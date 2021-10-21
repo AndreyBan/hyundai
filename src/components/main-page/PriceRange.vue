@@ -24,8 +24,7 @@ export default {
     }
   },
 
-  data() {
-    return {
+  data: () => ({
       min: 0,
       max: 100000,
       minValue: 1000,
@@ -39,9 +38,7 @@ export default {
         curTrack: null
       }
 
-    }
-  },
-
+  }),
   methods: {
     moveTrack(track, ev) {
 
@@ -261,6 +258,7 @@ export default {
   background-color: #ffffff;
   -ms-touch-action: pan-x;
   touch-action: pan-x;
+  -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
 }
 .track1{
