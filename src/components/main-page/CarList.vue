@@ -1,54 +1,58 @@
 <template>
   <section class="car-list">
-
-    <div class="car-item" v-for="(el, i) in models" :key="i">
-      <div class="car-item__title">
-        {{ el.nameRus + " / " + el.name }}
-      </div>
-      <div class="car-item__price">
-        от {{ el.minPrice }} ₽
-      </div>
-      <div class="car-item__img">
-        <img :src="el.img" alt="">
-      </div>
-      <a class="btn-link" href="/model" @click.prevent="$router.push('/auto-v-nalichii-new/model/')">
-        {{ el.countCars }} авто в наличии
-      </a>
-      <div class="wrap-credit">
-        <span class="credit__text">В кредит от</span>
-        <span class="credit__price">{{ el.creditPrice }} ₽/мес.</span>
-      </div>
-    </div>
+    <CarItem v-for="(el, i) in models" :key="i" :element="el" :type="type"></CarItem>
+    <template v-if="!dataLoad && !error">
+      <PreloaderCars v-for="i in 8" :key="i"/>
+    </template>
+    <div class="error-message" v-if="error">Произошла ошибка загрузки данных!</div>
   </section>
 </template>
 
 <script>
+import CarItem from "../main-page/CarItem";
+import PreloaderCars from "../main-page/PreloaderCars";
+
 export default {
   name: "CarList",
+  components: {
+    CarItem,
+    PreloaderCars
+  },
+  props: ["type"],
   data: () => ({
-    models: {
-      0: {
-        name: "solaris",
-        nameRus: "солярис",
-        minPrice: "820 000",
-        countCars: "12",
-        creditPrice: "8 643",
-        img: "/images/instock/car-img.jpg"
-      },
-      1: {
-        name: "elantra",
-        nameRus: "элантра",
-        minPrice: "1 369 000",
-        countCars: "10",
-        creditPrice: "8 643",
-        img: "/images/instock/car-img-2.jpg"
-      }
-    }
-  })
+    models: null,
+    error: false,
+    dataLoad: false
+  }),
+  mounted() {
+    fetch('https://agat-hyundai.ru/ajax/api_instock.php?data=model-list', {method: "POST"})
+        .then(res => res.json())
+        .then(res => {
+            if (res["status"] == "success") {
+              this.models = res["data"][0]["models"];
+              this.dataLoad = true;
+            } else {
+              this.error = true;
+            }
+        })
+        .catch(e => {
+          console.log("Error message: " + e.errorText)
+          this.error = true;
+        })
+  }
 }
+
 </script>
 
 <style scoped>
+.error-message {
+  font-size: 18px;
+  font-weight: 500;
+  text-align: center;
+  grid-column: 1/5;
+  padding: 50px 0;
+}
+
 .car-list {
   margin-top: 32px;
   display: -ms-grid;
@@ -58,59 +62,6 @@ export default {
   grid-template: auto / 1fr 1fr 1fr 1fr;
   grid-column-gap: 32px;
 
-}
-
-.car-item {
-  padding: 28px 32px;
-  border: 1px solid #E4DCD3;
-  margin-bottom: 32px;
-}
-
-.car-item__title {
-  font-size: 18px;
-  text-transform: uppercase;
-  font-weight: 500;
-  margin-bottom: 5px;
-}
-
-.car-item__price {
-  font-weight: 500;
-}
-
-.car-item__img {
-  width: 100%;
-  text-align: center;
-  margin: 16px 0;
-}
-
-.car-item__img img {
-  max-width: 100%;
-}
-
-.btn-link {
-  text-decoration: none;
-  display: block;
-  text-align: center;
-  color: #ffffff;
-  background-color: #003469;
-  padding: 12px 0;
-  -webkit-transition-duration: .15s;
-  -o-transition-duration: .15s;
-  transition-duration: .15s;
-}
-
-.btn-link:hover {
-  background-color: #0C4F94;
-}
-
-.credit__price {
-  font-weight: 500;
-  color: #003469;
-  margin-left: 16px;
-}
-
-.wrap-credit {
-  margin-top: 12px;
 }
 
 @media (max-width: 1280px) {

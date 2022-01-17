@@ -20,7 +20,7 @@ export default {
   props: {
     trackHeight: {
       type: Number,
-      deafult: 1
+      default: 1
     }
   },
 

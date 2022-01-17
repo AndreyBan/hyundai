@@ -2,11 +2,10 @@
   <div>
     <div class="container">
       <section class="section-filter">
-        <TypeCar/>
-          <PriceRange/>
+        <TypeCar @type="getType" />
       </section>
 
-      <CarList/>
+      <CarList :type="filterType" />
     </div>
     <FormRequest/>
   </div>
@@ -20,11 +19,21 @@ import FormRequest from "./main-page/FormRequest";
 
 export default {
   name: "MainPageFilter",
+  data: () => {
+    return {
+      filterType: ""
+    }
+  },
   components: {
     FormRequest,
     TypeCar,
     PriceRange,
     CarList
+  },
+  methods: {
+    getType(data) {
+      this.filterType = data;
+    }
   }
 }
 </script>

@@ -18,12 +18,12 @@ body {
   padding: 0;
 }
 
-/*#app {*/
-/*  font-family: Roboto, sans-serif;*/
-/*  -webkit-font-smoothing: antialiased;*/
-/*  -moz-osx-font-smoothing: grayscale;*/
-/*  margin-top: 60px;*/
-/*}*/
+#app {
+  font-family: Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin-top: 60px;
+}
 
 .container {
   max-width: 1560px;

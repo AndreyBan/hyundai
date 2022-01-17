@@ -20,16 +20,17 @@ export default {
       document.querySelector('body').style.overflow = str;
 
       if (matchMedia("(min-width: 1025px)").matches) {
+        let $html = document.querySelector('html');
+
         if (str === 'hidden') {
-          document.querySelector('html').style.marginRight = '17px';
+          $html.style.marginRight = '17px';
         } else {
-          document.querySelector('html').style.marginRight = '0';
+          $html.style.marginRight = '0';
         }
 
       }
     },
     closeModal() {
-
       new Promise(resolve => {
         this.hideModal = true;
         resolve();
@@ -42,6 +43,7 @@ export default {
 
       });
     }
+
   },
   mounted() {
     this.disableOverFlow('hidden');

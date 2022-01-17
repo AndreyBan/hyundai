@@ -13,7 +13,7 @@ const routes = [
     component: MainPage
   },
   {
-    path: '/auto-v-nalichii-new/model/',
+    path: '/auto-v-nalichii-new/:model/',
     name: 'model',
     component: Model
   },

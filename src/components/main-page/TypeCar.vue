@@ -14,30 +14,38 @@ export default {
     tabList: {
       allModel: {
         name: "Все модели",
+        value: "",
         active: true
       },
       cities: {
         name: "Городские",
+        value: "седан",
         active: false
       },
       crossovers: {
         name: "Кроссоверы",
+        value: "кроссовер",
         active: false
       },
       minibus: {
         name: "Микроавтобусы",
+        value: "микроавтобус",
         active: false
       },
     }
   }),
   methods: {
     setActive(el) {
-      for (let i in this.tabList) {
-        this.tabList[i].active = false;
+      let tabs = this.tabList;
+
+      for (let i in tabs) {
+        tabs[i].active = false;
       }
 
       el.active = true;
-    }
+
+      this.$emit('type', el.value)
+    },
   }
 }
 </script>
