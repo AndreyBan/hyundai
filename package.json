@@ -11,11 +11,13 @@
     "@fancyapps/ui": "^4.0.5",
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
+    "vue-ads-pagination": "^2.1.7",
     "vue-inputmask": "^0.2.1",
     "vue-range-component": "^1.0.3",
     "vue-range-slider": "^0.6.0",
     "vue-router": "^3.2.0",
     "vue-select": "^3.13.0",
+    "vuejs-paginate": "^2.1.0",
     "vuelidate": "^0.7.6"
   },
   "devDependencies": {
@@ -26,6 +28,8 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "sass": "^1.49.0",
+    "sass-loader": "^10.2.1",
     "vue-template-compiler": "^2.6.11"
   }
 }

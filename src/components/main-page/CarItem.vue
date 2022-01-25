@@ -9,9 +9,7 @@
       <div class="car-item__img">
         <img :src="element['img']" alt="">
       </div>
-      <a class="btn-link" :href="'/auto-v-nalichii-new/' + element['name_en'] + '/'" @click.prevent="$router.push(`/auto-v-nalichii-new/${element['name_en']}/`)">
-        {{ element["instock_count"] }} авто в наличии
-      </a>
+      <router-link class="btn-link" :to="`/auto-v-nalichii-new/${element['name_en']}/`"> {{ element["instock_count"] }} авто в наличии</router-link>
       <div class="wrap-credit" v-if="element['credit']">
         <span class="credit__text">В кредит от</span>
         <span class="credit__price">{{ element["credit"] | formatPrice }} ₽/мес.</span>
