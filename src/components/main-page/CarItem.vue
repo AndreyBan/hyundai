@@ -29,32 +29,32 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .car-item {
   padding: 28px 32px;
   border: 1px solid #E4DCD3;
   margin-bottom: 32px;
-}
 
-.car-item__title {
-  font-size: 18px;
-  text-transform: uppercase;
-  font-weight: 500;
-  margin-bottom: 5px;
-}
+  &__title {
+    font-size: 18px;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 5px;
+  }
 
-.car-item__price {
-  font-weight: 500;
-}
+  &__price {
+    font-weight: 500;
+  }
 
-.car-item__img {
-  width: 100%;
-  text-align: center;
-  margin: 16px 0;
-}
+  &__img {
+    width: 100%;
+    text-align: center;
+    margin: 16px 0;
 
-.car-item__img img {
-  max-width: 100%;
+    img {
+      max-width: 100%;
+    }
+  }
 }
 
 .btn-link {
@@ -64,13 +64,11 @@ export default {
   color: #ffffff;
   background-color: #003469;
   padding: 12px 0;
-  -webkit-transition-duration: .15s;
-  -o-transition-duration: .15s;
   transition-duration: .15s;
-}
 
-.btn-link:hover {
-  background-color: #0C4F94;
+  &:hover {
+    background-color: #0C4F94;
+  }
 }
 
 .credit__price {

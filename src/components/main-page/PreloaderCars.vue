@@ -17,58 +17,63 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+$bgColor: #E4DCD3;
+
+@mixin block-preload($height, $width){
+  height: $height;
+  width: $width;
+  background-color: $bgColor;
+}
+
 .car-item {
   padding: 28px 32px;
   border: 1px solid #E4DCD3;
   margin-bottom: 32px;
+
+  &__title{
+    @include block-preload(10px, 150px);
+    margin-bottom: 5px;
+  }
+
+  &__price{
+    @include block-preload(8px, 100px);
+  }
+
+  &__img {
+    @include block-preload(164px, 100%);
+    margin: 16px 0;
+  }
 }
-.car-item__title{
-  height: 10px;
-  width: 150px;
-  background-color: #E4DCD3;
-  margin-bottom: 5px;
-}
+
 .wrap-credit{
+  @include block-preload(8px, 100px);
+
   margin-top: 12px;
-  height: 8px;
-  width: 100px;
-  background-color: #E4DCD3;
-}
-.car-item__price{
-  background-color: #E4DCD3;
-  height: 8px;
-  width: 100px;
-}
-.car-item__img {
-  width: 100%;
-  height: 164px;
-  background-color: #E4DCD3;
-  margin: 16px 0;
 }
 .btn-link{
   display: block;
+
+  @include block-preload(48px, 292px);
   background-color: #E4DCD3;
-  width: 292px;
-  height: 48px;
 }
 .c-preload,
 .c-preload--big{
   position: relative;
   overflow: hidden;
+
+  &:before{
+    content: '';
+    display: block;
+    position: absolute;
+    left: -250px;
+    top: 0;
+    height: 100%;
+    background: linear-gradient(to right, transparent 0%, #f5eee7 50%, transparent 100%);
+    animation: load 1s ease-in-out infinite;
+  }
 }
 
-.c-preload:before,
-.c-preload--big:before{
-  content: '';
-  display: block;
-  position: absolute;
-  left: -250px;
-  top: 0;
-  height: 100%;
-  background: linear-gradient(to right, transparent 0%, #f5eee7 50%, transparent 100%);
-  animation: load 1s ease-in-out infinite;
-}
 .c-preload:before{
   width: 60px;
 }

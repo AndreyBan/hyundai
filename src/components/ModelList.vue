@@ -41,7 +41,7 @@ export default {
             $this.cars = res["data"];
             $this.countCars = res["data"].length;
 
-            $this.dataLoad = true;
+            // $this.dataLoad = true;
 
           } else {
             $this.error = true;
