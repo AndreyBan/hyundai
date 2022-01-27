@@ -41,8 +41,8 @@
         <div class="btn btn--dark">обратный звонок</div>
       </div>
     </div>
-    <div class="show-more" v-if="cars.length > showCount && showMore" @click="showMoreCars">Показать еще</div>
-    <paginate v-if="cars.length > showCount * 2 && !showMore"
+    <div class="show-more" v-if="filteredCars.length > showCount && showMore" @click="showMoreCars">Показать еще</div>
+    <paginate v-if="filteredCars.length > showCount * 2 && !showMore"
         :click-handler="clickCallback"
         :page-count="getCount"
         :page-range="3"
@@ -109,9 +109,14 @@ export default {
       return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     }
   },
+  watch:{
+    cars(){
+      this.filteredCars = this.cars;
+      this.getShowCars();
+    }
+  },
   mounted() {
     this.getShowCars();
-    // console.log(this.showCars)
   }
 }
 </script>

@@ -4,19 +4,21 @@
     <template v-if="!dataLoad && !error">
       <PreloaderCars v-for="i in 8" :key="i"/>
     </template>
-    <div class="error-message" v-if="error">Произошла ошибка загрузки данных!</div>
+   <Error  v-if="error"/>
   </section>
 </template>
 
 <script>
 import CarItem from "../main-page/CarItem";
 import PreloaderCars from "../main-page/PreloaderCars";
+import Error from "../Error";
 
 export default {
   name: "CarList",
   components: {
     CarItem,
-    PreloaderCars
+    PreloaderCars,
+    Error
   },
   props: ["type"],
   data: () => ({
@@ -45,14 +47,6 @@ export default {
 </script>
 
 <style scoped>
-.error-message {
-  font-size: 18px;
-  font-weight: 500;
-  text-align: center;
-  grid-column: 1/5;
-  padding: 50px 0;
-}
-
 .car-list {
   margin-top: 32px;
   display: -ms-grid;

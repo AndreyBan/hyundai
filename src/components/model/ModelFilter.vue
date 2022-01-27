@@ -3,7 +3,7 @@
     <div class="mf__title">Выбрать автомобиль</div>
     <div class="mf-selects">
       <div class="select-wrap">
-        <v-select placeholder="Не выбрана" v-model="changed.configuration" :options="filters.configuration">
+        <v-select placeholder="Не выбрана" v-model.lazy="changedFilterList.configuration" :options="filterList.configuration">
           <template #header>
             <div class="select-title">Комплектация</div>
           </template>
@@ -13,7 +13,7 @@
         </v-select>
       </div>
       <div class="select-wrap">
-        <v-select placeholder="Не выбран" v-model="changed.engine_volume" :options="filters.engine_volume">
+        <v-select placeholder="Не выбран" v-model.lazy="changedFilterList.engine_volume" :options="filterList.engine_volume">
           <template #header>
             <div class="select-title">Объем двигателя</div>
           </template>
@@ -23,7 +23,7 @@
         </v-select>
       </div>
       <div class="select-wrap">
-        <v-select placeholder="Не выбран" v-model="changed.transmission" :options="filters.transmission">
+        <v-select placeholder="Не выбран" v-model.lazy="changedFilterList.transmission" :options="filterList.transmission">
           <template #header>
             <div class="select-title">Тип КПП</div>
           </template>
@@ -33,7 +33,7 @@
         </v-select>
       </div>
     </div>
-    <filterColors :colors="filters.colors"/>
+    <filterColors :colors="filterList.colors" @send-color="getColors" />
 
     <div class="mf-bottom">
       <div class="block-left">
@@ -45,14 +45,14 @@
             <div class="block-years">
               <div class="extra-options__title">Год выпуска</div>
               <div class="check-wrap">
-                <div class="check-group" v-for="(el, i) in filters.year_of_manufacture" :key="i">
+                <div class="check-group" v-for="(el, i) in filterList.year_of_manufacture" :key="i">
                   <input type="checkbox" name="year" :id="'year-' + i">
                   <label :for="'year-' + i">{{ el }}</label>
                 </div>
               </div>
             </div>
             <div class="select-wrap">
-              <v-select placeholder="Не выбран" v-model="changed.engine_power" :options="filters.engine_power">
+              <v-select placeholder="Не выбран" v-model.lazy="changedFilterList.engine_power" :options="filterList.engine_power">
                 <template #header>
                   <div class="select-title">Мощность двигателя</div>
                 </template>
@@ -62,7 +62,7 @@
               </v-select>
             </div>
             <div class="select-wrap">
-              <v-select placeholder="Не выбран" v-model="changed.gear_type" :options="filters.gear_type">
+              <v-select placeholder="Не выбран" v-model.lazy="changedFilterList.gear_type" :options="filterList.gear_type">
                 <template #header>
                   <div class="select-title">Тип привода</div>
                 </template>
@@ -75,7 +75,7 @@
         </div>
       </div>
       <div class="block-right">
-        <a href="#" class="btn btn--blue-dark">найдено {{ count }} авто</a>
+        <a href="#" class="btn btn--blue-dark" >найдено {{ count }} авто</a>
         <div class="btn btn--blue-dark btn-icon btn-icon-reset">сбросить фильтр</div>
       </div>
     </div>
@@ -95,8 +95,8 @@ export default {
     return {
       carList: this.cars,
       extraOptions: false,
-      changed: {},
-      filters: {},
+      filterList: {},
+      changedFilterList: {},
     }
   },
   methods: {
@@ -107,6 +107,8 @@ export default {
 
       return filter;
     },
+
+    // Получение уникальных значений цвета автомобилей
     getUniqueColors(colors) {
       return colors.reduce((acc, elem) => {
         if (acc.values[elem.value]) return acc;
@@ -121,25 +123,48 @@ export default {
 
         return acc;
       }, {values: [], colors: []}).colors
-    }
-  },
-  computed: {
-    getFilterData() {
-      let cars = this.carList;
-      let filter = {
-        configuration: [],
-        engine_volume: [],
-        transmission: [],
-        year_of_manufacture: [],
-        engine_power: [],
-        gear_type: [],
-        colors: []
-      };
+    },
 
-      if (cars) {
+    // Получяем выбранные в ифльтре цвета
+    getColors(filterColors) {
+      this.changedFilterList["colors"] = filterColors;
+      this.sendCars();
+    },
+
+    /**
+     * Сортировка значений фильтра по возрастанию
+     *
+     * @param filter
+     * @returns {*}
+     */
+    sortFilter(filter) {
+      for (let j in filter) {
+        if (["engine_volume", "year_of_manufacture", "engine_power"].includes(j)) {
+          filter[j].sort(function (a, b) {
+            return a - b;
+          });
+        }
+      }
+
+      return filter;
+    },
+
+    getUniqueProperties(cars){
+        let filter = {
+          configuration: [],
+          engine_volume: [],
+          transmission: [],
+          year_of_manufacture: [],
+          engine_power: [],
+          gear_type: [],
+          colors: []
+        };
+
         for (let i in cars) {
           if (!filter["configuration"].includes(cars[i]["configuration_name"])) {
-            filter["configuration"].push(cars[i]["configuration_name"]);
+            if (this.changedFilterList.configuration === undefined || this.changedFilterList.configuration === cars[i]["configuration_name"]) {
+              filter["configuration"].push(cars[i]["configuration_name"]);
+            }
           }
 
           // Заполняем свойства
@@ -149,47 +174,51 @@ export default {
             }
           }
 
-          // Заполняем массив объектами цветов (весь набор цветов)
-          filter["colors"].push(
-              {
-                name: cars[i]["color"]["name"],
-                value: cars[i]["color"]["value"]
-              }
-          );
+          if (cars[i]["color"]) {
+            filter["colors"].push(
+                {
+                  name: cars[i]["color"]["name"],
+                  value: cars[i]["color"]["value"]
+                }
+            );
+          }
         }
 
-        // Получаем уникальные значения цветов
-        filter.colors = this.getUniqueColors(filter.colors);
+        return filter;
+    },
+    sendCars(){
+      this.$emit('get-cars', this.changedFilterList);
+    }
+  },
+  computed: {
+     getFilterData() {
+      let $this = this;
+      let cars = $this.carList;
+      let filter = null;
 
-        // Сортируем свойства с числовым значением по возрастанию
-        for (let j in filter) {
-          if (["engine_volume", "year_of_manufacture", "engine_power"].includes(j)) {
-            filter[j].sort(function (a, b) {
-              return a - b;
-            });
-          }
+      if (cars) {
+        filter = this.getUniqueProperties(cars);
+
+        if (filter) {
+          filter["colors"] = $this.getUniqueColors(filter["colors"]);
+          filter = this.sortFilter(filter);
         }
       }
 
       return filter;
     },
-
   },
   watch: {
-    cars: function () {
-      this.carList = this.cars;
-      this.filters = this.getFilterData;
-    },
-    changed: function () {
-      console.log(this.changed)
+    changedFilterList: {
+      handler() {
+        this.filterList = this.getFilterData;
+        this.sendCars();
+      },
+      deep: true
     }
-
   },
   mounted() {
-    if (this.carList) {
-      this.filters = this.getFilterData;
-      // console.log(this.filters)
-    }
+      this.filterList = this.getFilterData;
   }
 }
 </script>
@@ -299,19 +328,19 @@ export default {
 }
 
 .extra-options {
-  &__title{
-  font-size: 14px;
-  margin-bottom: 16px;
-  color: #666666;
+  &__title {
+    font-size: 14px;
+    margin-bottom: 16px;
+    color: #666666;
   }
 
-  &-fields{
+  &-fields {
     display: flex;
     justify-content: space-between;
     width: 100%;
   }
 
-  &__toggle{
+  &__toggle {
     color: #003469;
     margin-bottom: 30px;
     position: relative;
@@ -321,7 +350,7 @@ export default {
     display: inline-block;
     cursor: pointer;
 
-    &:before{
+    &:before {
       content: '';
       position: absolute;
       background: url("/images/instock/arrow-down.svg") 0 0 no-repeat;
@@ -333,7 +362,7 @@ export default {
       transition-duration: .2s;
     }
 
-    .open:before{
+    .open:before {
       transform: rotate(180deg);
     }
   }
@@ -351,18 +380,19 @@ export default {
 .mf-bottom {
   display: flex;
 }
-.check-group{
+
+.check-group {
   input {
     display: none;
 
-    & + label{
+    & + label {
       display: inline;
       position: relative;
       padding-left: 28px;
       padding-top: 2px;
       cursor: pointer;
 
-      &:before{
+      &:before {
         content: '';
         position: absolute;
         width: 20px;
@@ -373,7 +403,7 @@ export default {
       }
     }
 
-    &:checked + label:after{
+    &:checked + label:after {
       content: '';
       position: absolute;
       width: 16px;
@@ -384,7 +414,7 @@ export default {
     }
   }
 
-  &:not(:last-child){
+  &:not(:last-child) {
     margin-right: 20px;
   }
 }
@@ -409,7 +439,7 @@ export default {
   font-size: 16px;
   text-decoration: none;
 
-  &:not(:last-child){
+  &:not(:last-child) {
     margin-right: 32px;
   }
 }
@@ -571,7 +601,7 @@ export default {
     width: 100%;
     text-align: center;
 
-    &:not(:last-child){
+    &:not(:last-child) {
       margin-bottom: 26px;
     }
   }

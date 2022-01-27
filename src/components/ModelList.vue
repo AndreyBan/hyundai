@@ -1,9 +1,12 @@
 <template>
   <section>
     <div class="container">
-      <ModelFilter v-if="dataLoad" :cars="cars" :count="countCars"/>
-      <ModelCarList v-if="dataLoad" :cars="cars"/>
-      <ModelPreload v-if="!dataLoad" />
+      <template v-if="dataLoad && !error">
+        <ModelFilter :cars="filterCarList" :count="countCars" @get-cars="filterCars"/>
+        <ModelCarList :cars="filterCarList" :model="$route.params.model"/>
+      </template>
+      <ModelPreload v-else-if="!dataLoad  && !error" />
+      <Error v-else />
     </div>
     <FormRequest/>
   </section>
@@ -14,6 +17,7 @@ import ModelFilter from "./model/ModelFilter";
 import FormRequest from "./main-page/FormRequest";
 import ModelCarList from "./model/ModelCarList";
 import ModelPreload from "./model/ModelPreload";
+import Error from "./Error";
 
 export default {
   name: "ModelList",
@@ -21,15 +25,39 @@ export default {
     ModelFilter,
     FormRequest,
     ModelCarList,
-    ModelPreload
+    ModelPreload,
+    Error
   },
   data() {
     return {
       cars: null,
       countCars: 0,
       error: false,
+      filterCarList: [],
       dataLoad: false
     }
+  },
+  methods: {
+    filterCars(filter = undefined){
+      let cars = this.cars;
+
+      if (filter){
+        let {colors} = filter;
+
+        this.filterCarList = cars.filter(el => {
+          if (el["color"]) {
+            return colors.includes(el["color"]["name"])
+          }
+        });
+
+        this.countCars = this.filterCarList.length;
+
+        return this.filterCarList;
+      } else return cars;
+    }
+  },
+  computed: {
+
   },
   mounted() {
     fetch('https://agat-hyundai.ru/ajax/api_instock.php?data=model-cars&model=' + this.$route.params.model, {method: 'POST'})
@@ -39,9 +67,9 @@ export default {
 
           if (res["status"] == "success") {
             $this.cars = res["data"];
-            $this.countCars = res["data"].length;
-
-            // $this.dataLoad = true;
+            $this.filterCarList = this.filterCars();
+            $this.countCars = $this.filterCarList.length;
+            $this.dataLoad = true;
 
           } else {
             $this.error = true;
