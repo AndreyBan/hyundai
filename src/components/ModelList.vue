@@ -42,12 +42,32 @@ export default {
       let cars = this.cars;
 
       if (filter){
-        let {colors} = filter;
+        let {colors, year_of_manufacture} = filter;
 
         this.filterCarList = cars.filter(el => {
-          if (el["color"]) {
-            return colors.includes(el["color"]["name"])
+          let flag = true;
+
+          for (let i in filter){
+            if (!["colors", "year_of_manufacture"].includes(i)) {
+              if (el[i]) {
+                if (filter[i] && !filter[i].includes(el[i])) flag = false
+              } else flag = false;
+            }
           }
+
+          if (el["year_of_manufacture"] && year_of_manufacture.length) {
+            if (!year_of_manufacture.includes(el["year_of_manufacture"])) flag = false;
+          } else if(!el["year_of_manufacture"]){
+            flag = false;
+          }
+          if (el["color"] && colors && colors.length) {
+             if (!colors.includes(el["color"]["name"])) flag = false;
+          } else if(!el["color"]){
+            flag = false;
+          }
+
+
+          return flag;
         });
 
         this.countCars = this.filterCarList.length;
@@ -82,7 +102,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

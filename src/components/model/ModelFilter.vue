@@ -3,7 +3,7 @@
     <div class="mf__title">Выбрать автомобиль</div>
     <div class="mf-selects">
       <div class="select-wrap">
-        <v-select placeholder="Не выбрана" v-model.lazy="changedFilterList.configuration" :options="filterList.configuration">
+        <v-select placeholder="Не выбрана" v-model.lazy="changedFilterList.configuration_name" :options="filterList.configuration_name">
           <template #header>
             <div class="select-title">Комплектация</div>
           </template>
@@ -46,7 +46,7 @@
               <div class="extra-options__title">Год выпуска</div>
               <div class="check-wrap">
                 <div class="check-group" v-for="(el, i) in filterList.year_of_manufacture" :key="i">
-                  <input type="checkbox" name="year" :id="'year-' + i">
+                  <input type="checkbox" name="year" :id="'year-' + i" v-model.lazy="changedFilterList['year_of_manufacture']" :value="el">
                   <label :for="'year-' + i">{{ el }}</label>
                 </div>
               </div>
@@ -96,13 +96,15 @@ export default {
       carList: this.cars,
       extraOptions: false,
       filterList: {},
-      changedFilterList: {},
+      changedFilterList: {
+        year_of_manufacture: []
+      },
     }
   },
   methods: {
     getProperty(filter, car, prop) {
-      if (!filter[prop].includes(car["property_values"][prop][0])) {
-        filter[prop].push(car["property_values"][prop][0]);
+      if (!filter[prop].includes(car[prop])) {
+        filter[prop].push(car[prop]);
       }
 
       return filter;
@@ -151,7 +153,7 @@ export default {
 
     getUniqueProperties(cars){
         let filter = {
-          configuration: [],
+          configuration_name: [],
           engine_volume: [],
           transmission: [],
           year_of_manufacture: [],
@@ -161,15 +163,9 @@ export default {
         };
 
         for (let i in cars) {
-          if (!filter["configuration"].includes(cars[i]["configuration_name"])) {
-            if (this.changedFilterList.configuration === undefined || this.changedFilterList.configuration === cars[i]["configuration_name"]) {
-              filter["configuration"].push(cars[i]["configuration_name"]);
-            }
-          }
-
           // Заполняем свойства
           for (let j in filter) {
-            if (!["colors", "configuration"].includes(j)) {
+            if (!["colors"].includes(j)) {
               filter = this.getProperty(filter, cars[i], j);
             }
           }
