@@ -33,7 +33,7 @@
         </v-select>
       </div>
     </div>
-    <filterColors :colors="filterList.colors" @reset-color="reset = false" :reset="reset" @send-color="getColors" />
+    <filterColors :colors="filterList.colors" @reset-color="resetDefault" :reset="reset" @send-color="getColors" />
 
     <div class="mf-bottom">
       <div class="block-left">
@@ -126,7 +126,8 @@ export default {
         acc.colors.push(
             {
               name: elem.name,
-              value: elem.value
+              value: elem.value,
+              visible: true
             }
         )
 
@@ -181,7 +182,7 @@ export default {
             filter["colors"].push(
                 {
                   name: cars[i]["color"]["name"],
-                  value: cars[i]["color"]["value"]
+                  value: cars[i]["color"]["value"],
                 }
             );
           }
@@ -191,6 +192,9 @@ export default {
     },
     sendCars(){
       this.$emit('get-cars', this.changedFilterList);
+    },
+    resetDefault(reset){
+      this.reset = reset;
     }
   },
   computed: {
@@ -220,7 +224,15 @@ export default {
     },
     cars() {
       this.carList = this.cars;
-      this.filterList = this.getFilterData;
+      let updateFilterList = this.getFilterData;
+
+
+     let colors = updateFilterList.colors.map(el => el.name);
+
+      this.filterList.colors.forEach(el => {
+        el.visible = !(colors && !colors.includes(el.name));
+      })
+
     }
   },
   mounted() {

@@ -4,7 +4,7 @@
     <div class="colors-wrap">
       <div class="colors-item" v-for="(el, i) in colors"
            :key="i"
-           :class="{'dark' : getShade(el.value)}">
+           :class="{'dark' : getShade(el.value), 'not-access': !el.visible}">
         <input type="checkbox" name="color" :id="'color-' + i" :value="el.name" v-model.lazy="colorsFilter" :checked="colorsFilter.includes(el.name)">
         <label :for="'color-' + i">
           <span class="colors-item__color" :style="{backgroundColor: el.value}"></span>
@@ -52,8 +52,7 @@ export default {
     reset(){
       if (this.reset){
         this.colorsFilter = [];
-        this.reset = false;
-        this.$emit('reset-color', this.reset);
+        this.$emit('reset-color', false);
       }
     }
   }
@@ -126,6 +125,10 @@ export default {
     }
     &.dark input:checked + label:before {
       background: url("/images/instock/white-check.svg") 0 0 no-repeat;
+    }
+    &.not-access{
+      opacity: .3;
+      pointer-events: none;
     }
   }
 }
