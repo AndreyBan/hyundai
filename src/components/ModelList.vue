@@ -5,8 +5,8 @@
         <ModelFilter :cars="filterCarList" :count="countCars" @get-cars="filterCars"/>
         <ModelCarList :cars="filterCarList" :model="$route.params.model"/>
       </template>
-      <ModelPreload v-else-if="!dataLoad  && !error" />
-      <Error v-else />
+      <ModelPreload v-else-if="!dataLoad  && !error"/>
+      <Error v-else/>
     </div>
     <FormRequest/>
   </section>
@@ -38,34 +38,43 @@ export default {
     }
   },
   methods: {
-    filterCars(filter = undefined){
+    filterProp(el, prop) {
+      let need = el.name ? el.name : el;
+
+      if (el && prop && prop.length) {
+        if (!prop.includes(need)) return false;
+
+      } else if (!el) {
+        return false;
+
+      }
+
+      return true;
+    },
+
+    filterCars(filter = undefined) {
       let cars = this.cars;
 
-      if (filter){
+      if (filter) {
         let {colors, year_of_manufacture} = filter;
 
         this.filterCarList = cars.filter(el => {
           let flag = true;
 
-          for (let i in filter){
+          for (let i in filter) {
             if (!["colors", "year_of_manufacture"].includes(i)) {
               if (el[i]) {
                 if (filter[i] && !filter[i].includes(el[i])) flag = false
+
               } else flag = false;
+
             }
           }
 
-          if (el["year_of_manufacture"] && year_of_manufacture.length) {
-            if (!year_of_manufacture.includes(el["year_of_manufacture"])) flag = false;
-          } else if(!el["year_of_manufacture"]){
+          if (!this.filterProp(el["year_of_manufacture"], year_of_manufacture)
+              || !this.filterProp(el["color"], colors)){
             flag = false;
           }
-          if (el["color"] && colors && colors.length) {
-             if (!colors.includes(el["color"]["name"])) flag = false;
-          } else if(!el["color"]){
-            flag = false;
-          }
-
 
           return flag;
         });
@@ -73,12 +82,11 @@ export default {
         this.countCars = this.filterCarList.length;
 
         return this.filterCarList;
+
       } else return cars;
     }
   },
-  computed: {
-
-  },
+  computed: {},
   mounted() {
     fetch('https://agat-hyundai.ru/ajax/api_instock.php?data=model-cars&model=' + this.$route.params.model, {method: 'POST'})
         .then(res => res.json())

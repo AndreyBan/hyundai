@@ -33,7 +33,7 @@
         </v-select>
       </div>
     </div>
-    <filterColors :colors="filterList.colors" @send-color="getColors" />
+    <filterColors :colors="filterList.colors" @reset-color="reset = false" :reset="reset" @send-color="getColors" />
 
     <div class="mf-bottom">
       <div class="block-left">
@@ -76,7 +76,7 @@
       </div>
       <div class="block-right">
         <a href="#" class="btn btn--blue-dark" >найдено {{ count }} авто</a>
-        <div class="btn btn--blue-dark btn-icon btn-icon-reset">сбросить фильтр</div>
+        <div class="btn btn--blue-dark btn-icon btn-icon-reset" @click="resetFilter">сбросить фильтр</div>
       </div>
     </div>
   </section>
@@ -99,6 +99,7 @@ export default {
       changedFilterList: {
         year_of_manufacture: []
       },
+      reset: false
     }
   },
   methods: {
@@ -110,6 +111,12 @@ export default {
       return filter;
     },
 
+    resetFilter(){
+      this.changedFilterList = {
+        year_of_manufacture: []
+      }
+      this.reset = true
+    },
     // Получение уникальных значений цвета автомобилей
     getUniqueColors(colors) {
       return colors.reduce((acc, elem) => {
@@ -165,7 +172,7 @@ export default {
         for (let i in cars) {
           // Заполняем свойства
           for (let j in filter) {
-            if (!["colors"].includes(j)) {
+            if (j !== 'colors') {
               filter = this.getProperty(filter, cars[i], j);
             }
           }
@@ -207,10 +214,13 @@ export default {
   watch: {
     changedFilterList: {
       handler() {
-        this.filterList = this.getFilterData;
         this.sendCars();
       },
       deep: true
+    },
+    cars() {
+      this.carList = this.cars;
+      this.filterList = this.getFilterData;
     }
   },
   mounted() {
