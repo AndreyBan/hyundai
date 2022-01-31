@@ -3,7 +3,8 @@
     <div class="mf__title">Выбрать автомобиль</div>
     <div class="mf-selects">
       <div class="select-wrap">
-        <v-select placeholder="Не выбрана" v-model.lazy="changedFilterList.configuration_name" :options="filterList.configuration_name">
+        <v-select placeholder="Не выбрана" v-model.lazy="changedFilterList.configuration_name"
+                  :options="filterList.configuration_name" @input="sendFilter">
           <template #header>
             <div class="select-title">Комплектация</div>
           </template>
@@ -13,7 +14,8 @@
         </v-select>
       </div>
       <div class="select-wrap">
-        <v-select placeholder="Не выбран" v-model.lazy="changedFilterList.engine_volume" :options="filterList.engine_volume">
+        <v-select placeholder="Не выбран" v-model.lazy="changedFilterList.engine_volume"
+                  :options="filterList.engine_volume" @input="sendFilter">
           <template #header>
             <div class="select-title">Объем двигателя</div>
           </template>
@@ -23,7 +25,8 @@
         </v-select>
       </div>
       <div class="select-wrap">
-        <v-select placeholder="Не выбран" v-model.lazy="changedFilterList.transmission" :options="filterList.transmission">
+        <v-select placeholder="Не выбран" v-model.lazy="changedFilterList.transmission"
+                  :options="filterList.transmission" @input="sendFilter">
           <template #header>
             <div class="select-title">Тип КПП</div>
           </template>
@@ -33,7 +36,7 @@
         </v-select>
       </div>
     </div>
-    <filterColors :colors="filterList.colors" @reset-color="resetDefault" :reset="reset" @send-color="getColors" />
+    <filterColors :colors="filterList.colors" @reset-color="resetDefault" :reset="reset" @send-color="getColors"/>
 
     <div class="mf-bottom">
       <div class="block-left">
@@ -45,14 +48,16 @@
             <div class="block-years">
               <div class="extra-options__title">Год выпуска</div>
               <div class="check-wrap">
-                <div class="check-group" v-for="(el, i) in filterList.year_of_manufacture" :key="i">
-                  <input type="checkbox" name="year" :id="'year-' + i" v-model.lazy="changedFilterList['year_of_manufacture']" :value="el">
-                  <label :for="'year-' + i">{{ el }}</label>
+                <div class="check-group" v-for="(el, i) in filterList.year_of_manufacture" :key="i" :class="{'not-access': !el.visible}">
+                  <input type="checkbox" name="year" :id="'year-' + i"
+                         v-model.lazy="changedFilterList['year_of_manufacture']" :value="el.value" @change="filterYears">
+                  <label :for="'year-' + i">{{ el.value }}</label>
                 </div>
               </div>
             </div>
             <div class="select-wrap">
-              <v-select placeholder="Не выбран" v-model.lazy="changedFilterList.engine_power" :options="filterList.engine_power">
+              <v-select placeholder="Не выбран" v-model.lazy="changedFilterList.engine_power"
+                        :options="filterList.engine_power" @input="sendFilter">
                 <template #header>
                   <div class="select-title">Мощность двигателя</div>
                 </template>
@@ -62,7 +67,8 @@
               </v-select>
             </div>
             <div class="select-wrap">
-              <v-select placeholder="Не выбран" v-model.lazy="changedFilterList.gear_type" :options="filterList.gear_type">
+              <v-select placeholder="Не выбран" v-model.lazy="changedFilterList.gear_type"
+                        :options="filterList.gear_type" @input="sendFilter">
                 <template #header>
                   <div class="select-title">Тип привода</div>
                 </template>
@@ -75,7 +81,7 @@
         </div>
       </div>
       <div class="block-right">
-        <a href="#" class="btn btn--blue-dark" >найдено {{ count }} авто</a>
+        <a href="#" class="btn btn--blue-dark">найдено {{ count }} авто</a>
         <div class="btn btn--blue-dark btn-icon btn-icon-reset" @click="resetFilter">сбросить фильтр</div>
       </div>
     </div>
@@ -99,7 +105,8 @@ export default {
       changedFilterList: {
         year_of_manufacture: []
       },
-      reset: false
+      reset: false,
+      stopUpdate: false
     }
   },
   methods: {
@@ -111,7 +118,7 @@ export default {
       return filter;
     },
 
-    resetFilter(){
+    resetFilter() {
       this.changedFilterList = {
         year_of_manufacture: []
       }
@@ -135,12 +142,16 @@ export default {
       }, {values: [], colors: []}).colors
     },
 
-    // Получяем выбранные в ифльтре цвета
+    // Получяем выбранные в фильтре цвета
     getColors(filterColors) {
       this.changedFilterList["colors"] = filterColors;
-      this.sendCars();
+      this.sendFilter();
+      this.stopUpdate = true;
     },
-
+    filterYears(){
+      this.sendFilter();
+      this.stopUpdate = true;
+    },
     /**
      * Сортировка значений фильтра по возрастанию
      *
@@ -159,46 +170,72 @@ export default {
       return filter;
     },
 
-    getUniqueProperties(cars){
-        let filter = {
-          configuration_name: [],
-          engine_volume: [],
-          transmission: [],
-          year_of_manufacture: [],
-          engine_power: [],
-          gear_type: [],
-          colors: []
-        };
+    getUniqueProperties(cars) {
+      let filter = {
+        configuration_name: [],
+        engine_volume: [],
+        transmission: [],
+        year_of_manufacture: [],
+        engine_power: [],
+        gear_type: [],
+        colors: [],
+      };
 
-        for (let i in cars) {
-          // Заполняем свойства
-          for (let j in filter) {
-            if (j !== 'colors') {
-              filter = this.getProperty(filter, cars[i], j);
-            }
-          }
-
-          if (cars[i]["color"]) {
-            filter["colors"].push(
-                {
-                  name: cars[i]["color"]["name"],
-                  value: cars[i]["color"]["value"],
-                }
-            );
+      for (let i in cars) {
+        // Заполняем свойства
+        for (let j in filter) {
+          if (j !== 'colors') {
+            filter = this.getProperty(filter, cars[i], j);
           }
         }
 
-        return filter;
+        if (cars[i]["color"]) {
+          filter["colors"].push(
+              {
+                name: cars[i]["color"]["name"],
+                value: cars[i]["color"]["value"],
+              }
+          );
+        }
+      }
+
+      // Добавляем годам видимость
+      for (let k in filter.year_of_manufacture){
+        filter.year_of_manufacture[k] = {
+          value: filter.year_of_manufacture[k],
+          visible: true
+        }
+      }
+
+      return filter;
     },
-    sendCars(){
+    sendFilter() {
       this.$emit('get-cars', this.changedFilterList);
     },
-    resetDefault(reset){
+    resetDefault(reset) {
       this.reset = reset;
+    },
+    updateFilter(stop = false) {
+      this.carList = this.cars;
+      let updateFilterList = this.getFilterData;
+
+      if (!stop) {
+        let colors = updateFilterList.colors.map(el => el.name);
+        let years = updateFilterList.year_of_manufacture.map(el => el.value);
+
+        this.filterList.colors.forEach(el => {
+          el.visible = !(colors && !colors.includes(el.name));
+        })
+
+        this.filterList.year_of_manufacture.forEach(el => {
+          el.visible = !(years && !years.includes(el.value));
+        })
+
+      }
     }
   },
   computed: {
-     getFilterData() {
+    getFilterData() {
       let $this = this;
       let cars = $this.carList;
       let filter = null;
@@ -214,29 +251,14 @@ export default {
 
       return filter;
     },
+
   },
-  watch: {
-    changedFilterList: {
-      handler() {
-        this.sendCars();
-      },
-      deep: true
-    },
-    cars() {
-      this.carList = this.cars;
-      let updateFilterList = this.getFilterData;
-
-
-     let colors = updateFilterList.colors.map(el => el.name);
-
-      this.filterList.colors.forEach(el => {
-        el.visible = !(colors && !colors.includes(el.name));
-      })
-
-    }
+  beforeUpdate() {
+    this.updateFilter(this.stopUpdate);
+    this.stopUpdate = false;
   },
   mounted() {
-      this.filterList = this.getFilterData;
+    this.filterList = this.getFilterData;
   }
 }
 </script>
@@ -400,6 +422,11 @@ export default {
 }
 
 .check-group {
+  &.not-access{
+    opacity: .3;
+    pointer-events: none;
+  }
+
   input {
     display: none;
 
