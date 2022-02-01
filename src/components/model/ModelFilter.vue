@@ -3,8 +3,12 @@
     <div class="mf__title">Выбрать автомобиль</div>
     <div class="mf-selects">
       <div class="select-wrap">
-        <v-select placeholder="Не выбрана" v-model.lazy="changedFilterList.configuration_name"
-                  :options="filterList.configuration_name" @input="sendFilter">
+        <v-select placeholder="Не выбрана"
+                  v-model.lazy="changedFilterList.configuration_name"
+                  :options="filterList.configuration_name"
+                  @input="sendFilter('configuration_name')"
+                  :selectable="(option) => updateFilterList.configuration_name ? updateFilterList.configuration_name.includes(option) : true"
+        >
           <template #header>
             <div class="select-title">Комплектация</div>
           </template>
@@ -14,8 +18,12 @@
         </v-select>
       </div>
       <div class="select-wrap">
-        <v-select placeholder="Не выбран" v-model.lazy="changedFilterList.engine_volume"
-                  :options="filterList.engine_volume" @input="sendFilter">
+        <v-select placeholder="Не выбран"
+                  v-model.lazy="changedFilterList.engine_volume"
+                  :options="filterList.engine_volume"
+                  @input="sendFilter('engine_volume')"
+                  :selectable="(option) => updateFilterList.engine_volume ? updateFilterList.engine_volume.includes(option) : true"
+        >
           <template #header>
             <div class="select-title">Объем двигателя</div>
           </template>
@@ -25,8 +33,12 @@
         </v-select>
       </div>
       <div class="select-wrap">
-        <v-select placeholder="Не выбран" v-model.lazy="changedFilterList.transmission"
-                  :options="filterList.transmission" @input="sendFilter">
+        <v-select placeholder="Не выбран"
+                  v-model.lazy="changedFilterList.transmission"
+                  :options="filterList.transmission"
+                  @input="sendFilter('transmission')"
+                  :selectable="(option) => updateFilterList.transmission ? updateFilterList.transmission.includes(option) : true"
+        >
           <template #header>
             <div class="select-title">Тип КПП</div>
           </template>
@@ -36,11 +48,18 @@
         </v-select>
       </div>
     </div>
-    <filterColors :colors="filterList.colors" @reset-color="resetDefault" :reset="reset" @send-color="getColors"/>
+    <filterColors :colors="filterList.colors"
+                  @reset-color="resetDefault"
+                  :reset="reset"
+                  @send-color="getColors"
+    />
 
     <div class="mf-bottom">
       <div class="block-left">
-        <div class="extra-options__toggle" :class="{'open': extraOptions}" @click="extraOptions = !extraOptions">
+        <div class="extra-options__toggle"
+             :class="{'open': extraOptions}"
+             @click="extraOptions = !extraOptions"
+        >
           Дополниетльные параметры
         </div>
         <div class="extra-options-content">
@@ -48,16 +67,28 @@
             <div class="block-years">
               <div class="extra-options__title">Год выпуска</div>
               <div class="check-wrap">
-                <div class="check-group" v-for="(el, i) in filterList.year_of_manufacture" :key="i" :class="{'not-access': !el.visible}">
-                  <input type="checkbox" name="year" :id="'year-' + i"
-                         v-model.lazy="changedFilterList['year_of_manufacture']" :value="el.value" @change="filterYears">
+                <div class="check-group"
+                     v-for="(el, i) in filterList.year_of_manufacture"
+                     :key="i"
+                     :class="{'not-access': !el.visible}"
+                >
+                  <input type="checkbox"
+                         name="year"
+                         :id="'year-' + i"
+                         v-model.lazy="changedFilterList['year_of_manufacture']"
+                         :value="el.value"
+                         @change="filterYears">
                   <label :for="'year-' + i">{{ el.value }}</label>
                 </div>
               </div>
             </div>
             <div class="select-wrap">
-              <v-select placeholder="Не выбран" v-model.lazy="changedFilterList.engine_power"
-                        :options="filterList.engine_power" @input="sendFilter">
+              <v-select placeholder="Не выбран"
+                        v-model.lazy="changedFilterList.engine_power"
+                        :options="filterList.engine_power"
+                        @input="sendFilter('engine_power')"
+                        :selectable="(option) => updateFilterList.engine_power ? updateFilterList.engine_power.includes(option) : true"
+              >
                 <template #header>
                   <div class="select-title">Мощность двигателя</div>
                 </template>
@@ -67,8 +98,12 @@
               </v-select>
             </div>
             <div class="select-wrap">
-              <v-select placeholder="Не выбран" v-model.lazy="changedFilterList.gear_type"
-                        :options="filterList.gear_type" @input="sendFilter">
+              <v-select placeholder="Не выбран"
+                        v-model.lazy="changedFilterList.gear_type"
+                        :options="filterList.gear_type"
+                        @input="sendFilter('gear_type')"
+                        :selectable="(option) => updateFilterList.gear_type ? updateFilterList.gear_type.includes(option) : true"
+              >
                 <template #header>
                   <div class="select-title">Тип привода</div>
                 </template>
@@ -105,6 +140,8 @@ export default {
       changedFilterList: {
         year_of_manufacture: []
       },
+      updateFilterList: {},
+      firstProperty: "",
       reset: false,
       stopUpdate: false
     }
@@ -209,7 +246,8 @@ export default {
 
       return filter;
     },
-    sendFilter() {
+    sendFilter(prop) {
+      this.firstProperty = prop;
       this.$emit('get-cars', this.changedFilterList);
     },
     resetDefault(reset) {
@@ -231,7 +269,13 @@ export default {
           el.visible = !(years && !years.includes(el.value));
         })
 
+        if (this.firstProperty) {
+          updateFilterList[this.firstProperty] = this.filterList[this.firstProperty]
+          this.firstProperty = "";
+        }
       }
+
+      return updateFilterList;
     }
   },
   computed: {
@@ -253,9 +297,8 @@ export default {
     },
 
   },
-  beforeUpdate() {
-    this.updateFilter(this.stopUpdate);
-    this.stopUpdate = false;
+  watch: {
+
   },
   mounted() {
     this.filterList = this.getFilterData;
