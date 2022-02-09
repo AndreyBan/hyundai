@@ -17,10 +17,12 @@ import ModelFilter from "./model/ModelFilter";
 import FormRequest from "./main-page/FormRequest";
 import ModelCarList from "./model/ModelCarList";
 import ModelPreload from "./model/ModelPreload";
+import {mixinFilterProp} from "./mixins/mixinFilterProp";
 import Error from "./Error";
 
 export default {
   name: "ModelList",
+  mixins: [mixinFilterProp],
   components: {
     ModelFilter,
     FormRequest,
@@ -34,73 +36,55 @@ export default {
       countCars: 0,
       error: false,
       filterCarList: [],
+      carsForFilter: [],
       dataLoad: false
     }
   },
   methods: {
-    filterProp(el, prop) {
-      let need = el.name ? el.name : el;
-
-      if (el && prop && prop.length) {
-        if (!prop.includes(need)) return false;
-
-      } else if (!el) {
-        return false;
-
-      }
-
-      return true;
-    },
-
     filterCars(filter = undefined) {
       let cars = this.cars;
 
       if (filter) {
-        let {colors, year_of_manufacture} = filter;
-
-        this.filterCarList = cars.filter(el => {
-          let flag = true;
-
-          for (let i in filter) {
-            if (!["colors", "year_of_manufacture"].includes(i)) {
-              if (el[i]) {
-                if (filter[i] && !filter[i].includes(el[i])) flag = false
-
-              } else flag = false;
-
-            }
-          }
-
-          if (!this.filterProp(el["year_of_manufacture"], year_of_manufacture)
-              || !this.filterProp(el["color"], colors)){
-            flag = false;
-          }
-
-          return flag;
-        });
-
+        this.filterCarList = this.getUpdateFilterCars(cars, filter);
         this.countCars = this.filterCarList.length;
 
         return this.filterCarList;
 
       } else return cars;
+    },
+
+    getUpdateFilterCars(cars, filter){
+      let {colors, year_of_manufacture} = filter;
+
+      return cars.filter(el => {
+
+        for (let i in filter) {
+          if (!["colors", "year_of_manufacture"].includes(i)) {
+
+            if (el[i]) {
+                if (filter[i] && !filter[i].includes(el[i])) return false;
+            } else return false;
+          }
+        }
+
+        return !(!this.filterProp(el["year_of_manufacture"], year_of_manufacture)
+            || !this.filterProp(el["color"], colors));
+
+      });
     }
   },
-  computed: {},
   mounted() {
     fetch('https://agat-hyundai.ru/ajax/api_instock.php?data=model-cars&model=' + this.$route.params.model, {method: 'POST'})
         .then(res => res.json())
         .then(res => {
-          let $this = this;
-
           if (res["status"] == "success") {
-            $this.cars = res["data"];
-            $this.filterCarList = this.filterCars();
-            $this.countCars = $this.filterCarList.length;
-            $this.dataLoad = true;
+            this.cars = res["data"];
+            this.filterCarList = this.carsForFilter = this.filterCars();
+            this.countCars = this.filterCarList.length;
+            this.dataLoad = true;
 
           } else {
-            $this.error = true;
+            this.error = true;
           }
         })
         .catch(e => {

@@ -5,7 +5,7 @@
       <div class="colors-item" v-for="(el, i) in colors"
            :key="i"
            :class="{'dark' : getShade(el.value), 'not-access': !el.visible}">
-        <input type="checkbox" name="color" :id="'color-' + i" :value="el.name" v-model.lazy="colorsFilter" :checked="colorsFilter.includes(el.name)">
+        <input type="checkbox" name="color" :id="'color-' + i" :value="el.name" v-model.lazy="colorsFilter" :checked="colorsFilter.includes(el.name)" @change="changeColor">
         <label :for="'color-' + i">
           <span class="colors-item__color" :style="{backgroundColor: el.value}"></span>
           <span class="colors-item__name">{{ el.name }}</span>
@@ -43,16 +43,17 @@ export default {
       let hsp = Math.sqrt(0.205 * (rgb.r * rgb.r) + 0.587 * (rgb.g * rgb.g) + 0.114 * (rgb.b * rgb.b))
 
       return hsp <= 127.5;
+    },
+    changeColor(){
+      this.$emit('send-color', this.colorsFilter);
     }
   },
   watch: {
-    colorsFilter() {
-      this.$emit('send-color', this.colorsFilter)
-    },
     reset(){
       if (this.reset){
         this.colorsFilter = [];
         this.$emit('reset-color', false);
+        this.changeColor();
       }
     }
   }
