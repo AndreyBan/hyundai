@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: "PreloaderCars"
+  name: "AppPreloaderCars"
 }
 </script>
 

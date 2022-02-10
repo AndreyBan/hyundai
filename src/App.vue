@@ -4,7 +4,10 @@
   </div>
 </template>
 
+
 <style>
+@import url('~vue-select/dist/vue-select.css');
+
 * {
   box-sizing: border-box;
 }
@@ -39,7 +42,76 @@ label{
   -ms-user-select: none;
   user-select: none;
 }
+.vs__dropdown-option {
+  height: auto;
+  line-height: 18px;
+  word-wrap: break-word;
+  white-space: normal;
+  border-top: 1px solid #dadada;
+  padding: 6px 8px;
 
+}
+
+.vs__actions {
+  cursor: pointer;
+}
+
+.vs__clear {
+  margin-right: 30px;
+}
+
+.vs__search, .vs__search:focus {
+  padding-left: 16px;
+  padding-right: 0;
+  color: #666666;
+}
+
+.vs__search::-webkit-input-placeholder {
+  color: #666666;
+  font-size: 14px;
+}
+
+.vs__search::-moz-placeholder {
+  color: #666666;
+  font-size: 14px;
+}
+
+.vs__search:-ms-input-placeholder {
+  color: #666666;
+  font-size: 14px;
+}
+
+.vs__search::-ms-input-placeholder {
+  color: #666666;
+  font-size: 14px;
+}
+
+.vs__search::placeholder {
+  color: #666666;
+  font-size: 14px;
+}
+
+.vs__dropdown-toggle {
+  height: 43px;
+  border-radius: 0;
+}
+
+.vs__selected-options {
+  font-size: 14px;
+  color: #CFD0D0;
+}
+
+.vs__open-indicator {
+  display: none;
+}
+
+.vs__actions {
+  width: 56px;
+  position: relative;
+}
+.v-select {
+  color: #666666;
+}
 @media only screen and (max-width: 1262px) {
   .container {
     padding-left: 40px;

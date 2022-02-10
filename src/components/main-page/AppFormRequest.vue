@@ -44,18 +44,15 @@
 
 <script>
 import Vue from "vue";
-import vSelect from "vue-select";
 import {validationMixin} from 'vuelidate'
 import {required} from 'vuelidate/lib/validators';
 
 const VueInputMask = require('vue-inputmask').default
 
 Vue.use(VueInputMask)
-Vue.component("v-select", vSelect);
-import "vue-select/dist/vue-select.css";
 
 export default {
-  name: "FormRequest",
+  name: "AppFormRequest",
   mixins: [validationMixin],
   validations: {
     fields: {
@@ -90,14 +87,6 @@ export default {
 }
 </script>
 <style>
-.vs__open-indicator {
-  display: none;
-}
-
-.vs__actions {
-  width: 56px;
-  position: relative;
-}
 
 .form-request .vs__actions:before {
   content: "";
@@ -106,20 +95,14 @@ export default {
   height: 10px;
   right: 16px;
   background: url("/images/instock/select-arrow.svg") 50% 50% no-repeat;
-  -webkit-transition-duration: .35s;
-  -o-transition-duration: .35s;
   transition-duration: .35s;
 }
 
 .vs--open .vs__actions:before {
-  -webkit-transform: rotate(180deg);
-  -ms-transform: rotate(180deg);
   transform: rotate(180deg);
 }
 
-.v-select {
-  color: #666666;
-}
+
 
 .form-request .vs--searchable .vs__dropdown-toggle {
   background-color: #CFD0D0;
@@ -129,50 +112,6 @@ export default {
   background-color: #CFD0D0;
 }
 
-.vs__clear {
-  margin-right: 30px;
-}
-
-.vs__search, .vs__search:focus {
-  padding-left: 16px;
-  padding-right: 0;
-  color: #666666;
-}
-
-.vs__search::-webkit-input-placeholder {
-  color: #666666;
-  font-size: 14px;
-}
-
-.vs__search::-moz-placeholder {
-  color: #666666;
-  font-size: 14px;
-}
-
-.vs__search:-ms-input-placeholder {
-  color: #666666;
-  font-size: 14px;
-}
-
-.vs__search::-ms-input-placeholder {
-  color: #666666;
-  font-size: 14px;
-}
-
-.vs__search::placeholder {
-  color: #666666;
-  font-size: 14px;
-}
-
-.vs__dropdown-toggle {
-  height: 43px;
-  border-radius: 0;
-}
-
-.vs__selected-options {
-  font-size: 14px;
-  color: #CFD0D0;
-}
 
 #policy-agreement + label {
   position: relative;
@@ -190,7 +129,6 @@ export default {
   height: 16px;
   left: 0;
   top: 3px;
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
 
@@ -206,8 +144,6 @@ export default {
 }
 
 .btn.btn--dark {
-  -webkit-transition-duration: .2s;
-  -o-transition-duration: .2s;
   transition-duration: .2s;
   background-color: #00AAD2;
 }
@@ -257,10 +193,7 @@ export default {
   color: #ffffff;
   cursor: pointer;
   border: none;
-  -ms-grid-column-align: end;
   justify-self: end;
-  -ms-flex-item-align: start;
-  -ms-grid-row-align: start;
   align-self: start;
   border-radius: 0;
   font-size: 16px;
@@ -292,10 +225,7 @@ export default {
 }
 
 .block-fields {
-  display: -ms-grid;
   display: grid;
-  -ms-grid-rows: auto;
-  -ms-grid-columns: 360px 32px 360px;
   grid-template: auto / 360px 360px;
   gap: 26px 32px;
 }
@@ -320,8 +250,6 @@ export default {
 
 @media (max-width: 1024px) {
   .block-fields {
-    -ms-grid-rows: auto;
-    -ms-grid-columns: 1fr 8px 1fr;
     grid-template: auto / 1fr 1fr;
     gap: 26px 8px;
   }
@@ -329,8 +257,6 @@ export default {
 
 @media (max-width: 767px) {
   .block-fields {
-    -ms-grid-rows: auto;
-    -ms-grid-columns: 1fr;
     grid-template: auto / 1fr;
     gap: 26px 0;
   }

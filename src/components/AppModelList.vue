@@ -1,34 +1,36 @@
 <template>
   <section>
     <div class="container">
-      <template v-if="dataLoad && !error">
-        <ModelFilter :cars="filterCarList" :count="countCars" @get-cars="filterCars"/>
-        <ModelCarList :cars="filterCarList" :model="$route.params.model"/>
+      <template v-if="loadPage && !error">
+        <AppFilter :cars="filterCarList" :count="countCars" @get-cars="filterCars"/>
+        <AppModelCarList :cars="filterCarList" :model="$route.params.model"/>
       </template>
-      <ModelPreload v-else-if="!dataLoad  && !error"/>
-      <Error v-else/>
+      <AppPreload v-else-if="!loadPage  && !error"/>
+      <AppError v-else/>
     </div>
-    <FormRequest/>
+    <AppFormRequest/>
   </section>
 </template>
 
 <script>
-import ModelFilter from "./model/ModelFilter";
-import FormRequest from "./main-page/FormRequest";
-import ModelCarList from "./model/ModelCarList";
-import ModelPreload from "./model/ModelPreload";
-import {mixinFilterProp} from "./mixins/mixinFilterProp";
-import Error from "./Error";
+import AppFilter from "./model/AppFilter";
+import AppFormRequest from "./main-page/AppFormRequest";
+import AppModelCarList from "./model/AppModelCarList";
+import AppPreload from "./model/AppPreload";
+import AppError from "./AppError";
+
+import {mixinFilterProp} from "./mixins/AppMixins";
+
 
 export default {
   name: "ModelList",
   mixins: [mixinFilterProp],
   components: {
-    ModelFilter,
-    FormRequest,
-    ModelCarList,
-    ModelPreload,
-    Error
+    AppFilter,
+    AppFormRequest,
+    AppModelCarList,
+    AppPreload,
+    AppError
   },
   data() {
     return {
@@ -36,8 +38,7 @@ export default {
       countCars: 0,
       error: false,
       filterCarList: [],
-      carsForFilter: [],
-      dataLoad: false
+      loadPage: false
     }
   },
   methods: {
@@ -79,9 +80,9 @@ export default {
         .then(res => {
           if (res["status"] == "success") {
             this.cars = res["data"];
-            this.filterCarList = this.carsForFilter = this.filterCars();
+            this.filterCarList = this.filterCars();
             this.countCars = this.filterCarList.length;
-            this.dataLoad = true;
+            this.loadPage = true;
 
           } else {
             this.error = true;

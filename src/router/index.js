@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import MainPage from '../views/MainPage'
-import Model from '../views/Model'
-import Detail from "../views/Detail";
+import AppMainPage from '../views/AppMainPage'
+import AppModel from '../views/AppModel'
+import AppDetailPage from "../views/AppDetailPage";
 
 Vue.use(VueRouter)
 
@@ -10,17 +10,17 @@ const routes = [
   {
     path: '/auto-v-nalichii-new/',
     name: 'MainPage',
-    component: MainPage
+    component: AppMainPage
   },
   {
     path: '/auto-v-nalichii-new/:model/',
-    name: 'model',
-    component: Model
+    name: 'ModelPage',
+    component: AppModel
   },
   {
     path: '/auto-v-nalichii-new/detail/',
-    name: 'Detail',
-    component: Detail
+    name: 'DetailPage',
+    component: AppDetailPage
   }
 ]
 

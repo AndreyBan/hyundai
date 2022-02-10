@@ -1,41 +1,43 @@
 <template>
   <section class="car-list">
-    <CarItem v-for="(el, i) in models" :key="i" :element="el" :type="type"></CarItem>
+    <AppCarItem v-for="(el, i) in models" :key="i" :element="el" :type="type"></AppCarItem>
     <template v-if="!dataLoad && !error">
-      <PreloaderCars v-for="i in 8" :key="i"/>
+      <AppPreloaderCars v-for="i in 8" :key="i"/>
     </template>
-   <Error  v-if="error"/>
+    <Error v-if="error"/>
   </section>
 </template>
 
 <script>
-import CarItem from "../main-page/CarItem";
-import PreloaderCars from "../main-page/PreloaderCars";
-import Error from "../Error";
+import AppCarItem from "./AppCarItem";
+import AppPreloaderCars from "./AppPreloaderCars";
+import Error from "../AppError";
 
 export default {
   name: "CarList",
   components: {
-    CarItem,
-    PreloaderCars,
+    AppCarItem,
+    AppPreloaderCars,
     Error
   },
   props: ["type"],
-  data: () => ({
-    models: null,
-    error: false,
-    dataLoad: false
-  }),
+  data() {
+    return {
+      models: null,
+      error: false,
+      dataLoad: false
+    }
+  },
   mounted() {
     fetch('https://agat-hyundai.ru/ajax/api_instock.php?data=model-list', {method: "POST"})
         .then(res => res.json())
         .then(res => {
-            if (res["status"] == "success") {
-              this.models = res["data"][0]["models"];
-              this.dataLoad = true;
-            } else {
-              this.error = true;
-            }
+          if (res["status"] == "success") {
+            this.models = res["data"][0]["models"];
+            this.dataLoad = true;
+          } else {
+            this.error = true;
+          }
         })
         .catch(e => {
           console.log("Error message: " + e.errorText)

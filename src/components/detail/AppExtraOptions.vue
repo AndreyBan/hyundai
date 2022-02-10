@@ -4,7 +4,7 @@
       Особенности
     </div>
     <div class="extra-options__list">
-      <OptionItem v-for="(opt, i) in TestOptions"
+      <AppOptionItem v-for="(opt, i) in TestOptions"
                   :key="i"
                   :name="opt.name"
                   :list="opt.optionList"/>
@@ -13,11 +13,11 @@
 </template>
 
 <script>
-import OptionItem from "./OptionItem";
+import AppOptionItem from "./AppOptionItem";
 export default {
   name: "ExtraOptions",
   components: {
-    OptionItem
+    AppOptionItem
   },
   data(){
     return {

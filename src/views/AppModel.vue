@@ -1,14 +1,14 @@
 <template>
-    <ModelList/>
+    <AppModelList/>
 </template>
 
 <script>
-import ModelList from "../components/ModelList";
+import AppModelList from "../components/AppModelList";
 
 export default {
   name: "Model",
   components: {
-    ModelList
+    AppModelList
   }
 }
 </script>

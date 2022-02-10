@@ -2,33 +2,31 @@
   <div>
     <div class="container">
       <section class="section-filter">
-        <TypeCar @type="getType" />
+        <AppTypeCar @type="getType" />
       </section>
 
-      <CarList :type="filterType" />
+      <AppCarList :type="filterType" />
     </div>
-    <FormRequest/>
+    <AppFormRequest/>
   </div>
 </template>
 
 <script>
-import TypeCar from "./main-page/TypeCar";
-import PriceRange from "./main-page/PriceRange";
-import CarList from "./main-page/CarList";
-import FormRequest from "./main-page/FormRequest";
+import AppTypeCar from "./main-page/AppTypeCar";
+import AppCarList from "./main-page/AppCarList";
+import AppFormRequest from "./main-page/AppFormRequest";
 
 export default {
   name: "MainPageFilter",
-  data: () => {
+  data() {
     return {
       filterType: ""
     }
   },
   components: {
-    FormRequest,
-    TypeCar,
-    PriceRange,
-    CarList
+    AppFormRequest,
+    AppTypeCar,
+    AppCarList
   },
   methods: {
     getType(data) {
@@ -41,22 +39,14 @@ export default {
 <style>
 .section-filter {
   padding: 42px 130px 42px 100px;
-  -webkit-box-shadow: 0 0 10px rgba(0, 52, 105, 0.1);
   box-shadow: 0 0 10px rgba(0, 52, 105, 0.1);
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
   justify-content: space-between;
 }
 
 @media (max-width: 1024px) {
   .section-filter {
     padding: 32px 50px 44px;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
     flex-direction: column;
   }
 }
@@ -64,9 +54,6 @@ export default {
 @media (max-width: 767px) {
   .section-filter {
     padding: 16px 18px 28px;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
     flex-direction: column;
   }
 }

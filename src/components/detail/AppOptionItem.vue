@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: "OptionItem",
+  name: "AppOptionItem",
   data: () => ({
     isOpen: false
   }),

@@ -1,15 +1,15 @@
 <template>
-  <MainPageCars/>
+  <AppMainPage/>
 </template>
 
 
 <script>
-import MainPageCars from '../components/MainPageCars';
+import AppMainPage from '../components/AppMainPage';
 
 export default {
   name: 'MainPage',
   components: {
-    MainPageCars
+    AppMainPage
   }
 }
 </script>

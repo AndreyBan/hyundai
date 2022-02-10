@@ -4,7 +4,7 @@
         {{ element["name_ru"] + " / " + element["name_en"] }}
       </div>
       <div class="car-item__price">
-        от {{ element["min_price"] | formatPrice }} ₽
+        от {{ formatPrice(element["min_price"]) }} ₽
       </div>
       <div class="car-item__img">
         <img :src="element['img']" alt="">
@@ -12,20 +12,18 @@
       <router-link class="btn-link" :to="`/auto-v-nalichii-new/${element['name_en']}/`"> {{ element["instock_count"] }} авто в наличии</router-link>
       <div class="wrap-credit" v-if="element['credit']">
         <span class="credit__text">В кредит от</span>
-        <span class="credit__price">{{ element["credit"] | formatPrice }} ₽/мес.</span>
+        <span class="credit__price">{{ formatPrice(element["credit"]) }} ₽/мес.</span>
       </div>
     </div>
 </template>
 
 <script>
+import {mixinFormatPrice} from "../mixins/AppMixins";
+
 export default {
-  name: "CarItem",
+  name: "AppCarItem",
   props: ["element", "type"],
-  filters: {
-    formatPrice: function (value) {
-      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-    }
-  }
+  mixins: [mixinFormatPrice]
 }
 </script>
 

@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: 'typeCar',
+  name: 'AppTypeCar',
   data: () => ({
     tabList: {
       allModel: {

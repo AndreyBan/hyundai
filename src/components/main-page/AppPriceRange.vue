@@ -15,7 +15,7 @@
 <script>
 
 export default {
-  name: "PriceRange",
+  name: "AppPriceRange",
 
   props: {
     trackHeight: {
@@ -78,7 +78,7 @@ export default {
       this.mousedown(ev, track)
     },
 
-    mouseup(ev, track) {
+    mouseup() {
       if (!this.isDragging) return;
       this.isDragging = false
     },
@@ -115,7 +115,7 @@ export default {
     setClickMove(ev) {
       let track1Left = this.$refs.track1.getBoundingClientRect().left;
       let track2Left = this.$refs.track2.getBoundingClientRect().left;
-      // console.log('track1Left', track1Left)
+
       if (ev.clientX < track1Left) {
         this.moveTrack('track1', ev)
       } else if ((ev.clientX - track1Left) < (track2Left - ev.clientX)) {
@@ -189,6 +189,10 @@ export default {
 </script>
 
 <style>
+
+.track-container .range-value {
+  background: transparent;
+}
 .range-value {
   position: absolute;
   bottom: 12px;
@@ -213,7 +217,7 @@ export default {
   text-align: right;
 }
 .range-slider-wrap{
-  margin-top: -28px;
+  margin-bottom: 24px;
   max-width: 391px;
   width: 100%;
 }

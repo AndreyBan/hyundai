@@ -6,7 +6,7 @@
     <div class="detail-form-price-image">
       <div class="detail-form__price">
         Стоимость: <span>755 000 ₽*</span>
-      <div v-if="isPopup" class="detail-form__price-old">от  929 000 ₽</div>
+        <div v-if="isPopup" class="detail-form__price-old">от 929 000 ₽</div>
       </div>
       <div class="detail-form__image">
         <img src="/images/instock/car-img.jpg" alt="">
@@ -31,14 +31,14 @@
         </v-select>
         <p v-if="$v.fields.dealer.$error" class="error-text">*Обязательное поле</p>
       </div>
-        <div class="policy-agreement">
-          <input type="checkbox" name="agreement" id="policy-agreement" v-model="fields.agree">
-          <label for="policy-agreement">
-            Я согласен на обработку данных
-            <br><a href="#">Смотреть правила</a>
-          </label>
-        </div>
-      <button type="submit" class="btn btn--blue-dark"  >забронировать авто</button>
+      <div class="policy-agreement">
+        <input type="checkbox" name="agreement" id="policy-agreement" v-model="fields.agree">
+        <label for="policy-agreement">
+          Я согласен на обработку данных
+          <br><a href="#">Смотреть правила</a>
+        </label>
+      </div>
+      <button type="submit" class="btn btn--blue-dark">забронировать авто</button>
     </form>
 
   </div>
@@ -49,21 +49,23 @@ import {validationMixin} from 'vuelidate'
 import {required} from 'vuelidate/lib/validators';
 
 export default {
-  name: "Form",
+  name: "AppForm",
   props: ['isPopup'],
-  data: () => ({
-    options: [
-      "test 1",
-      "test 2"
-    ],
-    fields: {
-      name: "",
-      phone: "",
-      comment: "",
-      dealer: "",
-      agree: false
+  data() {
+    return {
+      options: [
+        "test 1",
+        "test 2"
+      ],
+      fields: {
+        name: "",
+        phone: "",
+        comment: "",
+        dealer: "",
+        agree: false
+      }
     }
-  }),
+  },
   mixins: [validationMixin],
   validations: {
     fields: {
@@ -84,9 +86,10 @@ export default {
 }
 </script>
 <style>
-.form-group{
+.form-group {
   position: relative;
 }
+
 .detail-form .vs__actions:before {
   content: "";
   position: absolute;
@@ -101,7 +104,7 @@ export default {
 }
 </style>
 <style scoped>
-.detail-form__main-title{
+.detail-form__main-title {
   text-align: center;
   font-size: 24px;
   text-transform: uppercase;
@@ -110,18 +113,21 @@ export default {
   margin-bottom: 44px;
   z-index: 1;
 }
-.error-text{
+
+.error-text {
   position: absolute;
   bottom: -18px;
   color: #ee0505;
   margin: 0;
   font-size: 12px;
 }
+
 .detail-form {
   display: grid;
   grid-template: auto / 1fr 1fr;
   gap: 26px 29px;
 }
+
 .btn {
   display: block;
   position: relative;
@@ -139,6 +145,7 @@ export default {
   grid-column: 2/3;
   justify-self: end;
 }
+
 .form-group input {
   border: 1px solid #B7B7B7;
   font-size: 14px;
@@ -156,9 +163,11 @@ export default {
   padding: 48px 32px 56px;
   border: 1px solid #B7B7B7;
 }
+
 .form-popup .detail-form__title {
   font-size: 16px;
 }
+
 .detail-form__title {
   font-size: 36px;
   font-weight: 500;
@@ -179,16 +188,20 @@ export default {
   color: #003469;
   font-weight: 500;
 }
-.form-popup .detail-form__price{
+
+.form-popup .detail-form__price {
   font-size: 14px;
 }
+
 .form-popup .detail-form__price span {
   font-size: 16px;
 }
+
 .detail-form-price-image {
   display: flex;
   justify-content: space-between;
 }
+
 .form-popup .detail-form__image {
   max-width: 348px;
   width: 100%;
@@ -197,10 +210,12 @@ export default {
   margin-top: -70px;
   z-index: 0;
 }
+
 .form-popup .detail-form__image img {
   width: 100%;
   position: absolute;
 }
+
 .detail-form__image {
   max-width: 348px;
   width: 100%;
@@ -211,9 +226,10 @@ export default {
 }
 </style>
 <style scoped>
-.policy-agreement input{
+.policy-agreement input {
   display: none;
 }
+
 #policy-agreement + label {
   position: relative;
   cursor: pointer;
@@ -245,38 +261,46 @@ export default {
   top: 6px;
 }
 
-.policy-agreement label{
+.policy-agreement label {
   position: relative;
   font-size: 14px;
 }
-.detail-form__price-old{
+
+.detail-form__price-old {
   font-size: 14px;
   text-decoration: line-through;
 }
+
 @media (max-width: 1279px) {
   .detail-form__image {
     max-width: 600px;
   }
 }
+
 @media (max-width: 767px) {
-  .detail-form-page{
+  .detail-form-page {
     padding: 18px;
     margin-top: 30px;
   }
-  .detail-form-price-image{
+
+  .detail-form-price-image {
     flex-direction: column;
   }
-  .detail-form{
+
+  .detail-form {
     display: block;
   }
+
   .form-group,
-  .policy-agreement{
+  .policy-agreement {
     margin-bottom: 26px;
   }
-  .form-popup .detail-form__image{
+
+  .form-popup .detail-form__image {
     margin-top: 0;
   }
-  .detail-form-page.form-popup{
+
+  .detail-form-page.form-popup {
     overflow: auto;
   }
 }

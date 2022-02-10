@@ -1,13 +1,14 @@
 <template>
   <section class="model-filter">
     <div class="mf__title">Выбрать автомобиль</div>
+    <AppPriceRange/>
     <div class="mf-selects">
       <div class="select-wrap">
         <v-select placeholder="Не выбрана"
                   v-model.lazy="changedFilterList.configuration_name"
                   :options="filterList.configuration_name"
                   @input="sendFilter"
-                  :selectable="option => updateFilterList.configuration_name ? updateFilterList.configuration_name.includes(option) : true"
+                  :selectable="option => getVisibleValues(option, 'configuration_name')"
         >
           <template #header>
             <div class="select-title">Комплектация</div>
@@ -22,7 +23,7 @@
                   v-model.lazy="changedFilterList.engine_volume"
                   :options="filterList.engine_volume"
                   @input="sendFilter"
-                  :selectable="option => updateFilterList.engine_volume ? updateFilterList.engine_volume.includes(option) : true"
+                  :selectable="option => getVisibleValues(option, 'engine_volume')"
         >
           <template #header>
             <div class="select-title">Объем двигателя</div>
@@ -37,7 +38,7 @@
                   v-model.lazy="changedFilterList.transmission"
                   :options="filterList.transmission"
                   @input="sendFilter"
-                  :selectable="option => updateFilterList.transmission ? updateFilterList.transmission.includes(option) : true"
+                  :selectable="option => getVisibleValues(option, 'transmission')"
         >
           <template #header>
             <div class="select-title">Тип КПП</div>
@@ -48,10 +49,10 @@
         </v-select>
       </div>
     </div>
-    <filterColors :colors="filterList.colors"
-                  @reset-color="reset = false"
-                  :reset="reset"
-                  @send-color="getColors"
+    <AppFilterColors :colors="filterList.colors"
+                     @reset-color="reset = false"
+                     :reset="reset"
+                     @send-color="getColors"
     />
 
     <div class="mf-bottom">
@@ -87,7 +88,7 @@
                         v-model.lazy="changedFilterList.engine_power"
                         :options="filterList.engine_power"
                         @input="sendFilter"
-                        :selectable="option => updateFilterList.engine_power ? updateFilterList.engine_power.includes(option) : true"
+                        :selectable="option => getVisibleValues(option, 'engine_power')"
               >
                 <template #header>
                   <div class="select-title">Мощность двигателя</div>
@@ -102,7 +103,7 @@
                         v-model.lazy="changedFilterList.gear_type"
                         :options="filterList.gear_type"
                         @input="sendFilter"
-                        :selectable="option => updateFilterList.gear_type ? updateFilterList.gear_type.includes(option) : true"
+                        :selectable="option => getVisibleValues(option, 'gear_type')"
               >
                 <template #header>
                   <div class="select-title">Тип привода</div>
@@ -124,30 +125,25 @@
 </template>
 
 <script>
-import filterColors from "./filter/filterColors";
-import {mixinFilterProp} from "../mixins/mixinFilterProp";
+import AppFilterColors from "./filter/AppFilterColors";
+import AppPriceRange from "../main-page/AppPriceRange";
+
+import {mixinFilterProp} from "../mixins/AppMixins";
 
 export default {
   name: "ModelFilter",
   props: ["cars", "count"],
   mixins: [mixinFilterProp],
   components: {
-    filterColors,
+    AppFilterColors,
+    AppPriceRange
   },
   data() {
     return {
       allCars: this.cars,
       extraOptions: false,
       filterList: {},
-      changedFilterList: {
-        configuration_name: "",
-        engine_volume: "",
-        transmission: "",
-        colors: [],
-        year_of_manufacture: [],
-        engine_power: "",
-        gear_type: ""
-      },
+      changedFilterList: this.getEmptyFilterList(),
       reset: false,
       excludeProperty: ""
     }
@@ -161,13 +157,31 @@ export default {
       return filter;
     },
 
+    // Получаем список видимых значений свойства
+    getVisibleValues(option, property) {
+      let updateList = this.updateFilterList[property];
+
+      return updateList ? updateList.includes(option) : true
+    },
+
     // Сброс фильтра
     resetFilter() {
-      this.changedFilterList = {
-        year_of_manufacture: []
-      }
+      this.changedFilterList = this.getEmptyFilterList();
       this.reset = true;
       this.setVisibility(this.filterList);
+    },
+
+    // Пустой список значений свойств
+    getEmptyFilterList() {
+      return {
+        configuration_name: "",
+        engine_volume: "",
+        transmission: "",
+        colors: [],
+        year_of_manufacture: [],
+        engine_power: "",
+        gear_type: ""
+      }
     },
 
     // Получение уникальных значений цвета автомобилей
@@ -217,6 +231,21 @@ export default {
      * @returns {{engine_power: *[], transmission: *[], engine_volume: *[], year_of_manufacture: *[], colors: *[], configuration_name: *[], gear_type: *[]}}
      */
     getUniqueProperties(cars) {
+      let filter = this.fillProperties(cars);
+
+      // Добавляем годам признак активности (видимости)
+      for (let k in filter.year_of_manufacture) {
+        filter.year_of_manufacture[k] = {
+          value: filter.year_of_manufacture[k],
+          visible: true
+        }
+      }
+
+      return filter;
+    },
+
+    // Заполнение свойств значениями
+    fillProperties(cars) {
       let filter = {
         configuration_name: [],
         engine_volume: [],
@@ -228,29 +257,22 @@ export default {
       };
 
       for (let i in cars) {
+        let car = cars[i];
         // Заполняем свойства кроме цвета
         for (let j in filter) {
           if (j !== 'colors') {
-            filter = this.getProperty(filter, cars[i], j);
+            filter = this.getProperty(filter, car, j);
           }
         }
 
         // Заполняем цвета
-        if (cars[i]["color"]) {
+        if (car["color"]) {
           filter["colors"].push(
               {
-                name: cars[i]["color"]["name"],
-                value: cars[i]["color"]["value"],
+                name: car["color"]["name"],
+                value: car["color"]["value"],
               }
           );
-        }
-      }
-
-      // Добавляем годам признак активности (видимости)
-      for (let k in filter.year_of_manufacture) {
-        filter.year_of_manufacture[k] = {
-          value: filter.year_of_manufacture[k],
-          visible: true
         }
       }
 
@@ -278,21 +300,10 @@ export default {
       })
     },
 
-
-    // Обновление "видимости" значений фильтра
-    updateFilter() {
-      let updateFilterList = this.getFilterData;
-      let filter = this.changedFilterList;
-
-      for (let i in filter) {
-        if (filter[i]) {
-          this.excludeProperty = i;
-          updateFilterList[i] = this.getFilterData[i];
-        }
-      }
-
-      return updateFilterList;
+    setExcludeProperty(value) {
+      this.excludeProperty = value;
     },
+
   },
   computed: {
     getFilterData() {
@@ -310,9 +321,22 @@ export default {
 
       return filter;
     },
+
+    // Получение обновленного списка значений свойтсв
     updateFilterList() {
-      return this.updateFilter();
+      let updateFilterList = this.getFilterData;
+      let filter = this.changedFilterList;
+
+      for (let i in filter) {
+        if (filter[i]) {
+          this.setExcludeProperty(i)
+          updateFilterList[i] = this.getFilterData[i];
+        }
+      }
+
+      return updateFilterList;
     },
+
     carList() {
       let cars = this.allCars;
       let filter = this.changedFilterList;
@@ -326,7 +350,7 @@ export default {
           }
         }
 
-        if (excludeProp === "colors"){
+        if (excludeProp === "colors") {
           return this.filterProp(el["year_of_manufacture"], year_of_manufacture);
 
         } else if (excludeProp === "year_of_manufacture") {
@@ -336,6 +360,7 @@ export default {
           return !(!this.filterProp(el["year_of_manufacture"], year_of_manufacture)
               || !this.filterProp(el["color"], colors));
         }
+
       })
     },
   },
@@ -364,19 +389,6 @@ export default {
   font-size: 14px;
 }
 
-.vs__dropdown-option {
-  height: auto;
-  line-height: 18px;
-  word-wrap: break-word;
-  white-space: normal;
-  border-top: 1px solid #dadada;
-  padding: 6px 8px;
-
-}
-
-.vs__actions {
-  cursor: pointer;
-}
 
 .model-filter .vs__actions:before {
   content: "";

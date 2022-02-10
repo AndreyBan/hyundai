@@ -15,9 +15,9 @@
           <img :src="el['model_picture']" alt=""  v-else>
         </div>
         <div class="ml-car-price">
-          <div class="ml-car-price__new">{{ el["price"] | formatPrice }} ₽*</div>
+          <div class="ml-car-price__new">{{ formatPrice(el["price"]) }} ₽*</div>
           <div class="ml-car-price__old" v-if="(el['price_full4specials'] && el['price_full4specials'] > 0)">от
-            {{ el['price_full4specials'] | formatPrice }} ₽
+            {{ formatPrice(el['price_full4specials']) }} ₽
           </div>
         </div>
         <hr class="ml-separate">
@@ -58,10 +58,12 @@
 
 <script>
 import Paginate from '/node_modules/vuejs-paginate';
+import {mixinFormatPrice} from "../mixins/AppMixins";
 
 export default {
   name: "ModelCarList",
   props: ["cars", "model"],
+  mixins: [mixinFormatPrice],
   components: {
     Paginate
   },
@@ -103,13 +105,9 @@ export default {
   computed: {
     getCount(){
       return Math.ceil(this.filteredCars.length / this.showCount);
-    }
+    },
   },
-  filters: {
-    formatPrice: function (value) {
-      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-    }
-  },
+
   watch:{
     cars(){
       this.filteredCars = this.cars;

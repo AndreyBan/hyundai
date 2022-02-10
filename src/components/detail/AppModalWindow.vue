@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  name: "ModalWindow",
+  name: "AppModalWindow",
   data: () => ({
     hideModal: false
   }),

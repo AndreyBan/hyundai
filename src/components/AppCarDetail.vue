@@ -1,14 +1,14 @@
 <template>
   <div class="container">
-    <CarInfo></CarInfo>
-
+    <AppInfoCar/>
     <div class="bottom-block">
-      <ExtraOptions/>
+      <AppExtraOptions/>
       <div>
-        <FormDetail/>
+        <AppForm/>
       </div>
     </div>
-    <p class="bottom-text">Указанная цена достигается суммированием всех специальных условий, действующих на данную модель автомобиля, не
+    <p class="bottom-text">Указанная цена достигается суммированием всех специальных условий, действующих на данную
+      модель автомобиля, не
       включает стоимость установленного дополнительного оборудования и может отличаться от цен других дилеров. Ценовое
       предложение действует на ограниченную партию автомобилей, носит информационный характер и не является публичной
       офертой, определяемой положениями ст. 437 (2) ГК РФ. Окончательную стоимость а/м с учётом всех действующих акций и
@@ -18,20 +18,22 @@
 </template>
 
 <script>
-import CarInfo from "./detail/CarInfo";
-import ExtraOptions from "./detail/ExtraOptions";
-import FormDetail from "./detail/FormDetail";
+import AppInfoCar from "./detail/AppInfoCar";
+import AppExtraOptions from "./detail/AppExtraOptions";
+import AppForm from "./detail/AppForm";
 
 export default {
   name: "CarDetail",
   components: {
-    CarInfo,
-    ExtraOptions,
-    FormDetail
+    AppInfoCar,
+    AppExtraOptions,
+    AppForm
   },
-  data: () => ({
-    modalShow: false
-  })
+  data() {
+    return {
+      modalShow: false
+    }
+  }
 }
 </script>
 
@@ -42,11 +44,13 @@ export default {
   grid-template: auto / 1.4fr 1fr;
   column-gap: 32px;
 }
-.bottom-text{
+
+.bottom-text {
   margin: 50px 0;
   color: #666666;
   font-size: 14px;
 }
+
 @media (max-width: 1279px) {
   .bottom-block {
     grid-template: auto / 1fr;

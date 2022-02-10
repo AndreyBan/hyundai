@@ -1,13 +1,13 @@
 <template>
-  <CarDetail/>
+  <AppCarDetail/>
 </template>
 
 <script>
-import CarDetail from "../components/CarDetail";
+import AppCarDetail from "../components/AppCarDetail";
 export default {
   name: "Detail",
   components: {
-    CarDetail
+    AppCarDetail
   }
 }
 </script>
