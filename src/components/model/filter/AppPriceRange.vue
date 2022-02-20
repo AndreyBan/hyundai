@@ -1,252 +1,302 @@
 <template>
-  <div class="price-range" ref="range">
-    <div class="price-input">
-      <input type="number" class="input-min" v-model="minValue" @change="priceInput($event)">
-      <input type="number" class="input-max" v-model="maxValue" @change="priceInput($event)">
-    </div>
-    <div class="slider">
-      <div class="progress" ref="progress">
-        <div class="range-btn" ></div>
-        <div class="range-btn"></div>
-      </div>
-    </div>
-    <div class="range-input">
-      <input type="range" class="range-min" :min="min" :max="max" v-model="minValue" :step="step"
-             @input="rangeInput($event)">
-      <input type="range" class="range-max" :min="min" :max="max" v-model="maxValue" :step="step"
-             @input="rangeInput($event)">
+  <div class="range-slider-wrap">
+    <div class="range-slider__title">Цена</div>
+    <div class="track-container">
+      <input type="text" class="range-value min" @change="setTrackButtons" v-model="minValue">
+      <input type="text" class="range-value max" @change="setTrackButtons" v-model="maxValue">
+      <div class="track" ref="_vpcTrack"></div>
+      <div class="track-highlight" ref="trackHighlight"></div>
+      <button class="track-btn track1" ref="track1"></button>
+      <button class="track-btn track2" ref="track2"></button>
     </div>
   </div>
 </template>
 
 <script>
 
-
 export default {
   name: "AppPriceRange",
+
+  props: {
+    trackHeight: {
+      type: Number,
+      default: 1
+    },
+    minPrice: {
+      type: Number,
+      default: 1
+    },
+    maxPrice: {
+      type: Number,
+      default: 1
+    }
+  },
+
   data() {
     return {
-      min: 131000,
-      max: 12300000,
-      minValue: 500000,
-      maxValue: 5000000,
-      step: 1000000,
-      priceGap: 10000,
+      min: 0,
+      max: this.maxPrice,
+      minValue: this.minPrice,
+      maxValue: this.maxPrice,
+      step: 1000,
+      totalSteps: 10,
+      percentPerStep: 10,
+      trackWidth: 0,
+      isDragging: false,
+      pos: {
+        curTrack: null
+      }
     }
   },
   methods: {
-    rangeInput(e) {
-      let priceGap = this.priceGap,
-          progress = this.$refs.progress,
-          minVal = Number(this.minValue),
-          maxVal = Number(this.maxValue);
+    moveTrack(track, ev) {
 
-      if ((maxVal - minVal) < priceGap) {
-        if (e.target.className === "range-min") {
-          this.minValue = maxVal - priceGap
-        } else {
-          this.maxValue = minVal + priceGap;
+      let percentInPx = this.getPercentInPx();
+      let trackX = Math.round(this.$refs._vpcTrack.getBoundingClientRect().left);
+      let clientX = ev.clientX;
+      let moveDiff = clientX - trackX;
+
+      let moveInPct = moveDiff / percentInPx
+      let value = (Math.round(moveInPct / this.percentPerStep) * this.step) + this.min;
+
+      if (track === 'track1') {
+        if (moveInPct < 0){
+          this.$refs[track].style.left = '0';
+          this.setTrackHightlight()
+          this.minValue = this.min;
+
+          return false;
         }
+
+        if (value >= (this.maxValue - this.step)) return false;
+        this.minValue = value;
       } else {
-        progress.style.left = this.posLeft;
-        progress.style.right = this.posRight;
-      }
-    },
+        if (moveInPct > 100){
+          this.$refs[track].style.left = '100%';
+          this.setTrackHightlight()
+          this.maxValue = this.max;
 
-    priceInput(e) {
-      let max = this.max,
-          priceGap = this.priceGap,
-          classInput = e.target.className,
-          progress = this.$refs.progress,
-          minPrice = Number(this.minValue),
-          maxPrice = Number(this.maxValue);
-
-      if ((maxPrice - minPrice >= priceGap) && maxPrice <= max) {
-        if (classInput === "input-min") {
-          progress.style.left = this.posLeft;
-        } else {
-          progress.style.right = this.posRight;
+          return false;
         }
-      } else if (maxPrice - minPrice < priceGap) {
 
-        if (classInput === "input-min") {
-          this.minValue = maxPrice - priceGap;
-          progress.style.left = this.posLeft;
-        } else {
-          this.maxValue = minPrice + priceGap;
-          progress.style.right = this.posRight;
-        }
+        if (value < (this.minValue + this.step)) return false;
+        this.maxValue = value;
       }
 
-      this.checkRange(minPrice, maxPrice, progress);
+      this.$refs[track].style.left = moveInPct + '%';
+      this.setTrackHightlight()
 
     },
+    mousedown(ev, track) {
 
-    checkRange(minPrice, maxPrice, progress){
-      if (minPrice < this.min) {
-        this.minValue = this.min;
-        progress.style.left = this.posLeft;
+      if (this.isDragging) return;
+      this.isDragging = true;
+      this.pos.curTrack = track;
+    },
+
+    touchstart(ev, track) {
+      this.mousedown(ev, track)
+    },
+
+    mouseup() {
+      if (!this.isDragging) return;
+      this.isDragging = false
+    },
+
+    touchend(ev, track) {
+      this.mouseup(ev, track)
+    },
+
+    mousemove(ev, track) {
+      if (!this.isDragging) return;
+      this.moveTrack(track, ev)
+    },
+
+    touchmove(ev, track) {
+      this.mousemove(ev.changedTouches[0], track)
+    },
+
+    valueToPercent(value) {
+      return ((value - this.min) / this.step) * this.percentPerStep
+    },
+
+    setTrackHightlight() {
+      this.$refs.trackHighlight.style.left = this.valueToPercent(this.minValue) + '%'
+      this.$refs.trackHighlight.style.width = (this.valueToPercent(this.maxValue) - this.valueToPercent(this.minValue)) + '%'
+    },
+
+    getPercentInPx() {
+      let trackWidth = this.$refs._vpcTrack.offsetWidth;
+      let oneStepInPx = trackWidth / this.totalSteps;
+      // 1 percent in px
+      return oneStepInPx / this.percentPerStep;
+    },
+
+    setClickMove(ev) {
+      let track1Left = this.$refs.track1.getBoundingClientRect().left;
+      let track2Left = this.$refs.track2.getBoundingClientRect().left;
+
+      if (ev.clientX < track1Left) {
+        this.moveTrack('track1', ev)
+      } else if ((ev.clientX - track1Left) < (track2Left - ev.clientX)) {
+        this.moveTrack('track1', ev)
+      } else {
+        this.moveTrack('track2', ev)
       }
-      if (maxPrice > this.max) {
+    },
+    setTrackButtons() {
+      if (this.maxValue > this.max || this.minValue < this.min) {
         this.maxValue = this.max;
-        progress.style.right = this.posRight;
+        this.minValue = this.min;
+
+        return false;
       }
-    },
-  },
-  computed: {
-    posLeft() {
-      let minVal = Number(this.minValue),
-          max = Number(this.max),
-          min = Number(this.min),
-          range = max - min,
-          rangeWidth = this.$refs.range.offsetWidth,
-          differentMin = minVal - min,
-          res = 0;
-
-        res = ((differentMin / range) * 100) - (2400 * differentMin) / (range * rangeWidth);
-      // if ((range / this.step) > rangeWidth){
-      // } else {
-      //   res = ((differentMin / range) * 100);
-      // }
-      return res + "%";
-    },
-    posRight() {
-      let maxVal = Number(this.maxValue),
-          max = Number(this.max),
-          min = Number(this.min),
-          range = max - min,
-          rangeWidth = this.$refs.range.offsetWidth,
-          differentMin = max - maxVal,
-          res = 0;
-        res = ((differentMin / range) * 100) - (2400 * differentMin) / (range * rangeWidth);
-      // if ((range / this.step) > rangeWidth){
-      // } else {
-      //   res = ((differentMin / range) * 100);
-      // }
-      return res + "%";
-
-      // return ((max - maxVal) / (max - min)) * 100 + "%";
+      this.$refs.track1.style.left = this.valueToPercent(this.minValue) + '%'
+      this.$refs.track2.style.left = this.valueToPercent(this.maxValue) + '%'
+      this.setTrackHightlight()
     }
   },
-  mounted() {
-    let progress = this.$refs.progress;
 
-    progress.style.left = this.posLeft;
-    progress.style.right = this.posRight;
+  mounted() {
+    // calc per step value
+    this.totalSteps = (this.max - this.min) / this.step;
+
+    // percent the track button to be moved on each step
+    this.percentPerStep = 100 / this.totalSteps;
+
+    this.setTrackButtons()
+
+    let self = this;
+
+    ['mouseup', 'mousemove'].forEach(type => {
+      document.body.addEventListener(type, (ev) => {
+        ev.preventDefault();
+        if (self.isDragging && self.pos.curTrack) {
+          self[type](ev, self.pos.curTrack)
+        }
+      })
+    });
+
+    ['mousedown', 'mouseup', 'touchstart', 'touchmove', 'touchend'].forEach(type => {
+      document.querySelector('.track1').addEventListener(type, (ev) => {
+        ev.stopPropagation();
+        self[type](ev, 'track1')
+      })
+
+      document.querySelector('.track2').addEventListener(type, (ev) => {
+        ev.stopPropagation();
+        self[type](ev, 'track2')
+      })
+    })
+
+    document.querySelector('.track').addEventListener('click', function (ev) {
+      ev.stopPropagation();
+      self.setClickMove(ev)
+
+    })
+
+    document.querySelector('.track-highlight').addEventListener('click', function (ev) {
+      ev.stopPropagation();
+      self.setClickMove(ev)
+
+    })
   }
-}
+};
 </script>
 
-<style scoped>
-.price-range {
-  max-width: 391px;
-  margin-bottom: 40px;
-  position: relative;
-  z-index: 3;
-}
+<style>
 
-.price-input {
-  width: 100%;
-  display: flex;
-  margin: 30px 0 0;
-}
-
-.price-input input {
-  width: 50%;
-  height: 42px;
+.track-container .range-value {
   background: transparent;
-  border: 1px solid #B7B7B7;
-  font-size: 16px;
-  padding: 0 16px;
-  outline: none;
-
-}
-.price-input input:nth-child(1){
-  border-right: none;
-}
-.price-input input:nth-child(2){
-  border-left: none;
 }
 
-
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-}
-
-.price-input .separator {
-  width: 130px;
-  display: flex;
-  font-size: 19px;
-  align-items: center;
-  justify-content: center;
-}
-
-.slider {
-  height: 1px;
-  position: relative;
-  background: #B7B7B7;
-  z-index: 2;
-  margin-top: -1px;
-}
-
-.slider .progress {
-  height: 2px;
-  left: 25%;
-  right: 25%;
+.range-value {
   position: absolute;
-  border-radius: 5px;
-  background: #003469;
-}
-
-.range-input {
-  position: relative;
-}
-
-.range-input input {
-  position: absolute;
-  width: 100%;
-  height: 5px;
-  top: -5px;
-  background: none;
-  pointer-events: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  outline: none;
-  z-index: 5;
-  /*opacity: 0;*/
-}
-
-.range-btn {
-  /*pointer-events: none;*/
-  position: absolute;
-  appearance: none;
-  outline: none;
-  /*cursor: pointer;*/
-  display: block;
-  z-index: 2;
-  border-radius: 50%;
-  margin-top: -9px;
-  width: 24px;
-  height: 24px;
+  bottom: 12px;
   border: none;
-  background: #ffffff;
-  touch-action: pan-x;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
-  /*opacity: 0;*/
+  font-size: 16px;
 }
 
-.range-btn:nth-child(1) {
-  left: 0;
+.range-value:focus,
+.range-value:active,
+.range-value:focus-visible {
+  border: none;
+  outline: none;
 }
 
-.range-btn:nth-child(2) {
-  right: 0;
+.range-slider__title {
+  margin-bottom: 14px;
 }
-.input-max{
+
+.range-value.min {
+  left: 17px;
+}
+
+.range-value.max {
+  right: 17px;
   text-align: right;
 }
-.range-btn:before {
+
+.range-slider-wrap {
+  margin-bottom: 24px;
+  max-width: 391px;
+  width: 100%;
+}
+
+.track-container {
+  width: 100%;
+  position: relative;
+  cursor: pointer;
+  border: 1px solid #B7B7B7;
+  height: 42px;
+
+}
+
+.track,
+.track-highlight {
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: -1px;
+}
+
+
+.track-highlight {
+  background-color: #003469;
+  z-index: 2;
+}
+
+.track-btn {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+  display: block;
+  position: absolute;
+  z-index: 2;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  bottom: -10px;
+  border: none;
+  background-color: #ffffff;
+  -ms-touch-action: pan-x;
+  touch-action: pan-x;
+  -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+}
+
+.track1 {
+  margin-left: -6px;
+}
+
+.track2 {
+  margin-left: -22px;
+}
+
+.track-btn:before {
   content: "";
   position: absolute;
   width: 12px;
@@ -257,32 +307,14 @@ input[type="number"]::-webkit-inner-spin-button {
   top: 6px;
 }
 
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  pointer-events: auto;
-  appearance: none;
-  outline: none;
-  cursor: pointer;
-  display: block;
-  z-index: 5;
-  width: 24px;
-  height: 24px;
-  background: #0C4F94;
-  opacity: .5;
-}
+@media (max-width: 991px) {
+  .range-value {
+    width: 50%;
+  }
 
-input[type="range"]::-moz-range-thumb {
-  pointer-events: auto;
-  appearance: none;
-  -moz-appearance: none;
-  outline: none;
-  cursor: pointer;
-  display: block;
-  z-index: 5;
-  width: 24px;
-  height: 24px;
-  background: #0C4F94;
-  opacity: .5;
-
+  .range-slider-wrap {
+    margin-top: 12px;
+    max-width: 100%;
+  }
 }
 </style>

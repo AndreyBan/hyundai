@@ -1,7 +1,7 @@
 <template>
   <section class="model-filter">
     <div class="mf__title">Выбрать автомобиль</div>
-    <AppPriceRange />
+    <AppPriceRange :min-price="minPrice" :max-price="maxPrice"></AppPriceRange>
     <div class="mf-selects">
       <div class="select-wrap">
         <v-select placeholder="Не выбрана"
