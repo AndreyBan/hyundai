@@ -1,6 +1,6 @@
 <template>
   <div id="app" v-cloak>
-    <router-view/>
+      <router-view/>
   </div>
 </template>
 
@@ -34,7 +34,8 @@ body {
   padding-left: 16px;
   padding-right: 16px;
 }
-label{
+
+label {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -42,6 +43,7 @@ label{
   -ms-user-select: none;
   user-select: none;
 }
+
 .vs__dropdown-option {
   height: auto;
   line-height: 18px;
@@ -109,9 +111,11 @@ label{
   width: 56px;
   position: relative;
 }
+
 .v-select {
   color: #666666;
 }
+
 @media only screen and (max-width: 1262px) {
   .container {
     padding-left: 40px;
@@ -125,10 +129,11 @@ label{
     padding-right: 16px;
   }
 }
+
 @media screen and (prefers-reduced-motion: reduce) {
   .btn {
-     -webkit-transition: .2s !important;
-     transition: .2s !important;
+    -webkit-transition: .2s !important;
+    transition: .2s !important;
   }
 }
 </style>

@@ -21,24 +21,33 @@ export default {
     trackHeight: {
       type: Number,
       default: 1
+    },
+    minPrice: {
+      type: Number,
+      default: 1
+    },
+    maxPrice: {
+      type: Number,
+      default: 1
     }
   },
 
-  data: () => ({
+  data() {
+    return {
       min: 0,
-      max: 100000,
-      minValue: 1000,
-      maxValue: 100000,
+      max: this.maxPrice,
+      minValue: this.minPrice,
+      maxValue: this.maxPrice,
       step: 1000,
-      totalSteps: 0,
-      percentPerStep: 1,
-      trackWidth: null,
+      totalSteps: 10,
+      percentPerStep: 10,
+      trackWidth: 0,
       isDragging: false,
       pos: {
         curTrack: null
       }
-
-  }),
+    }
+  },
   methods: {
     moveTrack(track, ev) {
 
@@ -51,7 +60,7 @@ export default {
       let moveInPct = moveDiff / percentInPx
       // console.log(moveInPct)
 
-      if (moveInPct < 1 || moveInPct > 100) return;
+      if (moveInPct <= 0 || moveInPct >= 100) return;
       let value = (Math.round(moveInPct / this.percentPerStep) * this.step) + this.min;
       if (track === 'track1') {
         if (value >= (this.maxValue - this.step)) return;
@@ -124,15 +133,15 @@ export default {
         this.moveTrack('track2', ev)
       }
     },
-    setTrackButtons(){
-      if (this.maxValue > this.max || this.minValue < this.min){
+    setTrackButtons() {
+      if (this.maxValue > this.max || this.minValue < this.min) {
         this.maxValue = this.max;
         this.minValue = this.min;
 
         return false;
       }
-      document.querySelector('.track1').style.left = this.valueToPercent(this.minValue) + '%'
-      document.querySelector('.track2').style.left = this.valueToPercent(this.maxValue) + '%'
+      this.$refs.track1.style.left = this.valueToPercent(this.minValue) + '%'
+      this.$refs.track2.style.left = this.valueToPercent(this.maxValue) + '%'
       this.setTrackHightlight()
     }
   },
@@ -193,21 +202,25 @@ export default {
 .track-container .range-value {
   background: transparent;
 }
+
 .range-value {
   position: absolute;
   bottom: 12px;
   border: none;
   font-size: 16px;
 }
+
 .range-value:focus,
 .range-value:active,
-.range-value:focus-visible{
+.range-value:focus-visible {
   border: none;
   outline: none;
 }
-.range-slider__title{
+
+.range-slider__title {
   margin-bottom: 14px;
 }
+
 .range-value.min {
   left: 17px;
 }
@@ -216,11 +229,13 @@ export default {
   right: 17px;
   text-align: right;
 }
-.range-slider-wrap{
+
+.range-slider-wrap {
   margin-bottom: 24px;
   max-width: 391px;
   width: 100%;
 }
+
 .track-container {
   width: 100%;
   position: relative;
@@ -265,12 +280,15 @@ export default {
   -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
 }
-.track1{
+
+.track1 {
   margin-left: -6px;
 }
-.track2{
+
+.track2 {
   margin-left: -22px;
 }
+
 .track-btn:before {
   content: "";
   position: absolute;
@@ -281,11 +299,13 @@ export default {
   left: 6px;
   top: 6px;
 }
+
 @media (max-width: 991px) {
-  .range-value{
+  .range-value {
     width: 50%;
   }
-  .range-slider-wrap{
+
+  .range-slider-wrap {
     margin-top: 12px;
     max-width: 100%;
   }

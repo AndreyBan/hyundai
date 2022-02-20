@@ -2,7 +2,7 @@
   <section>
     <div class="container">
       <template v-if="loadPage && !error">
-        <AppFilter :cars="filterCarList" :count="countCars" @get-cars="filterCars"/>
+          <AppFilter :cars="filterCarList" :count="countCars" @get-cars="filterCars"/>
         <AppModelCarList :cars="filterCarList" :model="$route.params.model"/>
       </template>
       <AppPreload v-else-if="!loadPage  && !error"/>
@@ -60,7 +60,7 @@ export default {
       return cars.filter(el => {
 
         for (let i in filter) {
-          if (!["colors", "year_of_manufacture"].includes(i)) {
+          if (!["colors", "year_of_manufacture", "priceMin", "priceMax"].includes(i)) {
 
             if (el[i]) {
                 if (filter[i] && !filter[i].includes(el[i])) return false;

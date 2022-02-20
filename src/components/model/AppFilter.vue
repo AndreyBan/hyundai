@@ -1,7 +1,7 @@
 <template>
   <section class="model-filter">
     <div class="mf__title">Выбрать автомобиль</div>
-    <AppPriceRange/>
+    <AppPriceRange />
     <div class="mf-selects">
       <div class="select-wrap">
         <v-select placeholder="Не выбрана"
@@ -126,8 +126,7 @@
 
 <script>
 import AppFilterColors from "./filter/AppFilterColors";
-import AppPriceRange from "../main-page/AppPriceRange";
-
+import AppPriceRange from "./filter/AppPriceRange";
 import {mixinFilterProp} from "../mixins/AppMixins";
 
 export default {
@@ -180,7 +179,9 @@ export default {
         colors: [],
         year_of_manufacture: [],
         engine_power: "",
-        gear_type: ""
+        gear_type: "",
+        priceMin: 0,
+        priceMax: 0
       }
     },
 
@@ -303,9 +304,30 @@ export default {
     setExcludeProperty(value) {
       this.excludeProperty = value;
     },
+    getPrice(cars) {
+      let minPrice = cars[0]["price"];
+      let maxPrice = cars[cars.length - 1]["price"];
+
+      this.changedFilterList.priceMin = minPrice;
+      // if (!this.changedFilterList.priceMin || minPrice < this.changedFilterList.priceMin ){
+      // }
+      //
+      // if (!this.changedFilterList.priceMax || maxPrice > this.changedFilterList.priceMax ){
+      // }
+      this.changedFilterList.priceMax = maxPrice;
+    }
+
 
   },
   computed: {
+    minPrice() {
+      return this.carList[0]["price"]
+    },
+    maxPrice() {
+      let cars = this.carList;
+
+      return cars[cars.length - 1]["price"];
+    },
     getFilterData() {
       let cars = this.carList;
       let filter = null;
@@ -329,7 +351,7 @@ export default {
 
       for (let i in filter) {
         if (filter[i]) {
-          this.setExcludeProperty(i)
+          this.setExcludeProperty(i);
           updateFilterList[i] = this.getFilterData[i];
         }
       }
@@ -345,7 +367,7 @@ export default {
 
       return cars.filter(el => {
         for (let i in filter) {
-          if (!["colors", "year_of_manufacture", excludeProp].includes(i)) {
+          if (!["colors", "year_of_manufacture", "priceMin", "priceMax", excludeProp].includes(i)) {
             if (filter[i] && !filter[i].includes(el[i])) return false;
           }
         }
@@ -367,6 +389,8 @@ export default {
 
   mounted() {
     this.filterList = this.getFilterData;
+    console.log(this.minPrice)
+    console.log(this.maxPrice)
   }
 }
 </script>
