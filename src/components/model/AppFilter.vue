@@ -1,7 +1,6 @@
 <template>
   <section class="model-filter">
     <div class="mf__title">Выбрать автомобиль</div>
-    <AppPriceRange :min-price="minPrice" :max-price="maxPrice"></AppPriceRange>
     <div class="mf-selects">
       <div class="select-wrap">
         <v-select placeholder="Не выбрана"
@@ -18,6 +17,7 @@
           </template>
         </v-select>
       </div>
+
       <div class="select-wrap">
         <v-select placeholder="Не выбран"
                   v-model.lazy="changedFilterList.engine_volume"
@@ -32,6 +32,10 @@
             Ничего не найдено
           </template>
         </v-select>
+      </div>
+      <div class="select-wrap">
+        <AppPriceRange :min-price="this.minPrice" :max-price="this.maxPrice" @up-price="getPrice"
+                       :reset="reset" />
       </div>
       <div class="select-wrap">
         <v-select placeholder="Не выбран"
@@ -117,7 +121,7 @@
         </div>
       </div>
       <div class="block-right">
-        <a href="#" class="btn btn--blue-dark">найдено {{ count }} авто</a>
+        <a href="#" class="btn btn--blue-dark" @click.prevent="scrollToCars">найдено {{ count }} авто</a>
         <div class="btn btn--blue-dark btn-icon btn-icon-reset" @click="resetFilter">сбросить фильтр</div>
       </div>
     </div>
@@ -127,12 +131,12 @@
 <script>
 import AppFilterColors from "./filter/AppFilterColors";
 import AppPriceRange from "./filter/AppPriceRange";
-import {mixinFilterProp} from "../mixins/AppMixins";
+import {mixinFilterProp, mixinScrollToCars} from "../mixins/AppMixins";
 
 export default {
   name: "ModelFilter",
   props: ["cars", "count"],
-  mixins: [mixinFilterProp],
+  mixins: [mixinFilterProp, mixinScrollToCars],
   components: {
     AppFilterColors,
     AppPriceRange
@@ -168,6 +172,7 @@ export default {
       this.changedFilterList = this.getEmptyFilterList();
       this.reset = true;
       this.setVisibility(this.filterList);
+      this.sendFilter();
     },
 
     // Пустой список значений свойств
@@ -180,8 +185,10 @@ export default {
         year_of_manufacture: [],
         engine_power: "",
         gear_type: "",
-        priceMin: 0,
-        priceMax: 0
+        price: {
+          priceMin: this.minPrice,
+          priceMax: this.maxPrice
+        }
       }
     },
 
@@ -304,27 +311,18 @@ export default {
     setExcludeProperty(value) {
       this.excludeProperty = value;
     },
-    getPrice(cars) {
-      let minPrice = cars[0]["price"];
-      let maxPrice = cars[cars.length - 1]["price"];
-
-      this.changedFilterList.priceMin = minPrice;
-      // if (!this.changedFilterList.priceMin || minPrice < this.changedFilterList.priceMin ){
-      // }
-      //
-      // if (!this.changedFilterList.priceMax || maxPrice > this.changedFilterList.priceMax ){
-      // }
-      this.changedFilterList.priceMax = maxPrice;
+    getPrice(price) {
+      this.changedFilterList["price"]["priceMin"] = price.priceMin;
+      this.changedFilterList["price"]["priceMax"] = price.priceMax;
+      this.sendFilter();
     }
-
-
   },
   computed: {
     minPrice() {
-      return this.carList[0]["price"]
+      return this.allCars[0]["price"]
     },
     maxPrice() {
-      let cars = this.carList;
+      let cars = this.allCars;
 
       return cars[cars.length - 1]["price"];
     },
@@ -338,6 +336,11 @@ export default {
         if (filter) {
           filter["colors"] = this.getUniqueColors(filter["colors"]);
           filter = this.sortFilter(filter);
+        }
+
+        filter["price"] = {
+          priceMin: this.minPrice,
+          priceMax: this.maxPrice
         }
       }
 
@@ -363,12 +366,18 @@ export default {
       let cars = this.allCars;
       let filter = this.changedFilterList;
       let excludeProp = this.excludeProperty;
-      let {colors, year_of_manufacture} = filter;
+      let {colors, year_of_manufacture, price} = filter;
 
       return cars.filter(el => {
         for (let i in filter) {
-          if (!["colors", "year_of_manufacture", "priceMin", "priceMax", excludeProp].includes(i)) {
+          if (!["colors", "year_of_manufacture", "price", excludeProp].includes(i)) {
             if (filter[i] && !filter[i].includes(el[i])) return false;
+          }
+        }
+
+        if (excludeProp !== "price") {
+          if (el["price"] > price.priceMax || el["price"] < price.priceMin) {
+            return false;
           }
         }
 
@@ -389,8 +398,6 @@ export default {
 
   mounted() {
     this.filterList = this.getFilterData;
-    console.log(this.minPrice)
-    console.log(this.maxPrice)
   }
 }
 </script>
@@ -720,6 +727,9 @@ export default {
 }
 
 @media (max-width: 767px) {
+  .model-filter .select-wrap{
+    margin-right: 0;
+  }
   .colors-wrap {
     margin-left: -10px;
     margin-right: -10px;

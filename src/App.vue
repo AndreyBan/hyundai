@@ -92,7 +92,9 @@ label {
   color: #666666;
   font-size: 14px;
 }
-
+.model-filter .vs--searchable .vs__dropdown-toggle{
+  overflow: hidden;
+}
 .vs__dropdown-toggle {
   height: 43px;
   border-radius: 0;

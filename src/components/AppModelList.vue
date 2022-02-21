@@ -55,18 +55,20 @@ export default {
     },
 
     getUpdateFilterCars(cars, filter){
-      let {colors, year_of_manufacture} = filter;
+      let {colors, year_of_manufacture, price} = filter;
 
       return cars.filter(el => {
 
         for (let i in filter) {
-          if (!["colors", "year_of_manufacture", "priceMin", "priceMax"].includes(i)) {
+          if (!["colors", "year_of_manufacture", "price"].includes(i)) {
 
             if (el[i]) {
                 if (filter[i] && !filter[i].includes(el[i])) return false;
             } else return false;
           }
         }
+
+        if (el["price"] > price.priceMax || el["price"] < price.priceMin) return false;
 
         return !(!this.filterProp(el["year_of_manufacture"], year_of_manufacture)
             || !this.filterProp(el["color"], colors));

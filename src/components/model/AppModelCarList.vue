@@ -48,8 +48,8 @@
         :page-count="getCount"
         :page-range="3"
         :margin-pages="2"
-        :prev-text="'Prev'"
-        :next-text="'Next'"
+        :prev-text="'<'"
+        :next-text="'>'"
         :container-class="'pagination'"
         :page-class="'page-item'">
     </paginate>
@@ -58,12 +58,12 @@
 
 <script>
 import Paginate from '/node_modules/vuejs-paginate';
-import {mixinFormatPrice} from "../mixins/AppMixins";
+import {mixinFormatPrice, mixinScrollToCars} from "../mixins/AppMixins";
 
 export default {
   name: "ModelCarList",
   props: ["cars", "model"],
-  mixins: [mixinFormatPrice],
+  mixins: [mixinFormatPrice, mixinScrollToCars],
   components: {
     Paginate
   },
@@ -100,6 +100,7 @@ export default {
         start = this.showCount * (pageNum - 1);
       }
       this.getShowCars(start, end);
+      this.scrollToCars();
     }
   },
   computed: {

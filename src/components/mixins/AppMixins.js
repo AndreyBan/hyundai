@@ -20,3 +20,19 @@ export const mixinFormatPrice = {
         }
     }
 }
+
+export const mixinScrollToCars = {
+    methods: {
+        scrollToCars(){
+            const scrollTarget = document.querySelector(".ml-car-wrap");
+            const topOffset = 200;
+            const elementPosition = scrollTarget.getBoundingClientRect().top;
+            const offsetPosition = elementPosition - topOffset;
+
+            window.scrollBy({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        },
+    }
+}
