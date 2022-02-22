@@ -67,6 +67,7 @@
         >
           Дополнительные параметры
         </div>
+
         <div class="extra-options-content">
           <div class="extra-options-fields">
             <div class="block-years">
