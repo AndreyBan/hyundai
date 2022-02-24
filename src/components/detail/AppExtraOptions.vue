@@ -1,67 +1,39 @@
 <template>
-  <div class="extra-options">
+  <div class="extra-options" v-if="options">
     <div class="extra-options__title">
       Особенности
     </div>
     <div class="extra-options__list">
-      <AppOptionItem v-for="(opt, i) in TestOptions"
-                  :key="i"
-                  :name="opt.name"
-                  :list="opt.optionList"/>
+      <AppOptionItem v-for="(opt, i) in options"
+                     :key="i"
+                     :name="i"
+                     :list="opt"/>
     </div>
   </div>
 </template>
 
 <script>
 import AppOptionItem from "./AppOptionItem";
+
 export default {
   name: "ExtraOptions",
+  props: {
+    car: {
+      type: Object
+    }
+  },
   components: {
     AppOptionItem
   },
-  data(){
+  data() {
     return {
-      TestOptions: [
-        {
-          name: "Интерьер",
-          optionList: [
-              "1",
-              "2"
-          ],
-        },
-        {
-          name: "Экстерьер",
-          optionList: [
-            "1",
-            "2"
-          ],
-        },
-        {
-          name: "Безопасность",
-          optionList: [
-            "1",
-            "2"
-          ],
-        },
-        {
-          name: "Комфорт",
-          optionList: [
-            "Стальные диски 15\" с шинами 185/65 R15",
-            "Карман в спинке кресла переднего пассажира",
-            "Воздуховоды к ногам задних пассажиров",
-            "Датчик наружной температуры",
-            "Карманы в задних дверях",
-            "Внутренняя обшивка крышки багажника",
-            "Лампы салонного освещения"
-          ],
-        },
-      ]
+      options: this.car["configuration_options"],
     }
   }
 }
 </script>
 <style>
-.extra-options__title{
+.extra-options__title {
   display: inline-block;
   font-size: 24px;
   font-weight: 500;
@@ -69,21 +41,26 @@ export default {
   border-bottom: 1px solid #00AAD2;
   margin-bottom: 30px;
 }
-.extra-options__list{
+
+.extra-options__list {
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.extra-options__list ul{
+
+.extra-options__list ul {
   list-style: none;
 }
-.extra-options__list > ul{
+
+.extra-options__list > ul {
   margin-top: 10px;
 }
-.extra-options__list > li:not(:first-child){
+
+.extra-options__list > li:not(:first-child) {
   margin-top: 12px;
 }
-.extra-options__list > li{
+
+.extra-options__list > li {
   font-size: 14px;
   padding-bottom: 12px;
   border-bottom: 1px solid #E5E5E5;
@@ -92,7 +69,8 @@ export default {
   position: relative;
   cursor: pointer;
 }
-.extra-options__list > li:after{
+
+.extra-options__list > li:after {
   content: "";
   position: absolute;
   right: 0;
@@ -104,26 +82,31 @@ export default {
 }
 
 
-.extra-options__list > li.open:after{
+.extra-options__list > li.open:after {
   transform: rotate(180deg);
 }
-.extra-options__list > li ul{
+
+.extra-options__list > li ul {
   padding-left: 0;
   max-width: 474px;
   width: 100%;
   margin-bottom: 0;
   display: none;
 }
-.extra-options__list > li.open ul{
+
+.extra-options__list > li.open ul {
   display: block;
   margin-top: 14px;
 }
-.extra-options__list > li ul li{
+
+.extra-options__list > li ul li {
   padding-bottom: 8px;
   position: relative;
   font-weight: 400;
+  padding-right: 24px;
 }
-.extra-options__list > li ul li:after{
+
+.extra-options__list > li ul li:after {
   content: '+';
   position: absolute;
   right: 0;

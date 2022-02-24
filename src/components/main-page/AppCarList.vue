@@ -20,7 +20,12 @@ export default {
     AppPreloaderCars,
     Error
   },
-  props: ["type"],
+  props: {
+    type: {
+      type: String,
+      default: ""
+    }
+  },
   data() {
     return {
       models: null,

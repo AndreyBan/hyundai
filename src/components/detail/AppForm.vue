@@ -1,15 +1,16 @@
 <template>
-  <div class="detail-form-page" :class="{'form-popup': isPopup}">
+  <div class="detail-form-page" v-if="car" :class="{'form-popup': isPopup}">
     <div class="detail-form__main-title" v-if="isPopup">забронировать автомобиль</div>
-    <div class="detail-form__title">Solaris HCR</div>
-    <div class="detail-form__subtitle">Hyundai Solaris HCR Active Plus</div>
+    <div class="detail-form__title">{{ car["model_name"] }}</div>
+    <div class="detail-form__subtitle">{{ car["name"] }}</div>
     <div class="detail-form-price-image">
       <div class="detail-form__price">
-        Стоимость: <span>755 000 ₽*</span>
-        <div v-if="isPopup" class="detail-form__price-old">от 929 000 ₽</div>
+        Стоимость: <span>{{ formatPrice(car["price"]) }} ₽*</span>
+        <div class="detail-form__price-old" v-if="isPopup && (car['price_full4specials'] && car['price_full4specials'] > 0)">от {{ formatPrice(car['price_full4specials']) }} ₽</div>
       </div>
       <div class="detail-form__image">
-        <img src="/images/instock/car-img.jpg" alt="">
+        <img :src="car['model_picture']" :alt="car.name" :style="{backgroundColor: car['color']['real_color']['value']}" v-if="car['color']">
+        <img :src="car['model_picture']" :alt="car.name"  v-else>
       </div>
     </div>
 
@@ -42,15 +43,30 @@
     </form>
 
   </div>
+  <AppError v-else>
+    Ошибка загрузки формы!
+  </AppError>
 </template>
 
 <script>
 import {validationMixin} from 'vuelidate'
+import AppError from '../AppError';
 import {required} from 'vuelidate/lib/validators';
+import {mixinFormatPrice} from "../mixins/AppMixins";
 
 export default {
   name: "AppForm",
-  props: ['isPopup'],
+  components: {
+    AppError
+  },
+  props: {
+    isPopup: {
+      type: Boolean
+    },
+    car: {
+      type: Object
+    }
+  },
   data() {
     return {
       options: [
@@ -66,7 +82,7 @@ export default {
       }
     }
   },
-  mixins: [validationMixin],
+  mixins: [validationMixin, mixinFormatPrice],
   validations: {
     fields: {
       name: {required},
@@ -174,8 +190,11 @@ export default {
 }
 
 .detail-form__subtitle {
+  position: relative;
   font-size: 14px;
   color: #003469;
+  max-width: 260px;
+  z-index: 1;
 }
 
 .detail-form__price {

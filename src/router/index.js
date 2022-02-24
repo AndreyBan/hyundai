@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import AppMainPage from '../views/AppMainPage'
 import AppModel from '../views/AppModel'
 import AppDetailPage from "../views/AppDetailPage";
+import NotFound from "../views/NotFound";
 
 Vue.use(VueRouter)
 
@@ -18,9 +19,17 @@ const routes = [
     component: AppModel
   },
   {
-    path: '/auto-v-nalichii-new/detail/',
+    path: '/auto-v-nalichii-new/:model/:id/',
     name: 'DetailPage',
     component: AppDetailPage
+  },
+  {
+    path: '/404',
+    name: '404',
+    component: NotFound,
+  }, {
+    path: '*',
+    redirect: '/404'
   }
 ]
 

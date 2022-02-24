@@ -1,10 +1,12 @@
 <template>
-  <div class="container">
-    <AppInfoCar/>
+  <div class="container" v-if="loaded">
+    <AppInfoCar :car="car"/>
     <div class="bottom-block">
-      <AppExtraOptions/>
+      <AppExtraOptions :car="car"/>
       <div>
-        <AppForm/>
+        <div class="sticky-form">
+          <AppForm :car="car"/>
+        </div>
       </div>
     </div>
     <p class="bottom-text">Указанная цена достигается суммированием всех специальных условий, действующих на данную
@@ -31,8 +33,27 @@ export default {
   },
   data() {
     return {
-      modalShow: false
+      car: {},
+      modalShow: false,
+      loaded: false,
+      error: false
     }
+  },
+  mounted() {
+    fetch('https://agat-hyundai.ru/ajax/api_instock.php?data=car-detail&id=' + this.$route.params.id, {method: 'POST'})
+        .then(res => res.json())
+        .then(res => {
+          if (res["status"] == "success") {
+            this.car = res["data"];
+            this.loaded = true;
+            console.log( this.car )
+          } else this.error = true;
+
+        })
+        .catch(e => {
+          console.log("Error message: " + e.errorText)
+          this.error = true;
+        })
   }
 }
 </script>
@@ -43,6 +64,12 @@ export default {
   display: grid;
   grid-template: auto / 1.4fr 1fr;
   column-gap: 32px;
+}
+
+.sticky-form {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 120px;
 }
 
 .bottom-text {

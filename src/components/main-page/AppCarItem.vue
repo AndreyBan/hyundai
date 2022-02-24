@@ -22,7 +22,15 @@ import {mixinFormatPrice} from "../mixins/AppMixins";
 
 export default {
   name: "AppCarItem",
-  props: ["element", "type"],
+  props: {
+    element: {
+      type: Object
+    },
+    type: {
+      type: String,
+      default: ""
+    }
+  },
   mixins: [mixinFormatPrice]
 }
 </script>

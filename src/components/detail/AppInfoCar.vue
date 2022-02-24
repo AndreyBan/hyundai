@@ -1,45 +1,46 @@
 <template>
-  <section class="car-info">
+  <section class="car-info" >
     <div class="car-info-top-row">
       <div class="car-info-title-wrap">
         <div class="car-info__title">
-          Solaris HCR
+          {{ carInfo["model_name"] }}
         </div>
         <div class="car-info__subtitle">
-          Hyundai Solaris HCR Active Plus
+          {{ carInfo["name"] }}
         </div>
       </div>
       <div class="car-info-price">
         <div class="car-info-price-row">
-          <span class="car-info-price__new">755 000 ₽*</span>
-          <span class="car-info-price__old">от  929 000 ₽</span>
+          <span class="car-info-price__new">{{ formatPrice(carInfo["price"]) }} ₽*</span>
+          <span class="car-info-price__old"  v-if="(carInfo['price_full4specials'] && carInfo['price_full4specials'] > 0)">от {{ formatPrice(carInfo['price_full4specials']) }} ₽</span>
         </div>
-        <div class="car-info-price__credit">В кредит от <span>8 643 ₽/мес.</span></div>
+        <div class="car-info-price__credit" v-if="carInfo['credit']">В кредит от <span>{{ formatPrice(carInfo["credit"]) }} ₽/мес.</span></div>
       </div>
     </div>
     <div class="car-info-grid">
       <div class="car-info__img">
-        <img src="/images/instock/car-full.jpg" alt="">
+        <img :src="carInfo['model_picture']" :alt="carInfo.name" :style="{backgroundColor: carInfo['color']['real_color']['value']}" v-if="carInfo['color']">
+        <img :src="carInfo['model_picture']" :alt="carInfo.name"  v-else>
       </div>
       <div class="car-info-options-wrap">
         <div class="car-info-options">
           <div class="car-info-options__title">Технические характеристики</div>
           <div class="car-info-options__row">
             <div class="car-info-options__name car-info-options-icon car-info-options-icon--time">Год выпуска, г</div>
-            <div class="car-info-options__value">2021</div>
+            <div class="car-info-options__value">{{ carInfo["year_of_manufacture"] }}</div>
             <div class="car-info-options__name car-info-options-icon ml-car-options-icon--volume">Объем двигателя, л
             </div>
-            <div class="car-info-options__value">2</div>
+            <div class="car-info-options__value">{{ carInfo["engine_volume"] }}</div>
             <div class="car-info-options__name car-info-options-icon ml-car-options-icon--power">Мощность двигателя,
               л.с.
             </div>
-            <div class="car-info-options__value">150</div>
+            <div class="car-info-options__value">{{ carInfo["engine_power"] }}</div>
             <div class="car-info-options__name car-info-options-icon ml-car-options-icon--transmission">Тип
               трансмиссии
             </div>
-            <div class="car-info-options__value">АКПП</div>
+            <div class="car-info-options__value">{{ carInfo["transmission"] }}</div>
             <div class="car-info-options__name car-info-options-icon ml-car-options-icon--drive">Тип привода</div>
-            <div class="car-info-options__value">Передний</div>
+            <div class="car-info-options__value">{{ carInfo["gear_type"] }}</div>
           </div>
         </div>
       </div>
@@ -48,24 +49,24 @@
           <div>
             <div class="car-info-address__title">Автомобиль в наличии в ДЦ АГАТ</div>
             <div class="car-info-address__name">
-              Московское шоссе, 294б
+              {{ carInfo["placement"] }}
               <br>
               +7 (831) 266-47-08
             </div>
           </div>
-          <a href="#hidden-form" class="btn btn--blue-dark" data-fancybox @click="modalShow = true">забронировать
-            авто</a>
+          <div class="btn btn--blue-dark" data-fancybox @click="modalShow = true">забронировать
+            авто</div>
         </div>
       </div>
       <div class="car-info-buttons-wrap">
         <div class="car-info-buttons">
-          <a href="#" class="btn btn--dark icon-btn icon-btn--calc">расчет кредита</a>
-          <a href="#" class="btn btn--dark icon-btn icon-btn--test-drive">тест-драйв</a>
-          <a href="#" class="btn btn--dark icon-btn icon-btn--refresh">трейд-ин</a>
+          <div class="btn btn--dark icon-btn icon-btn--calc" data-fancybox @click="modalShow = true">расчет кредита</div>
+          <div class="btn btn--dark icon-btn icon-btn--test-drive" data-fancybox @click="modalShow = true">тест-драйв</div>
+          <div class="btn btn--dark icon-btn icon-btn--refresh" data-fancybox @click="modalShow = true">трейд-ин</div>
         </div>
       </div>
       <AppModalWindow v-if="modalShow" @close-modal="modalShow = false">
-        <AppForm :is-popup="true"/>
+        <AppForm :car="carInfo" :is-popup="true"/>
       </AppModalWindow>
     </div>
   </section>
@@ -74,15 +75,23 @@
 <script>
 import AppModalWindow from "./AppModalWindow";
 import AppForm from "./AppForm";
+import {mixinFormatPrice} from "../mixins/AppMixins";
 
 export default {
   name: "CarInfo",
+  props: {
+    car: {
+      type: Object
+    }
+  },
+  mixins: [mixinFormatPrice],
   components: {
     AppModalWindow,
     AppForm
   },
   data() {
     return {
+      carInfo: this.car,
       modalShow: false
     }
   }

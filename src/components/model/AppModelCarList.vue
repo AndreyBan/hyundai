@@ -5,13 +5,12 @@
     </div>
     <div class="ml-car-wrap">
       <div class="ml-car-item" v-for="(el, i) in showCars" :key="i">
-        <div class="ml-car-item__title" @click="$router.push('/auto-v-nalichii-new/detail/')">{{
-            el["model_name"]
-          }}
+        <div class="ml-car-item__title" @click="$router.push(`/auto-v-nalichii-new/${model}/${el.id}/`)">
+          {{ el["model_name"] }}
         </div>
-        <div class="ml-car-item__subtitle">{{ el["name"] }}</div>
-        <div class="ml-car-item__img" @click="$router.push('/auto-v-nalichii-new/detail/')">
-          <img :src="el['model_picture']" alt="" :style="{backgroundColor: el['color']['value']}" v-if="el['color']">
+        <div class="ml-car-item__subtitle" @click="$router.push(`/auto-v-nalichii-new/${model}/${el.id}/`)">{{ el["name"] }}</div>
+        <div class="ml-car-item__img" @click="$router.push(`/auto-v-nalichii-new/${model}/${el.id}/`)">
+          <img :src="el['model_picture']" alt="" :style="{backgroundColor: el['color']['real_color']['value']}" v-if="el['color']">
           <img :src="el['model_picture']" alt=""  v-else>
         </div>
         <div class="ml-car-price">
@@ -38,8 +37,8 @@
             <div class="ml-car-options__value">{{ el['gear_type'] }}</div>
           </div>
         </div>
-        <div class="btn btn--blue-dark">хочу скидку</div>
-        <div class="btn btn--dark">обратный звонок</div>
+        <div class="btn btn--blue-dark" data-fancybox @click="getCarForModal(el)">хочу скидку</div>
+        <div class="btn btn--dark" data-fancybox @click="getCarForModal(el)">обратный звонок</div>
       </div>
     </div>
     <div class="show-more" v-if="filteredCars.length > showCount && showMore" @click="showMoreCars">Показать еще</div>
@@ -53,11 +52,17 @@
         :container-class="'pagination'"
         :page-class="'page-item'">
     </paginate>
+
+    <AppModalWindow v-if="modalShow"  @close-modal="modalShow = false">
+      <AppForm :is-popup="true" :car="carsModal"/>
+    </AppModalWindow>
   </div>
 </template>
 
 <script>
 import Paginate from '/node_modules/vuejs-paginate';
+import AppModalWindow from "../detail/AppModalWindow";
+import AppForm from "../detail/AppForm";
 import {mixinFormatPrice, mixinScrollToCars} from "../mixins/AppMixins";
 
 export default {
@@ -65,7 +70,9 @@ export default {
   props: ["cars", "model"],
   mixins: [mixinFormatPrice, mixinScrollToCars],
   components: {
-    Paginate
+    Paginate,
+    AppModalWindow,
+    AppForm
   },
   data() {
     return {
@@ -74,7 +81,9 @@ export default {
       showCount: 12,
       filteredCars: this.cars,
       page: 1,
-      showMore: true
+      showMore: true,
+      modalShow: false,
+      carModal: {}
     }
   },
   methods: {
@@ -86,6 +95,11 @@ export default {
           this.showCars.push(this.filteredCars[i]);
         }
       }
+    },
+    getCarForModal(cars){
+      this.modalShow = true;
+      this.carsModal = cars;
+
     },
     showMoreCars() {
       this.showMore = false;

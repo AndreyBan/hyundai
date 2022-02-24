@@ -1,5 +1,5 @@
 <template>
-    <li :class="{'open': isOpen}" @click="isOpen = !isOpen">
+    <li v-if="name" :class="{'open': isOpen}" @click="isOpen = !isOpen">
       {{ name }}
       <ul>
         <li v-for="item in list" :key="item">{{ item }}</li>
@@ -13,7 +13,15 @@ export default {
   data: () => ({
     isOpen: false
   }),
-  props: ["name", "list"]
+  props: {
+    name: {
+      type: String,
+      default: ""
+    },
+    list: {
+      type: Array
+    }
+  }
 }
 </script>
 

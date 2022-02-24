@@ -1,5 +1,5 @@
 <template>
-  <div class="error-message">Произошла ошибка загрузки данных!</div>
+  <div class="error-message"><slot>Произошла ошибка загрузки данных!</slot></div>
 </template>
 
 <script>
