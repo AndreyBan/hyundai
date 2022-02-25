@@ -22,6 +22,16 @@ export default {
     AppPreloaderCars,
     Error
   },
+  metaInfo() {
+    return {
+      title: this.metaData.title,
+      meta: [
+        {vmid: 'description', property: 'description', content: this.metaData.description},
+        {vmid: 'og:title', property: 'og:title', content: this.metaData.title},
+        {vmid: 'og:description', property: 'og:description', content: this.metaData.description},
+      ],
+    }
+  },
   props: {
     type: {
       type: String,
@@ -31,12 +41,16 @@ export default {
   data() {
     return {
       dataModels: null,
+      metaData: {
+        title: 'Hyundai в наличии',
+        description: 'Hyundai в наличии - характеристики, цена, скидки.',
+      },
       error: false,
       dataLoad: false
     }
   },
   computed: {
-    models(){
+    models() {
       let models = this.dataModels;
 
       return models.sort((a, b) => {
@@ -49,8 +63,17 @@ export default {
         .then(res => res.json())
         .then(res => {
           if (res["status"] == "success") {
+            if (res["city"]["in"]) {
+              let cityIn = res["city"]["in"];
+
+              this.metaData.title = `Hyundai в наличии в ${cityIn}`;
+              this.metaData.description = `Hyundai в наличии в ${cityIn} - характеристики, цена, скидки.`;
+            }
+
             this.dataModels = res["data"][0]["models"];
             this.dataLoad = true;
+
+
           } else {
             this.error = true;
           }

@@ -3,7 +3,7 @@
     <div class="container">
       <template v-if="loadPage && !error">
           <AppFilter :cars="filterCarList" :count="countCars" @get-cars="filterCars"/>
-        <AppModelCarList :cars="filterCarList" :model="$route.params.model"/>
+          <AppModelCarList :cars="filterCarList" :model="$route.params.model"/>
       </template>
       <AppPreload v-else-if="!loadPage  && !error"/>
       <AppError v-else/>
@@ -38,7 +38,21 @@ export default {
       countCars: 0,
       error: false,
       filterCarList: [],
-      loadPage: false
+      loadPage: false,
+      metaData: {
+        title: 'Hyundai в наличии',
+        description: 'Hyundai в наличии - характеристики, цена, скидки.',
+      },
+    }
+  },
+  metaInfo() {
+    return {
+      title: this.metaData.title,
+      meta: [
+        {vmid: 'description', property: 'description', content: this.metaData.description},
+        {vmid: 'og:title', property: 'og:title', content: this.metaData.title},
+        {vmid: 'og:description', property: 'og:description', content: this.metaData.description},
+      ],
     }
   },
   methods: {
@@ -54,7 +68,7 @@ export default {
       } else return cars;
     },
 
-    getUpdateFilterCars(cars, filter){
+    getUpdateFilterCars(cars, filter) {
       let {colors, year_of_manufacture, price} = filter;
 
       return cars.filter(el => {
@@ -63,7 +77,7 @@ export default {
           if (!["colors", "year_of_manufacture", "price"].includes(i)) {
 
             if (el[i]) {
-                if (filter[i] && !filter[i].includes(el[i])) return false;
+              if (filter[i] && !filter[i].includes(el[i])) return false;
             } else return false;
           }
         }
@@ -81,6 +95,14 @@ export default {
         .then(res => res.json())
         .then(res => {
           if (res["status"] == "success") {
+
+            if (res["city"]["in"]) {
+              let cityIn = res["city"]["in"];
+
+              this.metaData.title = `Hyundai ${this.$route.params.model} в наличии в ${cityIn}`;
+              this.metaData.description = `Hyundai ${this.$route.params.model} в наличии в ${cityIn} - характеристики, цена, скидки.`;
+            }
+
             this.cars = res["data"];
             this.filterCarList = this.filterCars();
             this.countCars = this.filterCarList.length;

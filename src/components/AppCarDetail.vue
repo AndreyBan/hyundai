@@ -36,7 +36,21 @@ export default {
       car: {},
       modalShow: false,
       loaded: false,
-      error: false
+      error: false,
+      metaData: {
+        title: 'Hyundai в наличии',
+        description: 'Hyundai в наличии - характеристики, цена, скидки.',
+      },
+    }
+  },
+  metaInfo() {
+    return {
+      title: this.metaData.title,
+      meta: [
+        {vmid: 'description', property: 'description', content: this.metaData.description},
+        {vmid: 'og:title', property: 'og:title', content: this.metaData.title},
+        {vmid: 'og:description', property: 'og:description', content: this.metaData.description},
+      ],
     }
   },
   mounted() {
@@ -45,8 +59,16 @@ export default {
         .then(res => {
           if (res["status"] == "success") {
             this.car = res["data"];
+
+            if (res["city"]["in"]) {
+              let cityIn = res["city"]["in"];
+
+              this.metaData.title = `${this.car["name"]} ${this.car["color"]["name"]}  в наличии – купить в ${cityIn}`;
+              this.metaData.description = `Купить новый ${this.car["name"]} ${this.car["engine_volume"]} ${this.car["color"]["name"]} ${this.car["transmission"]} по цене ${this.car["price"]}  руб. в ${cityIn}. Автокредит, лизинг, спецпредложения. ${this.car["name"]} в наличии у официального дилера АГАТ.`;
+            }
+
             this.loaded = true;
-            console.log( this.car )
+
           } else this.error = true;
 
         })

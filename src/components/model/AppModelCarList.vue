@@ -5,11 +5,11 @@
     </div>
     <div class="ml-car-wrap">
       <div class="ml-car-item" v-for="(el, i) in showCars" :key="i">
-        <div class="ml-car-item__title" @click="$router.push(`/auto-v-nalichii-new/${model}/${el.id}/`)">
+        <div class="ml-car-item__title" @click="$router.push({ name: 'DetailPage', params: {model: model, id: el.id} })">
           {{ el["model_name"] }}
         </div>
-        <div class="ml-car-item__subtitle" @click="$router.push(`/auto-v-nalichii-new/${model}/${el.id}/`)">{{ el["name"] }}</div>
-        <div class="ml-car-item__img" @click="$router.push(`/auto-v-nalichii-new/${model}/${el.id}/`)">
+        <div class="ml-car-item__subtitle" @click="$router.push({ name: 'DetailPage', params: {model: model, id: el.id} })">{{ el["name"] }}</div>
+        <div class="ml-car-item__img" @click="$router.push({ name: 'DetailPage', params: {model: model, id: el.id} })">
           <img :src="el['model_picture']" alt="" :style="{backgroundColor: el['color']['real_color']['value']}" v-if="el['color']">
           <img :src="el['model_picture']" alt=""  v-else>
         </div>
@@ -22,18 +22,24 @@
         <hr class="ml-separate">
         <div class="ml-car-options">
           <div class="ml-car-options-row">
-            <div class="ml-car-options__name ml-car-options-icon ml-car-options-icon--volume">Объем двигателя, л</div>
+            <div class="ml-car-options__name ml-car-options-icon ml-car-options-icon--volume">
+              Объем двигателя, л
+            </div>
             <div class="ml-car-options__value">{{ el['engine_volume'] }}</div>
 
-            <div class="ml-car-options__name ml-car-options-icon ml-car-options-icon--power">Мощность двигателя, л.с.
+            <div class="ml-car-options__name ml-car-options-icon ml-car-options-icon--power">
+              Мощность двигателя, л.с.
             </div>
             <div class="ml-car-options__value">{{ el['engine_power'] }}</div>
 
-            <div class="ml-car-options__name ml-car-options-icon ml-car-options-icon--transmission">Тип трансмиссии
+            <div class="ml-car-options__name ml-car-options-icon ml-car-options-icon--transmission">
+              Тип трансмиссии
             </div>
             <div class="ml-car-options__value">{{ el['transmission'] }}</div>
 
-            <div class="ml-car-options__name ml-car-options-icon ml-car-options-icon--drive">Тип привода</div>
+            <div class="ml-car-options__name ml-car-options-icon ml-car-options-icon--drive">
+              Тип привода
+            </div>
             <div class="ml-car-options__value">{{ el['gear_type'] }}</div>
           </div>
         </div>

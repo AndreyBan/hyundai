@@ -9,7 +9,7 @@
       <div class="car-item__img">
         <img :src="element['img']" alt="">
       </div>
-      <router-link class="btn-link" :to="`/auto-v-nalichii-new/${element['name_en']}/`"> {{ element["instock_count"] }} авто в наличии</router-link>
+      <router-link class="btn-link" :to="{ name: 'ModelPage', params: { model: element['name_en']}}"> {{ element["instock_count"] }} авто в наличии</router-link>
       <div class="wrap-credit" v-if="element['credit']">
         <span class="credit__text">В кредит от</span>
         <span class="credit__price">{{ formatPrice(element["credit"]) }} ₽/мес.</span>

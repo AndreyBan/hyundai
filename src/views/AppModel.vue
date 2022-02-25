@@ -1,5 +1,5 @@
 <template>
-    <AppModelList/>
+  <AppModelList/>
 </template>
 
 <script>
