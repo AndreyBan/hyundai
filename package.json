@@ -13,6 +13,7 @@
     "vue": "^2.6.11",
     "vue-ads-pagination": "^2.1.7",
     "vue-inputmask": "^0.2.1",
+    "vue-meta": "^2.4.0",
     "vue-range-component": "^1.0.3",
     "vue-range-slider": "^0.6.0",
     "vue-router": "^3.2.0",

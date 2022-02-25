@@ -1,8 +1,10 @@
 <template>
   <section class="car-list">
-    <AppCarItem v-for="(el, i) in models" :key="i" :element="el" :type="type"></AppCarItem>
     <template v-if="!dataLoad && !error">
       <AppPreloaderCars v-for="i in 8" :key="i"/>
+    </template>
+    <template v-else>
+      <AppCarItem v-for="(el, i) in models" :key="i" :element="el" :type="type"></AppCarItem>
     </template>
     <Error v-if="error"/>
   </section>
@@ -28,9 +30,18 @@ export default {
   },
   data() {
     return {
-      models: null,
+      dataModels: null,
       error: false,
       dataLoad: false
+    }
+  },
+  computed: {
+    models(){
+      let models = this.dataModels;
+
+      return models.sort((a, b) => {
+        return a["min_price"] - b["min_price"];
+      })
     }
   },
   mounted() {
@@ -38,7 +49,7 @@ export default {
         .then(res => res.json())
         .then(res => {
           if (res["status"] == "success") {
-            this.models = res["data"][0]["models"];
+            this.dataModels = res["data"][0]["models"];
             this.dataLoad = true;
           } else {
             this.error = true;
