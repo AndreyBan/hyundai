@@ -1,35 +1,43 @@
 <template>
-  <div class="container" v-if="loaded">
-    <AppInfoCar :car="car"/>
-    <div class="bottom-block">
-      <AppExtraOptions :car="car"/>
-      <div>
-        <div class="sticky-form">
-          <AppForm :car="car"/>
+    <div class="container" v-if="loaded && !error">
+      <AppBreadcrumbs
+          :prop-chain-item="[{name: $route.params.model, path: $route.params.model}, {name: car['model_name'] + ' ' + car['configuration_name'], path: ''}]"/>
+      <AppInfoCar :car="car"/>
+      <div class="bottom-block">
+        <AppExtraOptions :car="car"/>
+        <div>
+          <div class="sticky-form">
+            <AppForm :car="car"/>
+          </div>
         </div>
       </div>
+      <p class="bottom-text">Указанная цена достигается суммированием всех специальных условий, действующих на данную
+        модель автомобиля, не
+        включает стоимость установленного дополнительного оборудования и может отличаться от цен других дилеров. Ценовое
+        предложение действует на ограниченную партию автомобилей, носит информационный характер и не является публичной
+        офертой, определяемой положениями ст. 437 (2) ГК РФ. Окончательную стоимость а/м с учётом всех действующих акций
+        и
+        установленного дополнительного оборудования уточняйте в отделах продаж Hyundai АГАТ и по телефону +7 (831)
+        266-47-08.</p>
     </div>
-    <p class="bottom-text">Указанная цена достигается суммированием всех специальных условий, действующих на данную
-      модель автомобиля, не
-      включает стоимость установленного дополнительного оборудования и может отличаться от цен других дилеров. Ценовое
-      предложение действует на ограниченную партию автомобилей, носит информационный характер и не является публичной
-      офертой, определяемой положениями ст. 437 (2) ГК РФ. Окончательную стоимость а/м с учётом всех действующих акций и
-      установленного дополнительного оборудования уточняйте в отделах продаж Hyundai АГАТ и по телефону +7 (831)
-      266-47-08.</p>
-  </div>
+  <AppError v-else-if="error" >Произошла ошибка загрузки данных, пожалуйста повторите позже.</AppError>
 </template>
 
 <script>
 import AppInfoCar from "./detail/AppInfoCar";
 import AppExtraOptions from "./detail/AppExtraOptions";
 import AppForm from "./detail/AppForm";
+import AppBreadcrumbs from "./AppBreadcrumbs";
+import AppError from "./AppError";
 
 export default {
   name: "CarDetail",
   components: {
     AppInfoCar,
     AppExtraOptions,
-    AppForm
+    AppForm,
+    AppError,
+    AppBreadcrumbs
   },
   data() {
     return {
@@ -54,9 +62,14 @@ export default {
     }
   },
   mounted() {
+    let errorTimeout = setTimeout(() => this.error = true, 5000);
+
     fetch('https://agat-hyundai.ru/ajax/api_instock.php?data=car-detail&id=' + this.$route.params.id, {method: 'POST'})
         .then(res => res.json())
         .then(res => {
+
+
+
           if (res["status"] == "success") {
             this.car = res["data"];
 
@@ -68,6 +81,7 @@ export default {
             }
 
             this.loaded = true;
+            clearTimeout(errorTimeout);
 
           } else this.error = true;
 

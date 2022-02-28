@@ -3,9 +3,10 @@
     <template v-if="!dataLoad && !error">
       <AppPreloaderCars v-for="i in 8" :key="i"/>
     </template>
-    <template v-else>
+    <template v-else-if="dataLoad && models.length">
       <AppCarItem v-for="(el, i) in models" :key="i" :element="el" :type="type"></AppCarItem>
     </template>
+    <div class="not-find-cars" v-else-if="dataLoad && !models.length">По заданным параметрам автомобилей в наличии нет</div>
     <Error v-if="error"/>
   </section>
 </template>
@@ -35,6 +36,7 @@ export default {
   props: {
     type: {
       type: String,
+      required: true,
       default: ""
     }
   },
@@ -59,6 +61,8 @@ export default {
     }
   },
   mounted() {
+    let errorTimeout = setTimeout(() => this.error = true, 5000);
+
     fetch('https://agat-hyundai.ru/ajax/api_instock.php?data=model-list', {method: "POST"})
         .then(res => res.json())
         .then(res => {
@@ -72,7 +76,7 @@ export default {
 
             this.dataModels = res["data"][0]["models"];
             this.dataLoad = true;
-
+            clearTimeout(errorTimeout);
 
           } else {
             this.error = true;

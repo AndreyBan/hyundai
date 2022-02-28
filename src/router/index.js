@@ -5,24 +5,29 @@ import AppModel from '../views/AppModel'
 import AppDetailPage from "../views/AppDetailPage";
 import NotFound from "../views/NotFound";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
+const urlPath = '/auto-v-nalichii-new/';
 const routes = [
   {
-    path: '/auto-v-nalichii-new/',
+    path: urlPath,
     name: 'MainPage',
-    component: AppMainPage
+    component: AppMainPage,
+    meta: {
+      breadcrumb: {name: 'Автомобили Hyundai в наличии'}
+    },
   },
   {
-    path: '/auto-v-nalichii-new/:model/',
+    path: urlPath + ':model/',
     name: 'ModelPage',
-    component: AppModel
+    component: AppModel,
   },
   {
-    path: '/auto-v-nalichii-new/:model/:id/',
+    path:  urlPath + ':model/:id/',
     name: 'DetailPage',
     component: AppDetailPage
   },
+
   {
     path: '/404',
     name: '404',

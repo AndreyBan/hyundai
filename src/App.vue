@@ -1,11 +1,11 @@
 <template>
   <div id="app" v-cloak>
-      <router-view/>
+      <router-view />
   </div>
 </template>
 
-
 <style>
+
 @import url('~vue-select/dist/vue-select.css');
 
 * {

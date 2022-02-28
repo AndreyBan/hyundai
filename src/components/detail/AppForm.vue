@@ -1,16 +1,16 @@
 <template>
-  <div class="detail-form-page" v-if="car" :class="{'form-popup': isPopup}">
+  <div class="detail-form-page" v-if="thisCar" :class="{'form-popup': isPopup}">
     <div class="detail-form__main-title" v-if="isPopup">забронировать автомобиль</div>
-    <div class="detail-form__title">{{ car["model_name"] }}</div>
-    <div class="detail-form__subtitle">{{ car["name"] }}</div>
+    <div class="detail-form__title">{{ thisCar["model_name"] }}</div>
+    <div class="detail-form__subtitle">{{ thisCar["name"] }}</div>
     <div class="detail-form-price-image">
       <div class="detail-form__price">
-        Стоимость: <span>{{ formatPrice(car["price"]) }} ₽*</span>
-        <div class="detail-form__price-old" v-if="isPopup && (car['price_full4specials'] && car['price_full4specials'] > 0)">от {{ formatPrice(car['price_full4specials']) }} ₽</div>
+        Стоимость: <span>{{ formatPrice(thisCar["price"]) }} ₽*</span>
+        <div class="detail-form__price-old" v-if="isPopup && (thisCar['price_full4specials'] && thisCar['price_full4specials'] > 0)">от {{ formatPrice(thisCar['price_full4specials']) }} ₽</div>
       </div>
       <div class="detail-form__image">
-        <img :src="car['model_picture']" :alt="car.name" :style="{backgroundColor: car['color']['real_color']['value']}" v-if="car['color']">
-        <img :src="car['model_picture']" :alt="car.name"  v-else>
+        <img :src="thisCar['model_picture']" :alt="thisCar.name" :style="{backgroundColor: thisCar['color']['real_color']['value']}" v-if="thisCar['color']">
+        <img :src="thisCar['model_picture']" :alt="thisCar.name"  v-else>
       </div>
     </div>
 
@@ -64,7 +64,8 @@ export default {
       type: Boolean
     },
     car: {
-      type: Object
+      type: Object,
+      required: true
     }
   },
   data() {
@@ -79,7 +80,8 @@ export default {
         comment: "",
         dealer: "",
         agree: false
-      }
+      },
+      thisCar: this.car
     }
   },
   mixins: [validationMixin, mixinFormatPrice],

@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="container">
+      <AppBreadcrumbs />
       <section class="section-filter">
         <AppTypeCar @type="getType" />
       </section>
@@ -15,6 +16,7 @@
 import AppTypeCar from "./main-page/AppTypeCar";
 import AppCarList from "./main-page/AppCarList";
 import AppFormRequest from "./main-page/AppFormRequest";
+import AppBreadcrumbs from "./AppBreadcrumbs";
 
 export default {
   name: "MainPageFilter",
@@ -26,7 +28,8 @@ export default {
   components: {
     AppFormRequest,
     AppTypeCar,
-    AppCarList
+    AppCarList,
+    AppBreadcrumbs
   },
   methods: {
     getType(data) {

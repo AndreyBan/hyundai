@@ -1,5 +1,5 @@
 <template>
-    <div class="car-item" v-if="element['body_type'].toLowerCase() === type || !type" >
+    <div class="car-item" v-if="element['body_type'].toLowerCase() === type || !type" @click="$router.push({ name: 'ModelPage', params: { model: element['name_en']}})">
       <div class="car-item__title">
         {{ element["name_ru"] + " / " + element["name_en"] }}
       </div>
@@ -7,9 +7,9 @@
         от {{ formatPrice(element["min_price"]) }} ₽
       </div>
       <div class="car-item__img">
-        <img :src="element['img']" alt="">
+        <img :src="element['img']" alt="" >
       </div>
-      <router-link class="btn-link" :to="{ name: 'ModelPage', params: { model: element['name_en']}}"> {{ element["instock_count"] }} авто в наличии</router-link>
+      <div class="btn-link" > {{ element["instock_count"] }} авто в наличии</div>
       <div class="wrap-credit" v-if="element['credit']">
         <span class="credit__text">В кредит от</span>
         <span class="credit__price">{{ formatPrice(element["credit"]) }} ₽/мес.</span>
@@ -24,11 +24,13 @@ export default {
   name: "AppCarItem",
   props: {
     element: {
-      type: Object
+      type: Object,
+      required: true
     },
     type: {
       type: String,
-      default: ""
+      default: "",
+      required: true
     }
   },
   mixins: [mixinFormatPrice]
@@ -40,6 +42,7 @@ export default {
   padding: 28px 32px;
   border: 1px solid #E4DCD3;
   margin-bottom: 32px;
+  cursor: pointer;
 
   &__title {
     font-size: 18px;

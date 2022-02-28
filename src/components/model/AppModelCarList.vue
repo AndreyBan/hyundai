@@ -1,67 +1,75 @@
 <template>
-  <div class="ml-car">
-    <div class="ml-car__title">
-      {{ filteredCars.length }} авто Hyundai {{ model }} в наличии
-    </div>
-    <div class="ml-car-wrap">
-      <div class="ml-car-item" v-for="(el, i) in showCars" :key="i">
-        <div class="ml-car-item__title" @click="$router.push({ name: 'DetailPage', params: {model: model, id: el.id} })">
-          {{ el["model_name"] }}
-        </div>
-        <div class="ml-car-item__subtitle" @click="$router.push({ name: 'DetailPage', params: {model: model, id: el.id} })">{{ el["name"] }}</div>
-        <div class="ml-car-item__img" @click="$router.push({ name: 'DetailPage', params: {model: model, id: el.id} })">
-          <img :src="el['model_picture']" alt="" :style="{backgroundColor: el['color']['real_color']['value']}" v-if="el['color']">
-          <img :src="el['model_picture']" alt=""  v-else>
-        </div>
-        <div class="ml-car-price">
-          <div class="ml-car-price__new">{{ formatPrice(el["price"]) }} ₽*</div>
-          <div class="ml-car-price__old" v-if="(el['price_full4specials'] && el['price_full4specials'] > 0)">от
-            {{ formatPrice(el['price_full4specials']) }} ₽
-          </div>
-        </div>
-        <hr class="ml-separate">
-        <div class="ml-car-options">
-          <div class="ml-car-options-row">
-            <div class="ml-car-options__name ml-car-options-icon ml-car-options-icon--volume">
-              Объем двигателя, л
-            </div>
-            <div class="ml-car-options__value">{{ el['engine_volume'] }}</div>
-
-            <div class="ml-car-options__name ml-car-options-icon ml-car-options-icon--power">
-              Мощность двигателя, л.с.
-            </div>
-            <div class="ml-car-options__value">{{ el['engine_power'] }}</div>
-
-            <div class="ml-car-options__name ml-car-options-icon ml-car-options-icon--transmission">
-              Тип трансмиссии
-            </div>
-            <div class="ml-car-options__value">{{ el['transmission'] }}</div>
-
-            <div class="ml-car-options__name ml-car-options-icon ml-car-options-icon--drive">
-              Тип привода
-            </div>
-            <div class="ml-car-options__value">{{ el['gear_type'] }}</div>
-          </div>
-        </div>
-        <div class="btn btn--blue-dark" data-fancybox @click="getCarForModal(el)">хочу скидку</div>
-        <div class="btn btn--dark" data-fancybox @click="getCarForModal(el)">обратный звонок</div>
+  <div>
+    <div class="ml-car" v-if="filteredCars.length">
+      <div class="ml-car__title">
+        {{ filteredCars.length }} авто Hyundai {{ model }} в наличии
       </div>
-    </div>
-    <div class="show-more" v-if="filteredCars.length > showCount && showMore" @click="showMoreCars">Показать еще</div>
-    <paginate v-if="filteredCars.length > showCount * 2 && !showMore"
-        :click-handler="clickCallback"
-        :page-count="getCount"
-        :page-range="3"
-        :margin-pages="2"
-        :prev-text="'<'"
-        :next-text="'>'"
-        :container-class="'pagination'"
-        :page-class="'page-item'">
-    </paginate>
+      <div class="ml-car-wrap">
+        <div class="ml-car-item" v-for="el in showCars" :key="el.id">
+          <div class="ml-car-item__title"
+               @click="$router.push({ name: 'DetailPage', params: {model: model, id: el.id} })">
+            {{ el["model_name"] }}
+          </div>
+          <div class="ml-car-item__subtitle"
+               @click="$router.push({ name: 'DetailPage', params: {model: model, id: el.id} })">{{ el["name"] }}
+          </div>
+          <div class="ml-car-item__img"
+               @click="$router.push({ name: 'DetailPage', params: {model: model, id: el.id} })">
+            <img :src="el['model_picture']" alt="" :style="{backgroundColor: el['color']['real_color']['value']}"
+                 v-if="el['color']">
+            <img :src="el['model_picture']" alt="" v-else>
+          </div>
+          <div class="ml-car-price">
+            <div class="ml-car-price__new">{{ formatPrice(el["price"]) }} ₽*</div>
+            <div class="ml-car-price__old" v-if="(el['price_full4specials'] && el['price_full4specials'] > 0)">от
+              {{ formatPrice(el['price_full4specials']) }} ₽
+            </div>
+          </div>
+          <hr class="ml-separate">
+          <div class="ml-car-options">
+            <div class="ml-car-options-row">
+              <div class="ml-car-options__name ml-car-options-icon ml-car-options-icon--volume">
+                Объем двигателя, л
+              </div>
+              <div class="ml-car-options__value">{{ el['engine_volume'] }}</div>
 
-    <AppModalWindow v-if="modalShow"  @close-modal="modalShow = false">
-      <AppForm :is-popup="true" :car="carsModal"/>
-    </AppModalWindow>
+              <div class="ml-car-options__name ml-car-options-icon ml-car-options-icon--power">
+                Мощность двигателя, л.с.
+              </div>
+              <div class="ml-car-options__value">{{ el['engine_power'] }}</div>
+
+              <div class="ml-car-options__name ml-car-options-icon ml-car-options-icon--transmission">
+                Тип трансмиссии
+              </div>
+              <div class="ml-car-options__value">{{ el['transmission'] }}</div>
+
+              <div class="ml-car-options__name ml-car-options-icon ml-car-options-icon--drive">
+                Тип привода
+              </div>
+              <div class="ml-car-options__value">{{ el['gear_type'] }}</div>
+            </div>
+          </div>
+          <div class="btn btn--blue-dark" data-fancybox @click="getCarForModal(el)">хочу скидку</div>
+          <div class="btn btn--dark" data-fancybox @click="getCarForModal(el)">обратный звонок</div>
+        </div>
+      </div>
+      <div class="show-more" v-if="filteredCars.length > showCount && showMore" @click="showMoreCars">Показать еще</div>
+      <paginate v-if="filteredCars.length > showCount * 2 && !showMore"
+                :click-handler="clickCallback"
+                :page-count="getCount"
+                :page-range="3"
+                :margin-pages="2"
+                :prev-text="'<'"
+                :next-text="'>'"
+                :container-class="'pagination'"
+                :page-class="'page-item'">
+      </paginate>
+
+      <AppModalWindow v-if="modalShow" @close-modal="modalShow = false">
+        <AppForm :is-popup="true" :car="carsModal"/>
+      </AppModalWindow>
+    </div>
+    <div class="not-find-cars" v-else>По заданным параметрам автомобилей в наличии нет</div>
   </div>
 </template>
 
@@ -73,7 +81,16 @@ import {mixinFormatPrice, mixinScrollToCars} from "../mixins/AppMixins";
 
 export default {
   name: "ModelCarList",
-  props: ["cars", "model"],
+  props: {
+    cars: {
+      type: Array,
+      required: true
+    },
+    model: {
+      type: String,
+      required: true
+    }
+  },
   mixins: [mixinFormatPrice, mixinScrollToCars],
   components: {
     Paginate,
@@ -89,20 +106,20 @@ export default {
       page: 1,
       showMore: true,
       modalShow: false,
-      carModal: {}
+      carsModal: {}
     }
   },
   methods: {
-    getShowCars(start = 0, end = this.showCount){
+    getShowCars(start = 0, end = this.showCount) {
       this.showCars = [];
 
-      for (let i in this.filteredCars){
-        if (i >= start && i < end){
+      for (let i in this.filteredCars) {
+        if (i >= start && i < end) {
           this.showCars.push(this.filteredCars[i]);
         }
       }
     },
-    getCarForModal(cars){
+    getCarForModal(cars) {
       this.modalShow = true;
       this.carsModal = cars;
 
@@ -112,7 +129,7 @@ export default {
       this.showCount = this.showCount * 2;
       this.getShowCars();
     },
-    clickCallback: function(pageNum) {
+    clickCallback: function (pageNum) {
       let start = 0;
       let end = this.showCount * pageNum;
 
@@ -124,13 +141,13 @@ export default {
     }
   },
   computed: {
-    getCount(){
+    getCount() {
       return Math.ceil(this.filteredCars.length / this.showCount);
     },
   },
 
-  watch:{
-    cars(){
+  watch: {
+    cars() {
       this.filteredCars = this.cars;
       this.getShowCars();
     }
@@ -155,10 +172,12 @@ export default {
   padding: 8px 16px;
   border: 1px solid #00AAD2;
 }
-.pagination li.active a{
+
+.pagination li.active a {
   color: #fff;
   background-color: #00AAD2;
 }
+
 .pagination li:not(:last-child) a {
   border-right: none;
 }
@@ -204,7 +223,7 @@ export default {
 </style>
 
 <style scoped>
-.show-more{
+.show-more {
   max-width: 200px;
   padding: 12px 32px;
   border: 1px solid #00AAD2;
@@ -213,11 +232,17 @@ export default {
   transition-duration: .2s;
   cursor: pointer;
 }
-.show-more:hover{
+.not-find-cars{
+  margin: 80px 0 40px;
+  font-size: 24px;
+  text-align: center;
+}
+.show-more:hover {
   transition-duration: .2s;
   color: #FFFFFF;
   background-color: #00AAD2;
 }
+
 .clicker {
   position: absolute;
   left: 0;
@@ -393,7 +418,7 @@ export default {
   }
 
   .ml-car-item__title,
-  .ml-car-price__new{
+  .ml-car-price__new {
     font-size: 16px;
   }
 

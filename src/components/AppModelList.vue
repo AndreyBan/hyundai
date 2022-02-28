@@ -2,6 +2,7 @@
   <section>
     <div class="container">
       <template v-if="loadPage && !error">
+          <AppBreadcrumbs :prop-chain-item="[{name: $route.params.model, path: ''}]" />
           <AppFilter :cars="filterCarList" :count="countCars" @get-cars="filterCars"/>
           <AppModelCarList :cars="filterCarList" :model="$route.params.model"/>
       </template>
@@ -18,9 +19,9 @@ import AppFormRequest from "./main-page/AppFormRequest";
 import AppModelCarList from "./model/AppModelCarList";
 import AppPreload from "./model/AppPreload";
 import AppError from "./AppError";
+import AppBreadcrumbs from "./AppBreadcrumbs";
 
 import {mixinFilterProp} from "./mixins/AppMixins";
-
 
 export default {
   name: "ModelList",
@@ -30,7 +31,8 @@ export default {
     AppFormRequest,
     AppModelCarList,
     AppPreload,
-    AppError
+    AppError,
+    AppBreadcrumbs
   },
   data() {
     return {
@@ -91,6 +93,8 @@ export default {
     }
   },
   mounted() {
+    let errorTimeout = setTimeout(() => this.error = true, 5000);
+
     fetch('https://agat-hyundai.ru/ajax/api_instock.php?data=model-cars&model=' + this.$route.params.model, {method: 'POST'})
         .then(res => res.json())
         .then(res => {
@@ -107,6 +111,7 @@ export default {
             this.filterCarList = this.filterCars();
             this.countCars = this.filterCarList.length;
             this.loadPage = true;
+            clearTimeout(errorTimeout);
 
           } else {
             this.error = true;

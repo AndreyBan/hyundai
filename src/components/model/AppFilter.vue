@@ -136,7 +136,17 @@ import {mixinFilterProp, mixinScrollToCars} from "../mixins/AppMixins";
 
 export default {
   name: "ModelFilter",
-  props: ["cars", "count"],
+  props: {
+    cars: {
+      type: Array,
+      required: true
+    },
+    count: {
+      type: Number,
+      default: 0,
+      required: true
+    }
+  },
   mixins: [mixinFilterProp, mixinScrollToCars],
   components: {
     AppFilterColors,
