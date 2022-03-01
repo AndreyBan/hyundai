@@ -1,42 +1,79 @@
 <template>
-  <form action="" class="form-request" @submit.prevent="checkForm">
+  <form action=""
+        class="form-request"
+        @submit.prevent="checkForm"
+  >
+
     <div class="container">
       <h3 class="form-title">Не нашли то, что искали?</h3>
       <p class="form-subtitle">Оставьте, пожалуйста, свои контактные данные. Мы свяжемся с Вами в ближайшее время и
         поможем подобрыть нужное
         авто.</p>
-      <div class="block-fields">
+      <div class="block-fields" :class="{'show-error': $v.fields.$error}">
         <div class="form-group">
-          <input type="text" placeholder="Имя и Фамилия*" v-model.lazy.trim="fields.name">
-          <p v-if="$v.fields.name.$error" class="error-text">*Обязательное поле</p>
+
+          <input type="text"
+                 placeholder="Имя и Фамилия*"
+                 v-model.lazy.trim="fields.name"
+          >
+
+          <p v-if="!$v.fields.name.required" class="error-text"> *Обязательное поле </p>
+          <p v-if="!$v.fields.name.cyrillic" class="error-text"> *Используйте русские буквы </p>
         </div>
         <div class="form-group">
-          <v-select placeholder="Выберите дилерский центр*" :options="options" v-model.lazy="fields.dealer">
+
+          <v-select placeholder="Выберите дилерский центр*"
+                    :options="dealers"
+                    v-model="fields.dealer"
+          >
+
             <template #no-options>
               Ничего не найдено
             </template>
           </v-select>
+
           <p v-if="$v.fields.dealer.$error" class="error-text">*Обязательное поле</p>
         </div>
         <div class="form-group">
-          <input type="text" placeholder="Телефон*" v-model.lazy="fields.phone"
-                 v-mask="{mask: '+7(999)999-99-99', showMaskOnHover: false}">
+
+          <input type="text"
+                 placeholder="Телефон*"
+                 v-model="fields.phone"
+                 v-mask="{mask: '+7(999)999-99-99', showMaskOnHover: false}"
+                 @input="maskCheck"
+          >
+
           <p v-if="$v.fields.phone.$error" class="error-text">*Обязательное поле</p>
         </div>
         <div class="form-group">
-          <input type="text" placeholder="Добавить комментарий" v-model.lazy.trim="fields.comment">
+
+          <input type="text"
+                 placeholder="Добавить комментарий"
+                 v-model.lazy.trim="fields.comment"
+          >
+
         </div>
         <div class="form-bottom-left">
           <div class="policy-agreement">
-            <input type="checkbox" name="agreement" id="policy-agreement" v-model="fields.agree">
-            <label for="policy-agreement">
+            <input type="checkbox"
+                   name="agreement"
+                   id="policy-agreement"
+                   v-model="fields.agree"
+            >
+
+            <label for="policy-agreement"
+                   :class="{'no-check': !fields.agree}">
               Я согласен на обработку данных
               <br><a href="#">Смотреть правила</a>
             </label>
+
           </div>
           <div class="require-text">*Поля, обязательные для заполнения</div>
         </div>
-        <input type="submit" class="btn btn--dark" value="Отправить заявку">
+        <input type="submit"
+               class="btn btn--dark"
+               value="Отправить заявку"
+        >
       </div>
     </div>
   </form>
@@ -45,27 +82,28 @@
 <script>
 import Vue from "vue";
 import {validationMixin} from 'vuelidate'
-import {required} from 'vuelidate/lib/validators';
+import {required, minLength} from 'vuelidate/lib/validators';
+import {mixinValidates} from "../mixins/AppMixins";
 
 const VueInputMask = require('vue-inputmask').default
 
-Vue.use(VueInputMask)
+Vue.use(VueInputMask);
+
+const cyrillic = value => !/[^а-яё\s]/i.test(value);
 
 export default {
   name: "AppFormRequest",
-  mixins: [validationMixin],
+  mixins: [validationMixin, mixinValidates],
   validations: {
     fields: {
-      name: {required},
-      phone: {required},
+      name: {required, cyrillic},
+      phone: {required, minLength: minLength(10)},
       dealer: {required},
+      agree: {required}
     }
   },
   data: () => ({
-    options: [
-      "test 1",
-      "test 2"
-    ],
+    dataDealers: {},
     fields: {
       name: "",
       phone: "",
@@ -74,15 +112,29 @@ export default {
       agree: false
     }
   }),
-  methods: {
-    checkForm() {
-      this.$v.fields.$touch();
 
-      if (!this.$v.fields.$error && this.fields.agree) {
-        console.log("validate")
+  computed: {
+    dealers() {
+      let dealerNames = [];
+
+      for (const i in this.dataDealers) {
+        dealerNames.push(this.dataDealers[i]["UF_NAME"]);
       }
 
+      return dealerNames;
     }
+  },
+  mounted() {
+    fetch('https://agat-hyundai.ru/ajax/api_instock.php?data=dealers', {method: "POST"})
+        .then(res => res.json())
+        .then(res => {
+          if (res["dealers"]) {
+            this.dataDealers = res["dealers"];
+          }
+        })
+        .catch(e => {
+          console.log("Error message: " + e.errorText)
+        })
   }
 }
 </script>
@@ -101,7 +153,6 @@ export default {
 .vs--open .vs__actions:before {
   transform: rotate(180deg);
 }
-
 
 
 .form-request .vs--searchable .vs__dropdown-toggle {
@@ -130,6 +181,10 @@ export default {
   left: 0;
   top: 3px;
   box-sizing: border-box;
+}
+
+.show-error #policy-agreement + label.no-check:before {
+  border: 1px solid #ee0505;
 }
 
 #policy-agreement:checked + label:after {
@@ -164,6 +219,11 @@ export default {
   color: #ee0505;
   margin: 0;
   font-size: 12px;
+  display: none;
+}
+
+.show-error .error-text {
+  display: block;
 }
 
 .policy-agreement {

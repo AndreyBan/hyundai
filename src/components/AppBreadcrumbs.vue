@@ -1,5 +1,5 @@
 <template>
-  <ul class="breadcrumbs-list" itemtype="https://schema.org/BreadcrumbList">
+  <ul class="breadcrumbs-list" :class="{'desktop-show': deviceDesktop}" itemtype="https://schema.org/BreadcrumbList">
     <li class="breadcrumbs-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"
         v-for="(item, i) in breadcrumbs" :key="i">
       <a :href="item.path" itemprop="item" :title="item.title" v-if="(i +1) !== breadcrumbs.length">
@@ -22,6 +22,7 @@ export default {
   data() {
     return {
       chainItem: this.propChainItem,
+      deviceDesktop: false,
       basePath: "/auto-v-nalichii-new/",
       breadcrumbs: [
         {
@@ -44,6 +45,11 @@ export default {
       });
     }
   },
+  created() {
+    if ( matchMedia('(min-width: 768px)').matches){
+      this.deviceDesktop = true;
+    }
+  },
   mounted() {
     if (this.chainItem) {
       this.finishedCrumbs.forEach(el => this.breadcrumbs.push(el))
@@ -54,12 +60,14 @@ export default {
 
 <style scoped lang="scss">
 .breadcrumbs-list {
-  display: flex;
+  display: none;
   list-style: none;
   padding-left: 0;
   margin: 24px 0;
 }
-
+.breadcrumbs-list.desktop-show{
+  display: flex;
+}
 .breadcrumbs-item {
   position: relative;
 
@@ -87,6 +95,11 @@ export default {
 
   span {
     color: #333;
+  }
+}
+@media (max-width: 991px) {
+  .breadcrumbs-list {
+    font-size: 14px;
   }
 }
 </style>
