@@ -104,7 +104,7 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
-  background-color: rgba(255,255,255,.5);
+  background-color: rgba(255,255,255,.9);
   display: flex;
   justify-content: center;
   align-items: center;
