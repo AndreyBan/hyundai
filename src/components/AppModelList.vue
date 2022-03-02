@@ -4,7 +4,7 @@
       <template v-if="loadPage && !error">
           <AppBreadcrumbs :prop-chain-item="[{name: $route.params.model, path: ''}]" />
           <AppFilter :cars="filterCarList" :count="countCars" @get-cars="filterCars"/>
-          <AppModelCarList :cars="filterCarList" :model="$route.params.model"/>
+          <AppModelCarList :cars="filterCarList" :dealers="dealers" :model="$route.params.model"/>
       </template>
       <AppPreload v-else-if="!loadPage  && !error"/>
       <AppError v-else/>
@@ -40,6 +40,7 @@ export default {
       countCars: 0,
       error: false,
       filterCarList: [],
+      dealers: null,
       loadPage: false,
       metaData: {
         title: 'Hyundai в наличии',
@@ -108,17 +109,20 @@ export default {
             }
 
             this.cars = res["data"];
+            this.dealers = res["city"]["dealers"];
             this.filterCarList = this.filterCars();
             this.countCars = this.filterCarList.length;
             this.loadPage = true;
             clearTimeout(errorTimeout);
 
+          } else if (res["status"] == 'not-found'){
+            this.$router.push({name: '404'});
           } else {
             this.error = true;
           }
         })
         .catch(e => {
-          console.log("Error message: " + e.errorText)
+          console.log("Error message: " + e.message)
           this.error = true;
         })
   }

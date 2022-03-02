@@ -10,6 +10,11 @@ Vue.use(VueRouter);
 const urlPath = '/auto-v-nalichii-new/';
 const routes = [
   {
+    path: '/',
+    redirect: urlPath,
+    name: 'BasePage',
+  },
+  {
     path: urlPath,
     name: 'MainPage',
     component: AppMainPage,

@@ -83,7 +83,7 @@ export default {
           }
         })
         .catch(e => {
-          console.log("Error message: " + e.errorText)
+          console.log("Error message: " + e.message)
           this.error = true;
         })
   }

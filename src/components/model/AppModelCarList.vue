@@ -2,7 +2,7 @@
   <div>
     <div class="ml-car" v-if="filteredCars.length">
       <div class="ml-car__title">
-        {{ filteredCars.length }} авто Hyundai {{ model }} в наличии
+        {{ filteredCars.length }} авто Hyundai {{ model }} в наличии в {{ instockText }}
       </div>
       <div class="ml-car-wrap">
         <div class="ml-car-item" v-for="el in showCars" :key="el.id">
@@ -89,6 +89,10 @@ export default {
     model: {
       type: String,
       required: true
+    },
+    dealers: {
+      type: Array,
+      required: true
     }
   },
   mixins: [mixinFormatPrice, mixinScrollToCars],
@@ -103,6 +107,7 @@ export default {
       showCars: [],
       showCount: 12,
       filteredCars: this.cars,
+      selfDealers: this.dealers,
       page: 1,
       showMore: true,
       modalShow: false,
@@ -144,8 +149,16 @@ export default {
     getCount() {
       return Math.ceil(this.filteredCars.length / this.showCount);
     },
-  },
+    instockText(){
+      let text = 'Hyundai АГАТ';
 
+      if (this.selfDealers && this.selfDealers.length === 1){
+        text = this.selfDealers[0]["UF_NAME"];
+      }
+
+      return text;
+    }
+  },
   watch: {
     cars() {
       this.filteredCars = this.cars;
