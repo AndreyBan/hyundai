@@ -28,7 +28,7 @@ export const mixinScrollToCars = {
             const topOffset = 200;
             const elementPosition = scrollTarget.getBoundingClientRect().top;
             const offsetPosition = elementPosition - topOffset;
-
+            console.log('test scroll');
             window.scrollBy({
                 top: offsetPosition,
                 behavior: 'smooth'
