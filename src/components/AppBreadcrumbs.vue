@@ -2,9 +2,12 @@
   <ul class="breadcrumbs-list" :class="{'desktop-show': deviceDesktop}" itemtype="https://schema.org/BreadcrumbList">
     <li class="breadcrumbs-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"
         v-for="(item, i) in breadcrumbs" :key="i">
-      <a :href="item.path" itemprop="item" :title="item.title" v-if="(i +1) !== breadcrumbs.length">
+      <router-link :to="item.path" itemprop="item" v-if="(i +1) !== breadcrumbs.length">
         <span itemprop="name">{{ item.name }}</span>
-      </a>
+      </router-link>
+<!--      <a :href="item.path" itemprop="item" :title="item.title" v-if="(i +1) !== breadcrumbs.length">-->
+<!--        <span itemprop="name">{{ item.name }}</span>-->
+<!--      </a>-->
       <span itemprop="name" v-else>{{ item.name }}</span>
       <meta itemprop="position" :content="i + 1">
     </li>

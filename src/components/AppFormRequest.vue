@@ -83,7 +83,7 @@
 import Vue from "vue";
 import {validationMixin} from 'vuelidate'
 import {required, minLength} from 'vuelidate/lib/validators';
-import {mixinValidates} from "../mixins/AppMixins";
+import {mixinValidates} from "./mixins/AppMixins";
 
 const VueInputMask = require('vue-inputmask').default
 
@@ -112,7 +112,11 @@ export default {
       agree: false
     }
   }),
-
+  methods: {
+    setFieldDealer(value) {
+      this.fields.dealer = value;
+    },
+  },
   computed: {
     dealers() {
       let dealerNames = [];
@@ -120,7 +124,9 @@ export default {
       for (const i in this.dataDealers) {
         dealerNames.push(this.dataDealers[i]["UF_NAME"]);
       }
-
+      if (dealerNames.length === 1) {
+        this.setFieldDealer(dealerNames[0]);
+      }
       return dealerNames;
     }
   },

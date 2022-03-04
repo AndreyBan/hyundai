@@ -87,7 +87,7 @@ export default {
       required: true
     },
     model: {
-      type: String,
+      // type: String,
       required: true
     },
     dealers: {
@@ -365,7 +365,7 @@ export default {
 .ml-car-item__subtitle {
   font-size: 14px;
   color: #003469;
-  height: 38px;
+  height: 46px;
 }
 
 .ml-car-item__img {

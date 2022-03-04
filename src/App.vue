@@ -1,11 +1,31 @@
 <template>
   <div id="app" v-cloak>
+    <keep-alive :include="$route.meta.keepComponents">
       <router-view />
+    </keep-alive>
   </div>
 </template>
-
+<!--<script>-->
+<!--export default {-->
+<!--  data() {-->
+<!--    return {-->
+<!--      includeComponents: ['MainPage', 'ModelPage']-->
+<!--    }-->
+<!--  },-->
+<!--  methods: {-->
+<!--    changeIncludes(action){-->
+<!--      console.log(this.$route)-->
+<!--      if (action === 'remove') {-->
+<!--        this.includeComponents = this.includeComponents.filter(el => el !== 'ModelPage');-->
+<!--      } else {-->
+<!--        if (!this.includeComponents.includes('ModelPage'))-->
+<!--        this.includeComponents.push('ModelPage');-->
+<!--      }-->
+<!--    }-->
+<!--  }-->
+<!--}-->
+<!--</script>-->
 <style>
-
 @import url('~vue-select/dist/vue-select.css');
 
 * {
@@ -92,9 +112,11 @@ label {
   color: #666666;
   font-size: 14px;
 }
-.model-filter .vs--searchable .vs__dropdown-toggle{
+
+.model-filter .vs--searchable .vs__dropdown-toggle {
   overflow: hidden;
 }
+
 .vs__dropdown-toggle {
   height: 43px;
   border-radius: 0;
