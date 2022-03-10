@@ -41,14 +41,14 @@ export const mixinValidates = {
     methods: {
         checkForm() {
             this.$v.fields.$touch();
-                console.log(document.cookie)
+
             if (!this.$v.fields.$error && this.fields.agree) {
-                if (document.cookie['_ym_uid']) this.fields['_ym_uid'] = document.cookie['_ym_uid'];
-                if (document.cookie['_ga']) this.fields['_ga'] = document.cookie['_ga'];
+                if (this.get_cookie('_ym_uid')) this.fields['_ym_uid'] = this.get_cookie('_ym_uid');
+                if (this.get_cookie('_ga')) this.fields['_ga'] = this.getGa();
 
                 let dataSend = JSON.stringify(this.fields);
 
-                fetch('https://agat-hyundai.ru/ajax/api_instock.php?data=send',{
+                fetch('https://agat-hyundai.ru/ajax/api_instock.php?data=send', {
                     headers: {"Content-Type": "application/x-www-form-urlencoded"},
                     method: 'POST',
                     body: "body=" + dataSend
@@ -71,6 +71,17 @@ export const mixinValidates = {
         },
         maskCheck(field) {
             this.fields.phone = field.target.inputmask.unmaskedvalue();
+        },
+        get_cookie(cookie_name) {
+            let results = document.cookie.match('(^|;) ?' + cookie_name + '=([^;]*)(;|$)');
+
+            return results ? unescape(results[2]) : null;
+        },
+        getGa() {
+            let cidLong = this.get_cookie('_ga');
+            let tmp = cidLong.split('.');
+
+            return tmp[2] + '.' + tmp[3];
         }
     }
 }
