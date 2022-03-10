@@ -41,9 +41,21 @@ export const mixinValidates = {
     methods: {
         checkForm() {
             this.$v.fields.$touch();
-
+                console.log(document.cookie)
             if (!this.$v.fields.$error && this.fields.agree) {
-                console.log("validate")
+                if (document.cookie['_ym_uid']) this.fields['_ym_uid'] = document.cookie['_ym_uid'];
+                if (document.cookie['_ga']) this.fields['_ga'] = document.cookie['_ga'];
+
+                let dataSend = JSON.stringify(this.fields);
+
+                fetch('https://agat-hyundai.ru/ajax/api_instock.php?data=send',{
+                    headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                    method: 'POST',
+                    body: "body=" + dataSend
+                }).then(r => r.json())
+                    .then(r => {
+                        console.log(r)
+                    })
                 this.fields = {
                     name: "",
                     phone: "",
