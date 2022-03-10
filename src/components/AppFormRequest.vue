@@ -141,6 +141,13 @@ export default {
         .catch(e => {
           console.log("Error message: " + e.message)
         })
+
+    if (this.get_cookie('_ym_uid')) {
+      this.fields['_ym_uid'] = this.get_cookie('_ym_uid');
+    }
+    if (this.get_cookie('_ga')) {
+      this.fields['_ga'] = this.getGa();
+    }
   }
 }
 </script>
