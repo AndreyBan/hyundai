@@ -7,7 +7,7 @@
         Наши специалисты свяжутся с Вами в ближайшее время.
       </div>
       <div class="form-response__img">
-
+        <img src="/media/images/love-car.svg" alt="">
       </div>
     </div>
     <div class="response-no-success" v-else>
