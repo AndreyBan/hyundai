@@ -322,7 +322,10 @@ export default {
   font-size: 14px;
   text-decoration: line-through;
 }
-
+.detail-form-page.form-popup {
+  margin: 0;
+  padding-top: 54px;
+}
 @media (max-width: 1279px) {
   .detail-form__image {
     max-width: 600px;
@@ -330,6 +333,9 @@ export default {
 }
 
 @media (max-width: 767px) {
+  .detail-form-page.form-popup {
+    padding-top: 24px;
+  }
   .detail-form-page {
     padding: 18px;
   }
@@ -355,6 +361,7 @@ export default {
 
   .detail-form-page.form-popup {
     overflow: auto;
+    height: 100vh;
   }
 }
 </style>

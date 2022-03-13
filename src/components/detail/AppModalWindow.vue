@@ -125,20 +125,12 @@ export default {
   transform: rotate(-45deg);
 }
 
-.detail-form-page.form-popup {
-  margin: 0;
-  padding-top: 54px;
-}
+
 
 @media (max-width: 767px) {
   .modal-wrap {
     width: 100%;
-    height: 100vh;
-  }
 
-  .modal-content {
-    overflow: auto;
-    height: 100vh;
   }
 }
 </style>
