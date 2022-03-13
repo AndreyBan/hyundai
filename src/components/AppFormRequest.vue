@@ -37,11 +37,12 @@
           </div>
           <div class="form-group">
 
-            <input type="text"
+            <input type="tel"
                    placeholder="Телефон*"
                    v-model="fields.phone"
                    v-mask="{mask: '+7(999) 999-99-99', showMaskOnHover: false}"
                    @input="maskCheck"
+                   inputmode="numeric"
             >
 
             <p v-if="$v.fields.phone.$error" class="error-text">*Обязательное поле</p>
