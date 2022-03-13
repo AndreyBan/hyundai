@@ -116,7 +116,7 @@ export default {
         content: '';
         position: absolute;
         left: 2px;
-        top: 2px;
+        top: 4px;
         width: 16px;
         height: 12px;
         z-index: 1;

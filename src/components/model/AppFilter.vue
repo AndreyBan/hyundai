@@ -748,8 +748,6 @@ export default {
 
     background: url("/images/instock/filter-bg-mobile.jpg") 0 0 no-repeat;
     background-size: cover;
-
-
   }
 
   .mf-selects,
