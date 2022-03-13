@@ -200,6 +200,7 @@ export default {
 .car-info-options__value,
 .car-info-options__name {
   font-size: 14px;
+  line-height: 16px;
 }
 
 .car-info-options-icon:before {
@@ -227,6 +228,7 @@ export default {
 .car-info-options__title {
   font-size: 18px;
   font-weight: 500;
+  line-height: 21px;
 }
 
 .car-info-options,
