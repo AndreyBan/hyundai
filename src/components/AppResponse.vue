@@ -44,4 +44,7 @@ export default {
   padding: 48px 32px 56px;
   border: 1px solid #B7B7B7;
 }
+.form-response__img{
+  text-align: center;
+}
 </style>
