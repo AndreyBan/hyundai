@@ -4,15 +4,9 @@ import NotFound from "../views/NotFound";
 
 Vue.use(VueRouter);
 
-const urlPath = '/auto-v-nalichii-new/';
 const routes = [
     {
         path: '/',
-        redirect: urlPath,
-        name: 'BasePage',
-    },
-    {
-        path: urlPath,
         name: 'MainPage',
         component: () => import(/* webpackChunkName: "main" */'../views/AppMainPage'),
         meta: {
@@ -21,7 +15,7 @@ const routes = [
         },
     },
     {
-        path: urlPath + ':model/',
+        path: ':model/',
         name: 'ModelPage',
         component: () => import(/* webpackChunkName: "model" */'../views/AppModel.vue'),
         meta: {
@@ -29,7 +23,7 @@ const routes = [
         },
     },
     {
-        path: urlPath + ':model/:id/',
+        path: ':model/:id/',
         name: 'DetailPage',
         component: () => import(/* webpackChunkName: "detail" */'../views/AppDetailPage'),
         meta: {
