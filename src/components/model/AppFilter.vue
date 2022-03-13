@@ -1,5 +1,6 @@
 <template>
   <section class="model-filter">
+    <div class="model-filter__img" :style="{backgroundImage: `url('${modelImage}')`}"></div>
     <div class="mf__title">Выбрать автомобиль</div>
     <div class="mf-selects">
       <div class="select-wrap">
@@ -145,6 +146,10 @@ export default {
       type: Number,
       default: 0,
       required: true
+    },
+    modelImage: {
+      type: String,
+      default: ""
     }
   },
   mixins: [mixinFilterProp, mixinScrollToCars],
@@ -636,26 +641,19 @@ export default {
   position: relative;
   background: url("/images/instock/filter-bg.jpg") 0 0 no-repeat;
   background-size: cover;
-
-  &:after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 0;
-    background: url("/images/instock/filter-car-img.png") 50% 50% no-repeat;
-    width: 604px;
-    height: 260px;
-  }
 }
 
+.model-filter__img{
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-position: 0 50%;
+  background-repeat: no-repeat;
+  width: 604px;
+  height: 260px;
+}
 @media (max-width: 1560px) {
-  .model-filter:after {
-    top: 100px;
-    background: url('/images/instock/filter-car-img.png') 50% 50% no-repeat;
-    background-size: 404px;
-    width: 404px;
-    height: 140px;
-  }
+
 
   .mf-bottom {
     flex-direction: column;
@@ -672,9 +670,10 @@ export default {
 
 }
 
-@media (max-width: 1279px) {
-  .model-filter:after {
-    top: 160px;
+@media (max-width: 1388px) {
+  .model-filter__img {
+    top: 100px;
+    width: 40%;
   }
 }
 
@@ -692,16 +691,7 @@ export default {
       margin-right: 8px;
       margin-bottom: 32px;
     }
-
-    &:after {
-      background: url('/images/instock/filter-car-img-tablet.png') 0 50% no-repeat;
-      background-size: cover;
-      width: 278px;
-      height: 236px;
-      top: 48px;
-    }
   }
-
   .mf-selects {
     justify-content: start;
     max-width: 75%;
@@ -718,7 +708,9 @@ export default {
 }
 
 @media (max-width: 991px) {
-
+  .range-slider-wrap{
+    margin-top: 0;
+  }
   .mf-selects {
     justify-content: start;
     max-width: 82%;
@@ -738,6 +730,9 @@ export default {
 }
 
 @media (max-width: 767px) {
+  .model-filter__img {
+    display: none;
+  }
   .model-filter .select-wrap{
     margin-right: 0;
   }
@@ -754,9 +749,7 @@ export default {
     background: url("/images/instock/filter-bg-mobile.jpg") 0 0 no-repeat;
     background-size: cover;
 
-    &:after {
-      display: none;
-    }
+
   }
 
   .mf-selects,

@@ -120,28 +120,16 @@ export default {
 }
 
 .car-info-address {
-  -ms-grid-row: 2;
-  -ms-grid-row-span: 1;
-  -ms-grid-column: 2;
-  -ms-grid-column-span: 1;
   grid-area: 2 / 2 / 3 / 3;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
   justify-content: space-between;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
 }
 
 .car-info-address-wrap {
-  -ms-grid-column: 2;
-  -ms-grid-column-span: 1;
   grid-column: 2 / 3;
-  -ms-grid-row: 3;
-  -ms-grid-row-span: 1;
   grid-row: 3 / 4;
 }
 
@@ -167,10 +155,7 @@ export default {
 }
 
 .car-info-buttons-wrap {
-  -ms-grid-row: 3;
-  -ms-grid-row-span: 1;
   grid-row: 3 / 4;
-  -ms-grid-row-align: center;
   align-self: center;
 }
 
@@ -203,11 +188,7 @@ export default {
 }
 
 .car-info-buttons {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
   justify-content: space-between;
 }
 
@@ -239,8 +220,6 @@ export default {
   margin-top: 26px;
   display: -ms-grid;
   display: grid;
-  -ms-grid-rows: 1fr;
-  -ms-grid-columns: 1fr 1fr;
   grid-template: 1fr / 1fr 1fr;
   row-gap: 26px;
 }
@@ -261,14 +240,8 @@ export default {
 }
 
 .car-info-top-row {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
   justify-content: space-between;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
 }
 
@@ -307,22 +280,13 @@ export default {
 }
 
 .car-info-grid {
-  display: -ms-grid;
   display: grid;
-  -ms-grid-rows: 328px 32px 124px;
-  -ms-grid-columns: 1.4fr 32px 1fr;
   grid-template: 328px 32px 124px/ 1.4fr 1fr;
-  -webkit-column-gap: 32px;
-  -moz-column-gap: 32px;
   column-gap: 32px;
 }
 
 .car-info__img {
   text-align: center;
-  -ms-grid-row: 1;
-  -ms-grid-row-span: 1;
-  -ms-grid-column: 1;
-  -ms-grid-column-span: 1;
   grid-area: 1 / 1 / 2 / 2;
 }
 
@@ -332,20 +296,14 @@ export default {
 
 @media (max-width: 1279px) {
   .car-info-grid {
-    -ms-grid-rows: auto;
-    -ms-grid-columns: 60% auto;
     grid-template: auto/ 60% auto;
   }
 
   .car-info__img {
-    -ms-grid-column: 1;
-    -ms-grid-column-span: 2;
     grid-column: 1/3;
   }
 
   .car-info-options-wrap {
-    -ms-grid-column: 1;
-    -ms-grid-column-span: 1;
     grid-column: 1 / 2;
   }
 
@@ -354,23 +312,16 @@ export default {
   }
 
   .car-info-address-wrap {
-    -ms-grid-column: 2;
-    -ms-grid-column-span: 1;
     grid-column: 2 / 3;
     grid-row: auto;
   }
 
   .car-info-buttons-wrap {
-    -ms-grid-column: 1;
-    -ms-grid-column-span: 2;
     grid-column: 1 / 3;
     margin-top: 32px;
   }
 
   .car-info-address {
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
     flex-direction: column;
     height: 100%;
   }
@@ -387,21 +338,16 @@ export default {
   }
 
   .car-info-options__row {
-    -ms-grid-rows: 1fr;
-    -ms-grid-columns: 70% auto;
     grid-template: 1fr / 70% auto;
+  }
+  .car-info-grid {
+    grid-template: auto/ 55% auto;
+    column-gap: 8px;
   }
 }
 
 @media (max-width: 768px) {
-  .car-info-grid {
-    -ms-grid-rows: auto;
-    -ms-grid-columns: 55% 8px auto;
-    grid-template: auto/ 55% auto;
-    -webkit-column-gap: 8px;
-    -moz-column-gap: 8px;
-    column-gap: 8px;
-  }
+
 
   .car-info-address .btn {
     display: block;
@@ -415,8 +361,6 @@ export default {
 
 @media (max-width: 767px) {
   .car-info-grid {
-    -ms-grid-rows: auto;
-    -ms-grid-columns: 1fr;
     grid-template: auto / 1fr;
   }
 
@@ -463,11 +407,7 @@ export default {
   }
 
   .car-info-price-row {
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-pack: justify;
-    -ms-flex-pack: justify;
     justify-content: space-between;
     margin-bottom: 8px;
   }

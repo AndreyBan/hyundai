@@ -3,7 +3,7 @@
     <div class="container">
       <template v-if="loadPage && !error">
         <AppBreadcrumbs :prop-chain-item="[{name: $route.params.model, path: ''}]"/>
-        <AppFilter :cars="filterCarList" :count="countCars" @get-cars="filterCars"/>
+        <AppFilter :cars="filterCarList" :model-image="modelImage" :count="countCars" @get-cars="filterCars"/>
         <AppModelCarList :cars="filterCarList" :dealers="dealers" :model="$route.params.model"/>
       </template>
       <AppPreload v-else-if="!loadPage  && !error"/>
@@ -43,6 +43,7 @@ export default {
       filterCarList: [],
       dealers: null,
       loadPage: false,
+      modelImage: '/images/instock/filter-car-img.png',
       metaData: {
         title: 'Hyundai в наличии',
         description: 'Hyundai в наличии - характеристики, цена, скидки.',
@@ -115,6 +116,10 @@ export default {
 
               this.metaData.title = `Hyundai ${this.$route.params.model} в наличии в ${cityIn}`;
               this.metaData.description = `Hyundai ${this.$route.params.model} в наличии в ${cityIn} - характеристики, цена, скидки.`;
+            }
+
+            if (res["model_image"]){
+              this.modelImage = res["model_image"];
             }
 
             this.cars = res["data"];

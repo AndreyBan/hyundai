@@ -1,82 +1,88 @@
 <template>
-  <div class="detail-form-page"
-       v-if="thisCar"
-       :class="{'form-popup': isPopup}"
-  >
-    <div class="detail-form__main-title" v-if="isPopup">забронировать автомобиль</div>
-    <div class="detail-form__title">{{ thisCar["model_name"] }}</div>
-    <div class="detail-form__subtitle">{{ thisCar["name"] }}</div>
-    <div class="detail-form-price-image">
-      <div class="detail-form__price">
-        Стоимость: <span>{{ formatPrice(thisCar["price"]) }} ₽*</span>
-        <div class="detail-form__price-old"
-             v-if="isPopup && (thisCar['price_full4specials'] && thisCar['price_full4specials'] > 0)">от {{ formatPrice(thisCar['price_full4specials']) }} ₽</div>
-      </div>
-      <div class="detail-form__image">
-        <img :src="thisCar['model_picture']"
-             :alt="thisCar.name"
-             :style="{backgroundColor: thisCar['color']['real_color']['value']}"
-             v-if="thisCar['color']"
-        >
-        <img :src="thisCar['model_picture']"
-             :alt="thisCar.name"
-             v-else
-        >
-      </div>
-    </div>
-
-    <form action=""
-          class="detail-form"
-          @submit.prevent="checkForm"
-          :class="{'show-error': $v.fields.$error}"
+  <div v-if="!actionAfterSend.sendSuccess && !actionAfterSend.sendError">
+    <div class="detail-form-page"
+         v-if="thisCar"
+         :class="{'form-popup': isPopup}"
     >
+      <div class="detail-form__main-title" v-if="isPopup">забронировать автомобиль</div>
+      <div class="detail-form__title">{{ thisCar["model_name"] }}</div>
+      <div class="detail-form__subtitle">{{ thisCar["name"] }}</div>
+      <div class="detail-form-price-image">
+        <div class="detail-form__price">
+          Стоимость: <span>{{ formatPrice(thisCar["price"]) }} ₽*</span>
+          <div class="detail-form__price-old"
+               v-if="isPopup && (thisCar['price_full4specials'] && thisCar['price_full4specials'] > 0)">от
+            {{ formatPrice(thisCar['price_full4specials']) }} ₽
+          </div>
+        </div>
+        <div class="detail-form__image">
+          <img :src="thisCar['model_picture']"
+               :alt="thisCar.name"
+               :style="{backgroundColor: thisCar['color']['real_color']['value']}"
+               v-if="thisCar['color']"
+          >
+          <img :src="thisCar['model_picture']"
+               :alt="thisCar.name"
+               v-else
+          >
+        </div>
+      </div>
 
-      <input type="hidden"
-             name="dealer"
-             :value="thisCar['dealer_center']"
+      <form action=""
+            class="detail-form"
+            @submit.prevent="checkForm"
+            :class="{'show-error': $v.fields.$error}"
       >
 
-      <div class="form-group">
-        <input type="text"
-               placeholder="Имя и Фамилия*"
-               v-model.lazy.trim="fields.name"
+        <input type="hidden"
+               name="dealer"
+               :value="thisCar['dealer_center']"
         >
 
-        <p v-if="!$v.fields.name.required" class="error-text"> *Обязательное поле </p>
-        <p v-if="!$v.fields.name.cyrillic" class="error-text"> *Используйте русские буквы </p>
-      </div>
-      <div class="form-group">
-        <input type="text"
-               placeholder="Телефон*"
-               v-model="fields.phone"
-               v-mask="{mask: '+7(999)999-99-99', showMaskOnHover: false}"
-               @input="maskCheck"
-        >
+        <div class="form-group">
+          <input type="text"
+                 placeholder="Имя и Фамилия*"
+                 v-model.lazy.trim="fields.name"
+          >
 
-        <p v-if="$v.fields.phone.$error" class="error-text">*Обязательное поле</p>
-      </div>
-      <div class="policy-agreement">
-        <input type="checkbox"
-               name="agreement"
-               id="policy-agreement"
-               v-model="fields.agree">
-        <label for="policy-agreement" :class="{'no-check': !fields.agree}">
-          Я согласен на обработку данных
-          <br><a href="#">Смотреть правила</a>
-        </label>
-      </div>
-      <button type="submit" class="btn btn--blue-dark">забронировать авто</button>
-    </form>
+          <p v-if="!$v.fields.name.required" class="error-text"> *Обязательное поле </p>
+          <p v-if="!$v.fields.name.cyrillic" class="error-text"> *Используйте русские буквы </p>
+        </div>
+        <div class="form-group">
+          <input type="text"
+                 placeholder="Телефон*"
+                 v-model="fields.phone"
+                 v-mask="{mask: '+7(999)999-99-99', showMaskOnHover: false}"
+                 @input="maskCheck"
+          >
 
+          <p v-if="$v.fields.phone.$error" class="error-text">*Обязательное поле</p>
+        </div>
+        <div class="policy-agreement">
+          <input type="checkbox"
+                 name="agreement"
+                 id="policy-agreement"
+                 v-model="fields.agree">
+          <label for="policy-agreement" :class="{'no-check': !fields.agree}">
+            Я согласен на обработку данных
+            <br><a href="#">Смотреть правила</a>
+          </label>
+        </div>
+        <button type="submit" class="btn btn--blue-dark">забронировать авто</button>
+      </form>
+
+    </div>
+    <AppError v-else>
+      Ошибка загрузки формы!
+    </AppError>
   </div>
-  <AppError v-else>
-    Ошибка загрузки формы!
-  </AppError>
+  <AppResponse :action-send="actionAfterSend" v-else-if="actionAfterSend.sendSuccess || actionAfterSend.sendError" />
 </template>
 
 <script>
 import {validationMixin} from 'vuelidate'
 import AppError from '../AppError';
+import AppResponse from "../AppResponse";
 import {minLength, required} from 'vuelidate/lib/validators';
 import {mixinFormatPrice, mixinValidates} from "../mixins/AppMixins";
 
@@ -85,7 +91,8 @@ const cyrillic = value => !/[^а-яё\s]/i.test(value);
 export default {
   name: "AppForm",
   components: {
-    AppError
+    AppError,
+    AppResponse
   },
   props: {
     isPopup: {
@@ -155,9 +162,11 @@ export default {
   font-size: 12px;
   display: none;
 }
-.show-error .error-text{
+
+.show-error .error-text {
   display: block;
 }
+
 .detail-form {
   display: grid;
   grid-template: auto / 1fr 1fr;
@@ -292,6 +301,7 @@ export default {
 .show-error #policy-agreement + label.no-check:before {
   border: 1px solid #ee0505;
 }
+
 #policy-agreement:checked + label:after {
   content: '';
   background: url("/images/instock/black-check.svg") 50% 50% no-repeat;

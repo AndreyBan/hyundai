@@ -1,86 +1,93 @@
 <template>
-  <form action=""
-        class="form-request"
-        @submit.prevent="checkForm"
-  >
+  <div>
+    <form action=""
+          class="form-request"
+          @submit.prevent="checkForm"
+    >
 
-    <div class="container">
-      <h3 class="form-title">Не нашли то, что искали?</h3>
-      <p class="form-subtitle">Оставьте, пожалуйста, свои контактные данные. Мы свяжемся с Вами в ближайшее время и
-        поможем подобрыть нужное
-        авто.</p>
-      <div class="block-fields" :class="{'show-error': $v.fields.$error}">
-        <div class="form-group">
+      <div class="container">
+        <h3 class="form-title">Не нашли то, что искали?</h3>
+        <p class="form-subtitle">Оставьте, пожалуйста, свои контактные данные. Мы свяжемся с Вами в ближайшее время и
+          поможем подобрыть нужное
+          авто.</p>
+        <div class="block-fields" :class="{'show-error': $v.fields.$error}">
+          <div class="form-group">
 
-          <input type="text"
-                 placeholder="Имя и Фамилия*"
-                 v-model.lazy.trim="fields.name"
-          >
-
-          <p v-if="!$v.fields.name.required" class="error-text"> *Обязательное поле </p>
-          <p v-if="!$v.fields.name.cyrillic" class="error-text"> *Используйте русские буквы </p>
-        </div>
-        <div class="form-group">
-
-          <v-select placeholder="Выберите дилерский центр*"
-                    :options="dealers"
-                    v-model="fields.dealer"
-          >
-
-            <template #no-options>
-              Ничего не найдено
-            </template>
-          </v-select>
-
-          <p v-if="$v.fields.dealer.$error" class="error-text">*Обязательное поле</p>
-        </div>
-        <div class="form-group">
-
-          <input type="text"
-                 placeholder="Телефон*"
-                 v-model="fields.phone"
-                 v-mask="{mask: '+7(999)999-99-99', showMaskOnHover: false}"
-                 @input="maskCheck"
-          >
-
-          <p v-if="$v.fields.phone.$error" class="error-text">*Обязательное поле</p>
-        </div>
-        <div class="form-group">
-
-          <input type="text"
-                 placeholder="Добавить комментарий"
-                 v-model.lazy.trim="fields.comment"
-          >
-
-        </div>
-        <div class="form-bottom-left">
-          <div class="policy-agreement">
-            <input type="checkbox"
-                   name="agreement"
-                   id="policy-agreement"
-                   v-model="fields.agree"
+            <input type="text"
+                   placeholder="Имя и Фамилия*"
+                   v-model.lazy.trim="fields.name"
             >
 
-            <label for="policy-agreement"
-                   :class="{'no-check': !fields.agree}">
-              Я согласен на обработку данных
-              <br><a href="#">Смотреть правила</a>
-            </label>
+            <p v-if="!$v.fields.name.required" class="error-text"> *Обязательное поле </p>
+            <p v-if="!$v.fields.name.cyrillic" class="error-text"> *Используйте русские буквы </p>
+          </div>
+          <div class="form-group">
+
+            <v-select placeholder="Выберите дилерский центр*"
+                      :options="dealers"
+                      v-model="fields.dealer"
+            >
+
+              <template #no-options>
+                Ничего не найдено
+              </template>
+            </v-select>
+
+            <p v-if="$v.fields.dealer.$error" class="error-text">*Обязательное поле</p>
+          </div>
+          <div class="form-group">
+
+            <input type="text"
+                   placeholder="Телефон*"
+                   v-model="fields.phone"
+                   v-mask="{mask: '+7(999)999-99-99', showMaskOnHover: false}"
+                   @input="maskCheck"
+            >
+
+            <p v-if="$v.fields.phone.$error" class="error-text">*Обязательное поле</p>
+          </div>
+          <div class="form-group">
+
+            <input type="text"
+                   placeholder="Добавить комментарий"
+                   v-model.lazy.trim="fields.comment"
+            >
 
           </div>
-          <div class="require-text">*Поля, обязательные для заполнения</div>
+          <div class="form-bottom-left">
+            <div class="policy-agreement">
+              <input type="checkbox"
+                     name="agreement"
+                     id="policy-agreement"
+                     v-model="fields.agree"
+              >
+
+              <label for="policy-agreement"
+                     :class="{'no-check': !fields.agree}">
+                Я согласен на обработку данных
+                <br><a href="#">Смотреть правила</a>
+              </label>
+
+            </div>
+            <div class="require-text">*Поля, обязательные для заполнения</div>
+          </div>
+          <input type="submit"
+                 class="btn btn--dark"
+                 value="Отправить заявку"
+          >
         </div>
-        <input type="submit"
-               class="btn btn--dark"
-               value="Отправить заявку"
-        >
       </div>
-    </div>
-  </form>
+    </form>
+    <AppModalWindow v-if="modalShow" @close-modal="modalShow = false">
+      <AppResponse :action-send="actionAfterSend" />
+    </AppModalWindow>
+  </div>
 </template>
 
 <script>
 import Vue from "vue";
+import AppModalWindow from "./detail/AppModalWindow";
+import AppResponse from "./AppResponse";
 import {validationMixin} from 'vuelidate'
 import {required, minLength} from 'vuelidate/lib/validators';
 import {mixinValidates} from "./mixins/AppMixins";
@@ -102,8 +109,13 @@ export default {
       agree: {required}
     }
   },
+  components: {
+    AppModalWindow,
+    AppResponse
+  },
   data: () => ({
     dataDealers: {},
+    modalShow: false,
     fields: {
       name: "",
       phone: "",
