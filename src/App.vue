@@ -5,26 +5,7 @@
     </keep-alive>
   </div>
 </template>
-<!--<script>-->
-<!--export default {-->
-<!--  data() {-->
-<!--    return {-->
-<!--      includeComponents: ['MainPage', 'ModelPage']-->
-<!--    }-->
-<!--  },-->
-<!--  methods: {-->
-<!--    changeIncludes(action){-->
-<!--      console.log(this.$route)-->
-<!--      if (action === 'remove') {-->
-<!--        this.includeComponents = this.includeComponents.filter(el => el !== 'ModelPage');-->
-<!--      } else {-->
-<!--        if (!this.includeComponents.includes('ModelPage'))-->
-<!--        this.includeComponents.push('ModelPage');-->
-<!--      }-->
-<!--    }-->
-<!--  }-->
-<!--}-->
-<!--</script>-->
+
 <style>
 @import url('~vue-select/dist/vue-select.css');
 
@@ -74,6 +55,74 @@ label {
 
 }
 
+.ml-car-options-icon--volume:before {
+  background: url("/images/instock/icon-volume.svg") 0 0 no-repeat;
+  width: 20px;
+  height: 16px;
+  background-size: 20px;
+}
+
+.ml-car-options-icon--power:before {
+  background: url("/images/instock/icon-power.svg") 0 0 no-repeat;
+  width: 13px;
+  height: 21px;
+  background-size: 13px;
+  top: -2px;
+}
+
+.ml-car-options-icon--transmission:before {
+  background: url("/images/instock/icon-transmission.svg") 0 0 no-repeat;
+  width: 16px;
+  height: 21px;
+  background-size: 16px;
+  top: -2px;
+}
+
+.ml-car-options-icon--drive:before {
+  background: url("/images/instock/icon-drive.svg") 0 0 no-repeat;
+  width: 16px;
+  height: 21px;
+  background-size: 16px;
+  top: -2px;
+}
+
+.btn.btn--blue-dark {
+  background-color: #003469;
+}
+
+.btn--blue-dark:hover {
+  background-color: #0C4F94;
+}
+
+.model-filter .vs--searchable .vs__dropdown-toggle {
+  background-color: transparent;
+}
+
+.model-filter .vs__dropdown-menu {
+  background-color: #e7e7e7;
+  font-size: 14px;
+}
+
+
+.model-filter .vs__actions:before {
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 5px;
+  right: 16px;
+  background: url("/images/instock/select-arrow.svg") 50% 50% no-repeat;
+  background-size: 9px;
+  transition-duration: .35s;
+}
+
+.model-filter .v-select {
+  width: 100%;
+}
+
+.model-filter .select-wrap {
+  width: 100%;
+  max-width: 229px;
+}
 .vs__actions {
   cursor: pointer;
 }

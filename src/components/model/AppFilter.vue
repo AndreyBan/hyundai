@@ -417,47 +417,7 @@ export default {
   }
 }
 </script>
-<style>
 
-.btn.btn--blue-dark {
-  background-color: #003469;
-}
-
-.btn--blue-dark:hover {
-  background-color: #0C4F94;
-}
-
-.model-filter .vs--searchable .vs__dropdown-toggle {
-  background-color: transparent;
-}
-
-.model-filter .vs__dropdown-menu {
-  background-color: #e7e7e7;
-  font-size: 14px;
-}
-
-
-.model-filter .vs__actions:before {
-  content: "";
-  position: absolute;
-  width: 9px;
-  height: 5px;
-  right: 16px;
-  background: url("/images/instock/select-arrow.svg") 50% 50% no-repeat;
-  background-size: 9px;
-  transition-duration: .35s;
-}
-
-.model-filter .v-select {
-  width: 100%;
-}
-
-.model-filter .select-wrap {
-  width: 100%;
-  max-width: 229px;
-}
-
-</style>
 
 <style scoped lang="scss">
 

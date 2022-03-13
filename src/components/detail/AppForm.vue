@@ -81,11 +81,18 @@
 </template>
 
 <script>
+import Vue from "vue";
+
 import {validationMixin} from 'vuelidate'
 import AppError from '../AppError';
 import AppResponse from "../AppResponse";
 import {minLength, required} from 'vuelidate/lib/validators';
 import {mixinFormatPrice, mixinValidates} from "../mixins/AppMixins";
+
+
+const VueInputMask = require('vue-inputmask').default
+
+Vue.use(VueInputMask);
 
 const cyrillic = value => !/[^а-яё\s]/i.test(value);
 

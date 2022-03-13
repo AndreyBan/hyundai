@@ -57,6 +57,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.chainItem)
     if (this.chainItem) {
       this.finishedCrumbs.forEach(el => this.breadcrumbs.push(el))
     }

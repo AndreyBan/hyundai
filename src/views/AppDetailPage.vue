@@ -1,7 +1,7 @@
 <template>
   <div class="container" v-if="loaded && !error">
     <AppBreadcrumbs
-        :prop-chain-item="[{name: $route.params.model, path: ''}, {name: car['model_name'] + ' ' + car['configuration_name'], path: ''}]"/>
+        :prop-chain-item="[{name: $route.params.model, path:  '/' + $route.params.model}, {name: car['model_name'] + ' ' + car['configuration_name'], path: ''}]"/>
     <AppInfoCar :car="car"/>
     <div class="bottom-block">
       <AppExtraOptions :car="car"/>

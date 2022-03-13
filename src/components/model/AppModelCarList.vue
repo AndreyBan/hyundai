@@ -203,36 +203,6 @@ export default {
   opacity: .5;
 }
 
-.ml-car-options-icon--volume:before {
-  background: url("/images/instock/icon-volume.svg") 0 0 no-repeat;
-  width: 20px;
-  height: 16px;
-  background-size: 20px;
-}
-
-.ml-car-options-icon--power:before {
-  background: url("/images/instock/icon-power.svg") 0 0 no-repeat;
-  width: 13px;
-  height: 21px;
-  background-size: 13px;
-  top: -2px;
-}
-
-.ml-car-options-icon--transmission:before {
-  background: url("/images/instock/icon-transmission.svg") 0 0 no-repeat;
-  width: 16px;
-  height: 21px;
-  background-size: 16px;
-  top: -2px;
-}
-
-.ml-car-options-icon--drive:before {
-  background: url("/images/instock/icon-drive.svg") 0 0 no-repeat;
-  width: 16px;
-  height: 21px;
-  background-size: 16px;
-  top: -2px;
-}
 </style>
 
 <style scoped>
