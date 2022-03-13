@@ -18,9 +18,6 @@
         <br>
         Попробуйте отправить заявку позже.
       </div>
-      <div class="form-response__img">
-
-      </div>
     </div>
   </div>
 </template>
