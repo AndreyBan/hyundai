@@ -1,8 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import AppMainPage from '../views/AppMainPage'
-import AppModel from '../views/AppModel'
-import AppDetailPage from "../views/AppDetailPage";
 import NotFound from "../views/NotFound";
 
 Vue.use(VueRouter);
@@ -17,7 +14,7 @@ const routes = [
     {
         path: urlPath,
         name: 'MainPage',
-        component: AppMainPage,
+        component: () => import(/* webpackChunkName: "main" */'../views/AppMainPage'),
         meta: {
             breadcrumb: {name: 'Автомобили Hyundai в наличии'},
             keepComponents: ['MainPage', 'ModelPage'],
@@ -26,7 +23,7 @@ const routes = [
     {
         path: urlPath + ':model/',
         name: 'ModelPage',
-        component: AppModel,
+        component: () => import(/* webpackChunkName: "model" */'../views/AppModel.vue'),
         meta: {
             keepComponents: ['MainPage', 'ModelPage'],
         },
@@ -34,7 +31,7 @@ const routes = [
     {
         path: urlPath + ':model/:id/',
         name: 'DetailPage',
-        component: AppDetailPage,
+        component: () => import(/* webpackChunkName: "detail" */'../views/AppDetailPage'),
         meta: {
             keepComponents: ['MainPage', 'ModelPage'],
         }

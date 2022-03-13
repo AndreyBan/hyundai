@@ -9,7 +9,10 @@
   },
   "dependencies": {
     "@fancyapps/ui": "^4.0.5",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "core-js": "^3.6.5",
+    "install": "^0.13.0",
+    "uninstall": "0.0.0",
     "vue": "^2.6.11",
     "vue-ads-pagination": "^2.1.7",
     "vue-inputmask": "^0.2.1",
