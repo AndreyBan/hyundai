@@ -1,15 +1,23 @@
 <template>
   <ul class="breadcrumbs-list" :class="{'desktop-show': deviceDesktop}" itemtype="https://schema.org/BreadcrumbList">
+    <li itemprop="itemListElement"
+        itemscope="itemscope"
+        itemtype="https://schema.org/ListItem"
+        class="breadcrumbs-item">
+      <a  href="/"
+          class="router-link-active"
+          itemprop="item">
+        <span itemprop="name">Главная</span>
+      </a>
+      <meta itemprop="position" content="1">
+    </li>
     <li class="breadcrumbs-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"
         v-for="(item, i) in breadcrumbs" :key="i">
-      <router-link :to="item.path" itemprop="item" v-if="(i +1) !== breadcrumbs.length">
-        <span itemprop="name">{{ item.name }}</span>
-      </router-link>
-<!--      <a :href="item.path" itemprop="item" :title="item.title" v-if="(i +1) !== breadcrumbs.length">-->
-<!--        <span itemprop="name">{{ item.name }}</span>-->
-<!--      </a>-->
-      <span itemprop="name" v-else>{{ item.name }}</span>
-      <meta itemprop="position" :content="i + 1">
+    <router-link :to="item.path" itemprop="item" v-if="(i + 1) !== breadcrumbs.length">
+      <span itemprop="name">{{ item.name }}</span>
+    </router-link>
+    <span itemprop="name" v-else>{{ item.name }}</span>
+    <meta itemprop="position" :content="i + 2">
     </li>
   </ul>
 </template>
@@ -26,15 +34,10 @@ export default {
     return {
       chainItem: this.propChainItem,
       deviceDesktop: false,
-      basePath: "/auto-v-nalichii-new/",
       breadcrumbs: [
         {
-          name: "Главная",
-          path: "/"
-        },
-        {
           name: "Атомобили Hyundai в наличии",
-          path: "/auto-v-nalichii-new/"
+          path: "/"
         }
       ]
     }
@@ -42,14 +45,14 @@ export default {
   computed: {
     finishedCrumbs() {
       return this.chainItem.map(el => {
-        el.path = encodeURI(this.basePath + el.path);
+        el.path = encodeURI(el.path);
 
         return el;
       });
     }
   },
   created() {
-    if ( matchMedia('(min-width: 768px)').matches){
+    if (matchMedia('(min-width: 768px)').matches) {
       this.deviceDesktop = true;
     }
   },
@@ -68,9 +71,11 @@ export default {
   padding-left: 0;
   margin: 24px 0;
 }
-.breadcrumbs-list.desktop-show{
+
+.breadcrumbs-list.desktop-show {
   display: flex;
 }
+
 .breadcrumbs-item {
   position: relative;
 
@@ -100,6 +105,7 @@ export default {
     color: #333;
   }
 }
+
 @media (max-width: 991px) {
   .breadcrumbs-list {
     font-size: 14px;

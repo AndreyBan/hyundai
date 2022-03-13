@@ -15,7 +15,7 @@ const routes = [
         },
     },
     {
-        path: ':model/',
+        path: '/:model/',
         name: 'ModelPage',
         component: () => import(/* webpackChunkName: "model" */'../views/AppModel.vue'),
         meta: {
@@ -23,7 +23,7 @@ const routes = [
         },
     },
     {
-        path: ':model/:id/',
+        path: '/:model/:id/',
         name: 'DetailPage',
         component: () => import(/* webpackChunkName: "detail" */'../views/AppDetailPage'),
         meta: {
