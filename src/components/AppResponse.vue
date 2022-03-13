@@ -45,6 +45,7 @@ export default {
   border: 1px solid #B7B7B7;
 }
 .form-response__img{
+  margin-top: 16px;
   text-align: center;
 }
 </style>
