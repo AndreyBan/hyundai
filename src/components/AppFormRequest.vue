@@ -40,7 +40,7 @@
             <input type="text"
                    placeholder="Телефон*"
                    v-model="fields.phone"
-                   v-mask="{mask: '+7(999)999-99-99', showMaskOnHover: false}"
+                   v-mask="{mask: '+7(999) 999-99-99', showMaskOnHover: false}"
                    @input="maskCheck"
             >
 
@@ -153,13 +153,6 @@ export default {
         .catch(e => {
           console.log("Error message: " + e.message)
         })
-
-    if (this.get_cookie('_ym_uid')) {
-      this.fields['_ym_uid'] = this.get_cookie('_ym_uid');
-    }
-    if (this.get_cookie('_ga')) {
-      this.fields['_ga'] = this.getGa();
-    }
   }
 }
 </script>

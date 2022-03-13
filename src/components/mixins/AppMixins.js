@@ -110,7 +110,12 @@ export const mixinValidates = {
             }
         },
         maskCheck(field) {
-            this.fields.phone = field.target.inputmask.unmaskedvalue();
+            let unmasked = field.target.inputmask.unmaskedvalue();
+
+            if (unmasked.length < 10) {
+                this.fields.phone = unmasked;
+            }
+            console.log(this.fields.phone)
         },
         get_cookie(cookie_name) {
             let results = document.cookie.match('(^|;) ?' + cookie_name + '=([^;]*)(;|$)');
@@ -122,6 +127,14 @@ export const mixinValidates = {
             let tmp = cidLong.split('.');
 
             return tmp[2] + '.' + tmp[3];
+        }
+    },
+    mounted() {
+        if (this.get_cookie('_ym_uid')) {
+            this.fields['_ym_uid'] = this.get_cookie('_ym_uid');
+        }
+        if (this.get_cookie('_ga')) {
+            this.fields['_ga'] = this.getGa();
         }
     }
 }

@@ -52,7 +52,7 @@
           <input type="text"
                  placeholder="Телефон*"
                  v-model="fields.phone"
-                 v-mask="{mask: '+7(999)999-99-99', showMaskOnHover: false}"
+                 v-mask="{mask: '+7(999) 999-99-99', showMaskOnHover: false}"
                  @input="maskCheck"
           >
 
