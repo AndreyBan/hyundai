@@ -332,9 +332,10 @@ export default {
 @media (max-width: 767px) {
   .detail-form-page {
     padding: 18px;
+  }
+  .detail-form-page:not(.form-popup) {
     margin-top: 30px;
   }
-
   .detail-form-price-image {
     flex-direction: column;
   }
