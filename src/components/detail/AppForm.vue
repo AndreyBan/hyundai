@@ -34,11 +34,6 @@
             :class="{'show-error': $v.fields.$error}"
       >
 
-        <input type="hidden"
-               name="dealer"
-               :value="thisCar['dealer_center']"
-        >
-
         <div class="form-group">
           <input type="text"
                  placeholder="Имя и Фамилия*"
@@ -117,7 +112,16 @@ export default {
         name: "",
         phone: "",
         comment: "",
-        dealer: "",
+        dealer: this.car['dealer_center'],
+        adv: `Модель: ${this.car['model_name']}
+               Комплектация: ${this.car['configuration_name']}
+               Цвет: ${this.car['color']['real_color']['name']}
+               Цена со скидкой: ${this.car['price']}
+               Объем двигателя: ${this.car['engine_volume']}
+               Мощность двигателя: ${this.car['engine_power']}
+               Трансмиссия: ${this.car['transmission']}
+               Привод: ${this.car['gear_type']}
+               `,
         agree: false,
       },
       thisCar: this.car

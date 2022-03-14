@@ -52,7 +52,6 @@ export const mixinValidates = {
                 name: "",
                 phone: "",
                 comment: "",
-                dealer: "",
                 agree: false,
                 errors: {
                     agree: true,
