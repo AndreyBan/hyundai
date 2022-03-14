@@ -607,6 +607,7 @@ export default {
   position: absolute;
   right: 0;
   top: 0;
+  background-size: cover;
   background-position: 0 50%;
   background-repeat: no-repeat;
   width: 604px;
