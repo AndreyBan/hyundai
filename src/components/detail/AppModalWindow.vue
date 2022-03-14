@@ -105,7 +105,7 @@ export default {
   top: 24px;
   width: 24px;
   height: 24px;
-  z-index: 2;
+  z-index: 11;
   cursor: pointer;
 }
 

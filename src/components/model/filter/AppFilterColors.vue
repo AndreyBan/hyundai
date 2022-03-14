@@ -76,8 +76,8 @@ export default {
   }
 
   &-item {
+    position: relative;
     border: 1px solid #B7B7B7;
-    padding: 16px;
     margin-bottom: 30px;
 
     &__color {
@@ -110,13 +110,14 @@ export default {
         align-items: center;
         position: relative;
         cursor: pointer;
+        padding: 16px;
       }
 
       &:checked + label:before {
         content: '';
         position: absolute;
-        left: 2px;
-        top: 4px;
+        left: 18px;
+        top: calc(50% - 7px);
         width: 16px;
         height: 12px;
         z-index: 1;

@@ -104,7 +104,9 @@ export default {
   },
 
   mounted() {
-    window.scrollTo(0, 0)
+    if(matchMedia('(max-width:767px)').matches){
+      window.scrollTo(0, 0)
+    }
 
     let errorTimeout = setTimeout(() => this.error = true, 5000);
 

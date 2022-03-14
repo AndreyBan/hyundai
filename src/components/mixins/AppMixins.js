@@ -43,39 +43,40 @@ export const mixinValidates = {
             actionAfterSend: {
                 sendSuccess: false,
                 sendError: false
-            }
+            },
+            sendProcess: false,
+            errorPhone: false
         }
     },
     methods: {
-        resetObject(){
+        resetObject() {
             this.fields = {
                 name: "",
                 phone: "",
                 comment: "",
-                agree: false,
-                errors: {
-                    agree: true,
-                }
+                agree: ""
             }
         },
         openWindowSuccess() {
             this.modalShow = true;
 
             setTimeout(() => {
-                if (this.modalShow){
+                if (this.modalShow) {
                     this.modalShow = false;
                 }
             }, 5000);
         },
         checkForm() {
             this.$v.fields.$touch();
-
-            if (!this.$v.fields.$error && this.fields.agree) {
+            if (!this.fields.agree) this.fields.agree = "";
+            console.log(this.errorPhone)
+            if (!this.$v.fields.$error && this.fields.agree && !this.errorPhone) {
                 if (this.get_cookie('_ym_uid')) this.fields['_ym_uid'] = this.get_cookie('_ym_uid');
                 if (this.get_cookie('_ga')) this.fields['_ga'] = this.getGa();
 
                 let dataSend = JSON.stringify(this.fields);
                 let errorTimeout = setTimeout(() => this.actionAfterSend.sendError = true, 5000);
+                this.sendProcess = true;
 
                 try {
                     fetch(this.$requestUrl + '?data=send', {
@@ -99,9 +100,11 @@ export const mixinValidates = {
                         .finally(() => {
                             clearTimeout(errorTimeout);
                             this.openWindowSuccess();
+                            this.sendProcess = false;
                         })
                 } catch (e) {
                     this.actionAfterSend.sendError = true;
+                    this.sendProcess = false;
                     clearTimeout(errorTimeout);
                     console.log(e.message);
                 }
@@ -111,10 +114,7 @@ export const mixinValidates = {
         maskCheck(field) {
             let unmasked = field.target.inputmask.unmaskedvalue();
 
-            if (unmasked.length < 10) {
-                this.fields.phone = unmasked;
-            }
-            console.log(this.fields.phone)
+            this.errorPhone = unmasked.length < 10;
         },
         get_cookie(cookie_name) {
             let results = document.cookie.match('(^|;) ?' + cookie_name + '=([^;]*)(;|$)');

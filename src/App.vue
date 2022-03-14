@@ -234,6 +234,19 @@ label {
 
 .show-error #policy-agreement + label.no-check:before {
   border: 1px solid #ee0505;
+  animation: nocheck 1.1s linear infinite;
+}
+
+@keyframes nocheck {
+  from{
+    box-shadow: 0 0 0 0 rgba(238,5,5,.6);
+  }
+  50%{
+    box-shadow: 0 0 4px 1px rgba(238,5,5,.5);
+  }
+  to{
+    box-shadow: 0 0 0 0 rgba(238,5,5,.6);
+  }
 }
 
 #policy-agreement:checked + label:after {
@@ -258,7 +271,9 @@ label {
 .form-group {
   position: relative;
 }
-
+.wrap-relative{
+  position: relative;
+}
 @media only screen and (max-width: 1262px) {
   .container {
     padding-left: 40px;

@@ -23,6 +23,7 @@
         <v-select placeholder="Не выбран"
                   v-model.lazy="changedFilterList.engine_volume"
                   :options="filterList.engine_volume"
+                  :searchable="false"
                   @input="sendFilter"
                   :selectable="option => getVisibleValues(option, 'engine_volume')"
         >
@@ -41,6 +42,7 @@
       <div class="select-wrap">
         <v-select placeholder="Не выбран"
                   v-model.lazy="changedFilterList.transmission"
+                  :searchable="false"
                   :options="filterList.transmission"
                   @input="sendFilter"
                   :selectable="option => getVisibleValues(option, 'transmission')"
@@ -91,6 +93,7 @@
             </div>
             <div class="select-wrap">
               <v-select placeholder="Не выбран"
+                        :searchable="false"
                         v-model.lazy="changedFilterList.engine_power"
                         :options="filterList.engine_power"
                         @input="sendFilter"
@@ -106,6 +109,7 @@
             </div>
             <div class="select-wrap">
               <v-select placeholder="Не выбран"
+                        :searchable="false"
                         v-model.lazy="changedFilterList.gear_type"
                         :options="filterList.gear_type"
                         @input="sendFilter"
@@ -179,6 +183,9 @@ export default {
     // Получаем список видимых значений свойства
     getVisibleValues(option, property) {
       let updateList = this.updateFilterList[property];
+      if (updateList.length === 1) {
+        this.changedFilterList[property] = updateList[0];
+      }
 
       return updateList ? updateList.includes(option) : true
     },

@@ -1,9 +1,16 @@
 <template>
   <div v-if="!actionAfterSend.sendSuccess && !actionAfterSend.sendError">
+    <div class="preload-wrap" v-show="this.sendProcess">
+      <div class="sk-double-bounce">
+        <div class="sk-child sk-double-bounce-1"></div>
+        <div class="sk-child sk-double-bounce-2"></div>
+      </div>
+    </div>
     <div class="detail-form-page"
          v-if="thisCar"
          :class="{'form-popup': isPopup}"
     >
+
       <div class="detail-form__main-title" v-if="isPopup">забронировать автомобиль</div>
       <div class="detail-form__title">{{ thisCar["model_name"] }}</div>
       <div class="detail-form__subtitle">{{ thisCar["name"] }}</div>
@@ -31,7 +38,7 @@
       <form action=""
             class="detail-form"
             @submit.prevent="checkForm"
-            :class="{'show-error': $v.fields.$error}"
+            :class="{'show-error': $v.fields.$error || this.errorPhone}"
       >
 
         <div class="form-group">
@@ -44,15 +51,14 @@
           <p v-if="!$v.fields.name.cyrillic" class="error-text"> *Используйте русские буквы </p>
         </div>
         <div class="form-group">
-          <input type="tel"
+          <input type="text"
                  placeholder="Телефон*"
                  v-model="fields.phone"
                  v-mask="{mask: '+7(999) 999-99-99', showMaskOnHover: false}"
-                 @input="maskCheck"
-                 inputmode="numeric"
+                 @change="maskCheck"
           >
 
-          <p v-if="$v.fields.phone.$error" class="error-text">*Обязательное поле</p>
+          <p v-if="$v.fields.phone.$error || this.errorPhone" class="error-text">*Обязательное поле</p>
         </div>
         <div class="policy-agreement">
           <input type="checkbox"
@@ -81,7 +87,7 @@ import Vue from "vue";
 import {validationMixin} from 'vuelidate'
 import AppError from '../AppError';
 import AppResponse from "../AppResponse";
-import {minLength, required} from 'vuelidate/lib/validators';
+import {required} from 'vuelidate/lib/validators';
 import {mixinFormatPrice, mixinValidates} from "../mixins/AppMixins";
 
 
@@ -122,7 +128,7 @@ export default {
                Трансмиссия: ${this.car['transmission']}
                Привод: ${this.car['gear_type']}
                `,
-        agree: false,
+        agree: "",
       },
       thisCar: this.car
     }
@@ -131,14 +137,16 @@ export default {
   validations: {
     fields: {
       name: {required, cyrillic},
-      phone: {required, minLength: minLength(10)},
+      phone: {required},
       agree: {required}
     }
   },
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "/src/styles/preload-response";
+
 .detail-form__main-title {
   text-align: center;
   font-size: 24px;
@@ -294,10 +302,6 @@ export default {
   top: 3px;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-}
-
-.show-error #policy-agreement + label.no-check:before {
-  border: 1px solid #ee0505;
 }
 
 #policy-agreement:checked + label:after {

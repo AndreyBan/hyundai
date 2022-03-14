@@ -1,5 +1,12 @@
 <template>
-  <div>
+  <div class="wrap-relative">
+
+    <div class="preload-wrap" v-show="this.sendProcess">
+      <div class="sk-double-bounce">
+        <div class="sk-child sk-double-bounce-1"></div>
+        <div class="sk-child sk-double-bounce-2"></div>
+      </div>
+    </div>
     <form action=""
           class="form-request"
           @submit.prevent="checkForm"
@@ -10,7 +17,7 @@
         <p class="form-subtitle">Оставьте, пожалуйста, свои контактные данные. Мы свяжемся с Вами в ближайшее время и
           поможем подобрыть нужное
           авто.</p>
-        <div class="block-fields" :class="{'show-error': $v.fields.$error}">
+        <div class="block-fields" :class="{'show-error': $v.fields.$error || this.errorPhone}">
           <div class="form-group">
 
             <input type="text"
@@ -25,6 +32,8 @@
 
             <v-select placeholder="Выберите дилерский центр*"
                       :options="dealers"
+                      :searchable="false"
+                      class="select-dealers"
                       v-model="fields.dealer"
             >
 
@@ -45,7 +54,7 @@
                    inputmode="numeric"
             >
 
-            <p v-if="$v.fields.phone.$error" class="error-text">*Обязательное поле</p>
+            <p v-if="$v.fields.phone.$error || this.errorPhone" class="error-text">*Обязательное поле</p>
           </div>
           <div class="form-group">
 
@@ -80,7 +89,7 @@
       </div>
     </form>
     <AppModalWindow v-if="modalShow" @close-modal="modalShow = false">
-      <AppResponse :action-send="actionAfterSend" />
+      <AppResponse :action-send="actionAfterSend"/>
     </AppModalWindow>
   </div>
 </template>
@@ -90,7 +99,7 @@ import Vue from "vue";
 import AppModalWindow from "./detail/AppModalWindow";
 import AppResponse from "./AppResponse";
 import {validationMixin} from 'vuelidate'
-import {required, minLength} from 'vuelidate/lib/validators';
+import {required} from 'vuelidate/lib/validators';
 import {mixinValidates} from "./mixins/AppMixins";
 
 const VueInputMask = require('vue-inputmask').default
@@ -105,7 +114,7 @@ export default {
   validations: {
     fields: {
       name: {required, cyrillic},
-      phone: {required, minLength: minLength(10)},
+      phone: {required},
       dealer: {required},
       agree: {required}
     }
@@ -122,7 +131,7 @@ export default {
       phone: "",
       comment: "",
       dealer: "",
-      agree: false
+      agree: ""
     }
   }),
   methods: {
@@ -157,7 +166,9 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style scoped lang="scss">
+@import "/src/styles/preload-response";
+
 .form-group {
   position: relative;
 }
@@ -173,6 +184,10 @@ export default {
 
 .show-error .error-text {
   display: block;
+}
+
+.select-dealers {
+  background-color: #CFD0D0;
 }
 
 .policy-agreement {
