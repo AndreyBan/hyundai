@@ -72,7 +72,7 @@
       Ошибка загрузки формы!
     </AppError>
   </div>
-  <AppResponse :action-send="actionAfterSend" v-else-if="actionAfterSend.sendSuccess || actionAfterSend.sendError" />
+  <AppResponse :action-send="actionAfterSend" v-else-if="actionAfterSend.sendSuccess || actionAfterSend.sendError"/>
 </template>
 
 <script>
@@ -201,6 +201,13 @@ export default {
 
 .detail-form-page {
   padding: 48px 32px 56px;
+}
+
+.detail-form-page.form-popup {
+  box-shadow: 0 0 7px 0 rgba(0, 0, 0, .25);
+}
+
+.detail-form-page:not(.form-popup) {
   border: 1px solid #B7B7B7;
 }
 
@@ -317,10 +324,12 @@ export default {
   font-size: 14px;
   text-decoration: line-through;
 }
+
 .detail-form-page.form-popup {
   margin: 0;
   padding-top: 54px;
 }
+
 @media (max-width: 1279px) {
   .detail-form__image {
     max-width: 600px;
@@ -331,12 +340,15 @@ export default {
   .detail-form-page.form-popup {
     padding-top: 24px;
   }
+
   .detail-form-page {
     padding: 18px;
   }
+
   .detail-form-page:not(.form-popup) {
     margin-top: 30px;
   }
+
   .detail-form-price-image {
     flex-direction: column;
   }
