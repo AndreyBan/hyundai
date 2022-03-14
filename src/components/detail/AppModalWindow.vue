@@ -2,7 +2,7 @@
   <div class="modal-window" :class="{'modal-hidden': hideModal}">
     <div class="modal-wrap">
       <div class="modal-close" @click="closeModal"></div>
-      <div class="modal-content">
+      <div class="c-modal-content">
         <slot></slot>
       </div>
     </div>
@@ -68,7 +68,9 @@ export default {
   opacity: 0;
   animation: show ease-in .2s forwards;
 }
-
+.c-modal-content{
+  box-shadow: 0 0 7px 0 rgba(0, 0, 0, .25);
+}
 .modal-window.modal-hidden {
   animation: hide ease-out .2s forwards;
 }

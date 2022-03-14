@@ -203,10 +203,6 @@ export default {
   padding: 48px 32px 56px;
 }
 
-.detail-form-page.form-popup {
-  box-shadow: 0 0 7px 0 rgba(0, 0, 0, .25);
-}
-
 .detail-form-page:not(.form-popup) {
   border: 1px solid #B7B7B7;
 }
