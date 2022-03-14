@@ -53,7 +53,6 @@ $bgColor: #E4DCD3;
 }
 .btn-link{
   display: block;
-
   @include block-preload(48px, 292px);
   background-color: #E4DCD3;
 }
@@ -86,5 +85,10 @@ $bgColor: #E4DCD3;
   } to {
       left: 100%;
     }
+}
+@media (max-width: 767px) {
+  .btn-link{
+    @include block-preload(48px, 100%);
+  }
 }
 </style>

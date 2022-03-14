@@ -334,7 +334,8 @@ export default {
 
 @media (max-width: 767px) {
   .detail-form-page.form-popup {
-    padding-top: 24px;
+    padding-top: 48px;
+    padding-bottom: 48px;
   }
 
   .detail-form-page {

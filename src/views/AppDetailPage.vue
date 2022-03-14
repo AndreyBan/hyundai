@@ -71,6 +71,8 @@ export default {
     }
   },
   mounted() {
+    window.scrollTo(0, 0)
+
     let errorTimeout = setTimeout(() => this.error = true, 5000);
 
     fetch(this.$requestUrl + '?data=car-detail&id=' + this.$route.params.id, {method: 'POST'})

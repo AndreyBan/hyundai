@@ -36,7 +36,7 @@
       </div>
       <div class="select-wrap" v-if="allCars.length > 1">
         <AppPriceRange :min-price="this.minPrice" :max-price="this.maxPrice" @up-price="getPrice"
-                       :reset="reset" />
+                       :reset="reset"/>
       </div>
       <div class="select-wrap">
         <v-select placeholder="Не выбран"
@@ -603,7 +603,7 @@ export default {
   background-size: cover;
 }
 
-.model-filter__img{
+.model-filter__img {
   position: absolute;
   right: 0;
   top: 0;
@@ -613,6 +613,7 @@ export default {
   width: 604px;
   height: 260px;
 }
+
 @media (max-width: 1560px) {
 
 
@@ -669,7 +670,7 @@ export default {
 }
 
 @media (max-width: 991px) {
-  .range-slider-wrap{
+  .range-slider-wrap {
     margin-top: 0;
   }
   .mf-selects {
@@ -694,7 +695,7 @@ export default {
   .model-filter__img {
     display: none;
   }
-  .model-filter .select-wrap{
+  .model-filter .select-wrap {
     margin-right: 0;
   }
   .colors-wrap {
