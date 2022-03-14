@@ -132,7 +132,9 @@ export default {
 @media (max-width: 767px) {
   .modal-wrap {
     width: 100%;
-
+  }
+  .modal-close {
+    top: 36px;
   }
 }
 </style>
