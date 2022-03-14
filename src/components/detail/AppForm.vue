@@ -133,24 +133,7 @@ export default {
   },
 }
 </script>
-<style>
-.form-group {
-  position: relative;
-}
 
-.detail-form .vs__actions:before {
-  content: "";
-  position: absolute;
-  width: 9px;
-  height: 5px;
-  right: 16px;
-  background: url("/images/instock/select-arrow.svg") 50% 50% no-repeat;
-  background-size: 9px;
-  -webkit-transition-duration: .35s;
-  -o-transition-duration: .35s;
-  transition-duration: .35s;
-}
-</style>
 <style scoped>
 .detail-form__main-title {
   text-align: center;

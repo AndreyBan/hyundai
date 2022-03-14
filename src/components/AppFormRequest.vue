@@ -144,7 +144,7 @@ export default {
     }
   },
   mounted() {
-    fetch('https://agat-hyundai.ru/ajax/api_instock.php?data=dealers', {method: "POST"})
+    fetch(window.startRequestUrl + '?data=dealers', {method: "POST"})
         .then(res => res.json())
         .then(res => {
           if (res["dealers"]) {
@@ -157,76 +157,6 @@ export default {
   }
 }
 </script>
-<style>
-
-.form-request .vs__actions:before {
-  content: "";
-  position: absolute;
-  width: 14px;
-  height: 10px;
-  right: 16px;
-  background: url("/images/instock/select-arrow.svg") 50% 50% no-repeat;
-  transition-duration: .35s;
-}
-
-.vs--open .vs__actions:before {
-  transform: rotate(180deg);
-}
-
-
-.form-request .vs--searchable .vs__dropdown-toggle {
-  background-color: #CFD0D0;
-}
-
-.form-request .vs__dropdown-menu {
-  background-color: #CFD0D0;
-}
-
-
-#policy-agreement + label {
-  position: relative;
-  cursor: pointer;
-  padding-left: 32px;
-  display: inline-block;
-  line-height: 20px;
-}
-
-#policy-agreement + label:before {
-  content: '';
-  position: absolute;
-  border: 1px solid #fff;
-  width: 16px;
-  height: 16px;
-  left: 0;
-  top: 3px;
-  box-sizing: border-box;
-}
-
-.show-error #policy-agreement + label.no-check:before {
-  border: 1px solid #ee0505;
-}
-
-#policy-agreement:checked + label:after {
-  content: '';
-  background: url("/images/instock/checked.svg") 50% 50% no-repeat;
-  width: 10px;
-  height: 10px;
-  background-size: 10px;
-  position: absolute;
-  left: 3px;
-  top: 5px;
-}
-
-.btn.btn--dark {
-  transition-duration: .2s;
-  background-color: #00AAD2;
-}
-
-.btn--dark:hover {
-  background-color: #20C6ED;
-}
-</style>
-
 <style scoped>
 .form-group {
   position: relative;

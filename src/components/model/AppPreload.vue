@@ -54,7 +54,7 @@
 
 <script>
 export default {
-  name: "ModelPreload"
+  name: "AppPreload"
 }
 </script>
 

@@ -78,7 +78,7 @@ import AppForm from "./AppForm";
 import {mixinFormatPrice} from "../mixins/AppMixins";
 
 export default {
-  name: "CarInfo",
+  name: "AppInfoCar",
   props: {
     car: {
       type: Object

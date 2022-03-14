@@ -79,7 +79,7 @@ export const mixinValidates = {
                 let errorTimeout = setTimeout(() => this.actionAfterSend.sendError = true, 5000);
 
                 try {
-                    fetch('https://agat-hyundai.ru/ajax/api_instock.php?data=send', {
+                    fetch(window.startRequestUrl + '?data=send', {
                         headers: {"Content-Type": "application/x-www-form-urlencoded"},
                         method: 'POST',
                         body: "body=" + dataSend

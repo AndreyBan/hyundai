@@ -136,7 +136,7 @@ import AppPriceRange from "./filter/AppPriceRange";
 import {mixinFilterProp, mixinScrollToCars} from "../mixins/AppMixins";
 
 export default {
-  name: "ModelFilter",
+  name: "AppFilter",
   props: {
     cars: {
       type: Array,

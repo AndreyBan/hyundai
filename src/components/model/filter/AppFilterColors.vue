@@ -17,7 +17,7 @@
 
 <script>
 export default {
-  name: "filterColors",
+  name: "AppFilterColors",
   props: ["colors", "reset"],
   data() {
     return {

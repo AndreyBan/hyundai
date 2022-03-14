@@ -46,7 +46,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .section-filter {
   padding: 42px 130px 42px 100px;
   box-shadow: 0 0 10px rgba(0, 52, 105, 0.1);

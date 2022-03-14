@@ -80,7 +80,7 @@ import AppForm from "../detail/AppForm";
 import {mixinFormatPrice, mixinScrollToCars} from "../mixins/AppMixins";
 
 export default {
-  name: "ModelCarList",
+  name: "AppModelCarList",
   props: {
     cars: {
       type: Array,
