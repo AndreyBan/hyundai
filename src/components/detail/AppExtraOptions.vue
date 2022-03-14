@@ -3,12 +3,12 @@
     <div class="extra-options__title">
       Особенности
     </div>
-    <div class="extra-options__list">
+    <ul class="extra-options__list">
       <AppOptionItem v-for="(opt, i) in options"
                      :key="i"
                      :name="i"
                      :list="opt"/>
-    </div>
+    </ul>
   </div>
 </template>
 

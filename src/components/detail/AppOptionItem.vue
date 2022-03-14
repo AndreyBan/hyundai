@@ -1,6 +1,6 @@
 <template>
     <li v-if="name" :class="{'open': isOpen}" @click="isOpen = !isOpen">
-      {{ name }}
+      <span class="title-upper">{{ name }}</span>
       <ul>
         <li v-for="item in list" :key="item">{{ item }}</li>
       </ul>
@@ -47,6 +47,10 @@ export default {
   padding-left: 32px;
   position: relative;
   cursor: pointer;
+}
+
+.title-upper{
+  text-transform: uppercase;
 }
 
 .extra-options__list > li:after {
