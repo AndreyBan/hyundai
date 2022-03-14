@@ -63,7 +63,7 @@ export default {
   mounted() {
     let errorTimeout = setTimeout(() => this.error = true, 5000);
 
-    fetch(window.startRequestUrl + '?data=model-list', {method: "POST"})
+    fetch(this.$requestUrl + '?data=model-list', {method: "POST"})
         .then(res => res.json())
         .then(res => {
           if (res["status"] == "success") {

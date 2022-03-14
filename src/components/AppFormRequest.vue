@@ -144,7 +144,7 @@ export default {
     }
   },
   mounted() {
-    fetch(window.startRequestUrl + '?data=dealers', {method: "POST"})
+    fetch(this.$requestUrl + '?data=dealers', {method: "POST"})
         .then(res => res.json())
         .then(res => {
           if (res["dealers"]) {

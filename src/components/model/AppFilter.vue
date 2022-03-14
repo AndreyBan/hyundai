@@ -34,7 +34,7 @@
           </template>
         </v-select>
       </div>
-      <div class="select-wrap">
+      <div class="select-wrap" v-if="allCars.length > 1">
         <AppPriceRange :min-price="this.minPrice" :max-price="this.maxPrice" @up-price="getPrice"
                        :reset="reset" />
       </div>

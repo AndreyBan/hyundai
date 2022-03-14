@@ -78,7 +78,7 @@ export const mixinValidates = {
                 let errorTimeout = setTimeout(() => this.actionAfterSend.sendError = true, 5000);
 
                 try {
-                    fetch(window.startRequestUrl + '?data=send', {
+                    fetch(this.$requestUrl + '?data=send', {
                         headers: {"Content-Type": "application/x-www-form-urlencoded"},
                         method: 'POST',
                         body: "body=" + dataSend
