@@ -41,6 +41,7 @@ export default {
 
 .extra-options__list > li {
   font-size: 14px;
+  line-height: 16px;
   padding-bottom: 12px;
   border-bottom: 1px solid #E5E5E5;
   font-weight: 500;
