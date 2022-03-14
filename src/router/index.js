@@ -4,6 +4,7 @@ import NotFound from "../views/NotFound";
 
 Vue.use(VueRouter);
 
+
 const routes = [
     {
         path: '/',
