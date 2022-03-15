@@ -55,7 +55,6 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach((to, from) => {
     if (to.name === 'NotFound'){
-        console.log(from)
         history.pushState("", "", '/auto-v-nalichii' + from.path);
     }
 })
