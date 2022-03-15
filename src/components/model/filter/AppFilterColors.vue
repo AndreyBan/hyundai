@@ -111,6 +111,7 @@ export default {
         position: relative;
         cursor: pointer;
         padding: 16px;
+        margin: 0;
       }
 
       &:checked + label:before {
