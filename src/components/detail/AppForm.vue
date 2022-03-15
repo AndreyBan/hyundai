@@ -6,16 +6,19 @@
          :class="{'form-popup': isPopup}"
     >
 
-      <div class="detail-form__main-title" v-if="isPopup">забронировать автомобиль</div>
+      <div class="detail-form__main-title" v-if="isPopup">{{ hidePrice ? 'запросить цену' : 'забронировать автомобиль'}}</div>
       <div class="detail-form__title">{{ thisCar["model_name"] }}</div>
       <div class="detail-form__subtitle">{{ thisCar["name"] }}</div>
       <div class="detail-form-price-image">
-        <div class="detail-form__price">
+        <div class="detail-form__price" v-if="!hidePrice">
           Стоимость: <span>{{ formatPrice(thisCar["price"]) }} ₽*</span>
           <div class="detail-form__price-old"
                v-if="isPopup && (thisCar['price_full4specials'] && thisCar['price_full4specials'] > 0)">от
             {{ formatPrice(thisCar['price_full4specials']) }} ₽
           </div>
+        </div>
+        <div class="detail-form__price" v-else>
+       <span>Цена по запросу</span>
         </div>
         <div class="detail-form__image">
           <img :src="thisCar['model_picture']"
@@ -65,7 +68,7 @@
             <br><a href="#">Смотреть правила</a>
           </label>
         </div>
-        <button type="submit" class="btn btn--blue-dark">забронировать авто</button>
+        <button type="submit" class="btn btn--blue-dark">{{ hidePrice ? 'запросить цену' : 'забронировать авто'}}</button>
       </form>
 
     </div>
@@ -107,6 +110,11 @@ export default {
     car: {
       type: Object,
       required: true
+    },
+    hidePrice: {
+      type: Boolean,
+      required: true,
+      default: false
     }
   },
   data() {

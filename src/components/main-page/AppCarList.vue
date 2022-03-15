@@ -78,6 +78,7 @@ export default {
             this.dataLoad = true;
             clearTimeout(errorTimeout);
 
+
           } else {
             this.error = true;
           }

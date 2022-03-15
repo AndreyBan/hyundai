@@ -2,12 +2,12 @@
   <div class="container" v-if="loaded && !error">
     <AppBreadcrumbs
         :prop-chain-item="[{name: $route.params.model, path:  '/' + $route.params.model}, {name: car['model_name'] + ' ' + car['configuration_name'], path: ''}]"/>
-    <AppInfoCar :car="car"/>
+    <AppInfoCar :car="car" :hide-price="hidePrice" />
     <div class="bottom-block">
       <AppExtraOptions :car="car"/>
       <div>
         <div class="sticky-form">
-          <AppForm :car="car"/>
+          <AppForm :car="car" :hide-price="hidePrice" />
         </div>
       </div>
     </div>
@@ -52,6 +52,7 @@ export default {
         title: 'Hyundai в наличии',
         description: 'Hyundai в наличии - характеристики, цена, скидки.',
       },
+      hidePrice: false
     }
   },
   beforeRouteLeave(to, from, next) {
@@ -90,6 +91,7 @@ export default {
               this.metaData.description = `Купить новый ${this.car["name"]} ${this.car["engine_volume"]} ${this.car["color"]["name"]} ${this.car["transmission"]} по цене ${this.car["price"]}  руб. в ${cityIn}. Автокредит, лизинг, спецпредложения. ${this.car["name"]} в наличии у официального дилера АГАТ.`;
             }
 
+            this.hidePrice = res["hide_price"];
             this.loaded = true;
             clearTimeout(errorTimeout);
 

@@ -35,7 +35,7 @@
           </template>
         </v-select>
       </div>
-      <div class="select-wrap" v-if="allCars.length > 1">
+      <div class="select-wrap" v-if="allCars.length > 1 && !hidePrice">
         <AppPriceRange :min-price="this.minPrice" :max-price="this.maxPrice" @up-price="getPrice"
                        :reset="reset"/>
       </div>
@@ -154,6 +154,11 @@ export default {
     modelImage: {
       type: String,
       default: ""
+    },
+    hidePrice: {
+      type: Boolean,
+      required: true,
+      default: false
     }
   },
   mixins: [mixinFilterProp, mixinScrollToCars],

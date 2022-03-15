@@ -9,12 +9,17 @@
           {{ carInfo["name"] }}
         </div>
       </div>
-      <div class="car-info-price">
-        <div class="car-info-price-row">
+      <div class="car-info-price" v-if="!hidePrice">
+        <div class="car-info-price-row" >
           <span class="car-info-price__new">{{ formatPrice(carInfo["price"]) }} ₽*</span>
           <span class="car-info-price__old"  v-if="(carInfo['price_full4specials'] && carInfo['price_full4specials'] > 0)">от {{ formatPrice(carInfo['price_full4specials']) }} ₽</span>
         </div>
         <div class="car-info-price__credit" v-if="carInfo['credit']">В кредит от <span>{{ formatPrice(carInfo["credit"]) }} ₽/мес.</span></div>
+      </div>
+      <div class="car-info-price" v-else>
+        <div class="car-info-price-row">
+          <span class="car-info-price__new"> Цена по запросу </span>
+        </div>
       </div>
     </div>
     <div class="car-info-grid">
@@ -54,8 +59,9 @@
               +7 (831) 266-47-08
             </div>
           </div>
-          <div class="btn btn--blue-dark" data-fancybox @click="modalShow = true">забронировать
-            авто</div>
+          <div class="btn btn--blue-dark" data-fancybox @click="modalShow = true">
+            {{ hidePrice ? 'запросить цену' : 'забронировать авто' }}
+          </div>
         </div>
       </div>
       <div class="car-info-buttons-wrap">
@@ -66,7 +72,7 @@
         </div>
       </div>
       <AppModalWindow v-if="modalShow" @close-modal="modalShow = false">
-        <AppForm :car="carInfo" :is-popup="true"/>
+        <AppForm :car="carInfo" :is-popup="true" :hide-price="hidePrice"/>
       </AppModalWindow>
     </div>
   </section>
@@ -82,6 +88,11 @@ export default {
   props: {
     car: {
       type: Object
+    },
+    hidePrice: {
+      type: Boolean,
+      required: true,
+      default: false
     }
   },
   mixins: [mixinFormatPrice],

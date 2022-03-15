@@ -19,11 +19,14 @@
                  v-if="el['color']">
             <img :src="el['model_picture']" alt="" v-else>
           </div>
-          <div class="ml-car-price">
+          <div class="ml-car-price" v-if="!hidePrice">
             <div class="ml-car-price__new">{{ formatPrice(el["price"]) }} ₽*</div>
             <div class="ml-car-price__old" v-if="(el['price_full4specials'] && el['price_full4specials'] > 0)">от
               {{ formatPrice(el['price_full4specials']) }} ₽
             </div>
+          </div>
+          <div class="ml-car-price" v-else>
+            <div class="ml-car-price__request">Цена по запросу</div>
           </div>
           <hr class="ml-separate">
           <div class="ml-car-options">
@@ -49,7 +52,7 @@
               <div class="ml-car-options__value">{{ el['gear_type'] }}</div>
             </div>
           </div>
-          <div class="btn btn--blue-dark" data-fancybox @click="getCarForModal(el)">хочу скидку</div>
+          <div class="btn btn--blue-dark" data-fancybox @click="getCarForModal(el)">{{ hidePrice ? 'запросить цену' : 'хочу скидку' }}</div>
           <div class="btn btn--dark" data-fancybox @click="getCarForModal(el)">обратный звонок</div>
         </div>
       </div>
@@ -66,7 +69,7 @@
       </paginate>
 
       <AppModalWindow v-if="modalShow" @close-modal="modalShow = false">
-        <AppForm :is-popup="true" :car="carsModal"/>
+        <AppForm :is-popup="true" :car="carsModal" :hide-price="hidePrice" />
       </AppModalWindow>
     </div>
     <div class="not-find-cars" v-else>По заданным параметрам автомобилей в наличии нет</div>
@@ -93,6 +96,11 @@ export default {
     dealers: {
       type: Array,
       required: true
+    },
+    hidePrice: {
+      type: Boolean,
+      required: true,
+      default: false
     }
   },
   mixins: [mixinFormatPrice, mixinScrollToCars],
@@ -318,7 +326,11 @@ export default {
   font-weight: 500;
   color: #003469;
 }
-
+.ml-car-price__request{
+  font-size: 18px;
+  font-weight: 500;
+  color: #003469;
+}
 .ml-car-price__old {
   text-decoration: line-through;
   font-weight: 400;
