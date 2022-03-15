@@ -157,7 +157,7 @@ export default {
         this.maxValue = this.max;
         this.minValue = this.min;
 
-        return false;
+        // return false;
       }
 
       if (e) {
