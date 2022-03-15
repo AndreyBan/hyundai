@@ -307,6 +307,7 @@ export default {
   grid-template: 1fr / 70% 30%;
   column-gap: 8px;
   row-gap: 32px;
+  line-height: 16px;
 }
 
 .ml-car-options__name {
