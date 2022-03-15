@@ -1,11 +1,6 @@
 <template>
   <div v-if="!actionAfterSend.sendSuccess && !actionAfterSend.sendError">
-    <div class="preload-wrap" v-show="this.sendProcess">
-      <div class="sk-double-bounce">
-        <div class="sk-child sk-double-bounce-1"></div>
-        <div class="sk-child sk-double-bounce-2"></div>
-      </div>
-    </div>
+    <AppPreloadResponse :send-process="sendProcess" />
     <div class="detail-form-page"
          v-if="thisCar"
          :class="{'form-popup': isPopup}"
@@ -87,6 +82,7 @@ import Vue from "vue";
 import {validationMixin} from 'vuelidate'
 import AppError from '../AppError';
 import AppResponse from "../AppResponse";
+import AppPreloadResponse from "../AppPreloadResponse";
 import {required} from 'vuelidate/lib/validators';
 import {mixinFormatPrice, mixinValidates} from "../mixins/AppMixins";
 
@@ -101,7 +97,8 @@ export default {
   name: "AppForm",
   components: {
     AppError,
-    AppResponse
+    AppResponse,
+    AppPreloadResponse
   },
   props: {
     isPopup: {
@@ -144,8 +141,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-@import "/src/styles/preload-response";
+<style scoped>
 
 .detail-form__main-title {
   text-align: center;

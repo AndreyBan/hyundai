@@ -55,7 +55,8 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach((to, from) => {
     if (to.name === 'NotFound'){
-        window.history.pushState("", "", from.path);
+        console.log(from)
+        history.pushState("", "", '/auto-v-nalichii' + from.path);
     }
 })
 export default router

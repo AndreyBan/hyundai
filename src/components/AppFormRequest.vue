@@ -1,12 +1,7 @@
 <template>
   <div class="wrap-relative">
 
-    <div class="preload-wrap" v-show="this.sendProcess">
-      <div class="sk-double-bounce">
-        <div class="sk-child sk-double-bounce-1"></div>
-        <div class="sk-child sk-double-bounce-2"></div>
-      </div>
-    </div>
+    <AppPreloadResponse :send-process="sendProcess" />
     <form action=""
           class="form-request"
           @submit.prevent="checkForm"
@@ -97,6 +92,7 @@
 <script>
 import Vue from "vue";
 import AppModalWindow from "./detail/AppModalWindow";
+import AppPreloadResponse from "./AppPreloadResponse";
 import AppResponse from "./AppResponse";
 import {validationMixin} from 'vuelidate'
 import {required} from 'vuelidate/lib/validators';
@@ -121,7 +117,8 @@ export default {
   },
   components: {
     AppModalWindow,
-    AppResponse
+    AppResponse,
+    AppPreloadResponse
   },
   data: () => ({
     dataDealers: {},
@@ -167,7 +164,6 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-@import "/src/styles/preload-response";
 
 .form-group {
   position: relative;
