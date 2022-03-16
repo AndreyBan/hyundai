@@ -4,7 +4,7 @@
       <AppPreloaderCars v-for="i in 8" :key="i"/>
     </template>
     <template v-else-if="dataLoad && models.length">
-      <AppCarItem v-for="(el, i) in models" :key="i" :element="el" :type="type"></AppCarItem>
+      <AppCarItem v-for="(el, i) in models" :key="i" :element="el" :type="type" :hide-price="hidePrice"></AppCarItem>
     </template>
     <div class="not-find-cars" v-else-if="dataLoad && !models.length">По заданным параметрам автомобилей в наличии нет</div>
     <Error v-if="error"/>
@@ -48,7 +48,8 @@ export default {
         description: 'Hyundai в наличии - характеристики, цена, скидки.',
       },
       error: false,
-      dataLoad: false
+      dataLoad: false,
+      hidePrice: false
     }
   },
   computed: {
@@ -74,6 +75,7 @@ export default {
               this.metaData.description = `Hyundai в наличии в ${cityIn} - характеристики, цена, скидки.`;
             }
 
+            this.hidePrice = res["hide_price"];
             this.dataModels = res["data"][0]["models"];
             this.dataLoad = true;
             clearTimeout(errorTimeout);

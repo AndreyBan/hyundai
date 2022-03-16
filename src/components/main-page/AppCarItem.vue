@@ -6,7 +6,7 @@
       <div class="car-item__title"  itemprop="name">
         {{ element["name_ru"] + " / " + element["name_en"] }}
       </div>
-      <div class="car-item__price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+      <div class="car-item__price" itemprop="offers" itemscope itemtype="https://schema.org/Offer" v-if="!hidePrice">
         от <span itemprop="price" :content="element['min_price']">{{ formatPrice(element["min_price"]) }}</span> <span itemprop="priceCurrency" content="RUB">₽</span>
         <link itemprop="availability" href="https://schema.org/InStock" />
       </div>
@@ -35,6 +35,11 @@ export default {
       type: String,
       default: "",
       required: true
+    },
+    hidePrice: {
+      type: Boolean,
+      required: true,
+      default: false
     }
   },
   data() {
