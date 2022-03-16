@@ -1,13 +1,17 @@
 <template>
-    <div class="car-item" v-if="element['body_type'].toLowerCase() === type || !type" @click="$router.push({ name: 'ModelPage', params: { model: element['name_en']}})">
-      <div class="car-item__title">
+    <div class="car-item" itemscope itemtype="https://schema.org/Product" v-if="element['body_type'].toLowerCase() === type || !type" @click="$router.push({ name: 'ModelPage', params: { model: element['name_en']}})">
+      <meta itemprop="brand" content="Hyundai">
+      <meta itemprop="model" :content="element['name_en']">
+      <meta itemprop="url" :content="urlHost + encodeURI(element['name_en']) + '/'">
+      <div class="car-item__title"  itemprop="name">
         {{ element["name_ru"] + " / " + element["name_en"] }}
       </div>
-      <div class="car-item__price">
-        от {{ formatPrice(element["min_price"]) }} ₽
+      <div class="car-item__price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+        от <span itemprop="price" :content="element['min_price']">{{ formatPrice(element["min_price"]) }}</span> <span itemprop="priceCurrency" content="RUB">₽</span>
+        <link itemprop="availability" href="https://schema.org/InStock" />
       </div>
       <div class="car-item__img">
-        <img :src="element['img']" alt="" >
+        <img :src="element['img']" :alt="element['name_en']" itemprop="image" >
       </div>
       <div class="btn-link" > {{ element["instock_count"] }} авто в наличии</div>
       <div class="wrap-credit" v-if="element['credit']">
@@ -31,6 +35,11 @@ export default {
       type: String,
       default: "",
       required: true
+    }
+  },
+  data() {
+    return {
+      urlHost: location.href
     }
   },
   mixins: [mixinFormatPrice]

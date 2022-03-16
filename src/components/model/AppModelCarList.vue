@@ -5,9 +5,13 @@
         {{ filteredCars.length }} авто Hyundai {{ model }} в наличии в {{ instockText }}
       </div>
       <div class="ml-car-wrap">
-        <div class="ml-car-item" v-for="el in showCars" :key="el.id">
+        <div class="ml-car-item" itemscope itemtype="https://schema.org/Product" v-for="el in showCars" :key="el.id">
+          <meta itemprop="brand" content="Hyundai">
+          <meta itemprop="model" :content="el['name_en']">
+          <meta itemprop="url" :content="urlHost + '/' + el.id + '/'">
           <div class="ml-car-item__title"
-               @click="$router.push({ name: 'DetailPage', params: {model: model, id: el.id} })">
+               @click="$router.push({ name: 'DetailPage', params: {model: model, id: el.id} })"
+               itemprop="name">
             {{ el["model_name"] }}
           </div>
           <div class="ml-car-item__subtitle"
@@ -15,19 +19,32 @@
           </div>
           <div class="ml-car-item__img"
                @click="$router.push({ name: 'DetailPage', params: {model: model, id: el.id} })">
-            <img :src="el['model_picture']" alt="" :style="{backgroundColor: el['color']['real_color']['value']}"
-                 v-if="el['color']">
-            <img :src="el['model_picture']" alt="" v-else>
+            <img :src="el['model_picture']"
+                 :alt="el['model_name']"
+                 :style="{backgroundColor: el['color']['real_color']['value']}"
+                 v-if="el['color']"
+                 itemprop="image">
+
+            <img :src="el['model_picture']"
+                 :alt="el['model_name']"
+                 itemprop="image"
+                 v-else>
           </div>
-          <div class="ml-car-price" v-if="!hidePrice">
-            <div class="ml-car-price__new">{{ formatPrice(el["price"]) }} ₽*</div>
+          <div class="ml-car-price" v-if="!hidePrice" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+            <div class="ml-car-price__new"><span itemprop="price" :content="el['price']">
+              {{ formatPrice(el["price"]) }}</span> <span itemprop="priceCurrency" content="RUB">₽*</span></div>
             <div class="ml-car-price__old" v-if="(el['price_full4specials'] && el['price_full4specials'] > 0)">от
               {{ formatPrice(el['price_full4specials']) }} ₽
             </div>
+            <link itemprop="availability" href="https://schema.org/InStock"/>
           </div>
           <div class="ml-car-price" v-else>
             <div class="ml-car-price__request">Цена по запросу</div>
+            <meta itemprop="price" :content="el['price']">
+            <meta itemprop="priceCurrency" content="RUB">
+            <link itemprop="availability" href="https://schema.org/InStock"/>
           </div>
+
           <hr class="ml-separate">
           <div class="ml-car-options">
             <div class="ml-car-options-row">
@@ -52,7 +69,9 @@
               <div class="ml-car-options__value">{{ el['gear_type'] }}</div>
             </div>
           </div>
-          <div class="btn btn--blue-dark" data-fancybox @click="getCarForModal(el)">{{ hidePrice ? 'запросить цену' : 'хочу скидку' }}</div>
+          <div class="btn btn--blue-dark" data-fancybox @click="getCarForModal(el)">
+            {{ hidePrice ? 'запросить цену' : 'хочу скидку' }}
+          </div>
           <div class="btn btn--dark" data-fancybox @click="getCarForModal(el)">обратный звонок</div>
         </div>
       </div>
@@ -69,7 +88,7 @@
       </paginate>
 
       <AppModalWindow v-if="modalShow" @close-modal="modalShow = false">
-        <AppForm :is-popup="true" :car="carsModal" :hide-price="hidePrice" />
+        <AppForm :is-popup="true" :car="carsModal" :hide-price="hidePrice"/>
       </AppModalWindow>
     </div>
     <div class="not-find-cars" v-else>По заданным параметрам автомобилей в наличии нет</div>
@@ -119,7 +138,8 @@ export default {
       page: 1,
       showMore: true,
       modalShow: false,
-      carsModal: {}
+      carsModal: {},
+      urlHost: location.href
     }
   },
   methods: {
@@ -157,10 +177,10 @@ export default {
     getCount() {
       return Math.ceil(this.filteredCars.length / this.showCount);
     },
-    instockText(){
+    instockText() {
       let text = 'Hyundai АГАТ';
 
-      if (this.selfDealers && this.selfDealers.length === 1){
+      if (this.selfDealers && this.selfDealers.length === 1) {
         text = this.selfDealers[0]["UF_NAME"];
       }
 
@@ -223,11 +243,13 @@ export default {
   transition-duration: .2s;
   cursor: pointer;
 }
-.not-find-cars{
+
+.not-find-cars {
   margin: 80px 0 40px;
   font-size: 24px;
   text-align: center;
 }
+
 .show-more:hover {
   transition-duration: .2s;
   color: #FFFFFF;
@@ -327,11 +349,13 @@ export default {
   font-weight: 500;
   color: #003469;
 }
-.ml-car-price__request{
+
+.ml-car-price__request {
   font-size: 18px;
   font-weight: 500;
   color: #003469;
 }
+
 .ml-car-price__old {
   text-decoration: line-through;
   font-weight: 400;
