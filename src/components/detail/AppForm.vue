@@ -54,6 +54,7 @@
                  v-model="fields.phone"
                  v-mask="{mask: '+7(999) 999-99-99', showMaskOnHover: false}"
                  @change="maskCheck"
+                 inputmode="numeric"
           >
 
           <p v-if="$v.fields.phone.$error || this.errorPhone" class="error-text">*Обязательное поле</p>
