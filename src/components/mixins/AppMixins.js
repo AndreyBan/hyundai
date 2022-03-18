@@ -37,6 +37,7 @@ export const mixinScrollToCars = {
     }
 }
 
+
 export const mixinValidates = {
     data() {
         return {
