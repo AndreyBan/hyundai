@@ -70,8 +70,10 @@ export const mixinValidates = {
         checkForm() {
             this.$v.fields.$touch();
             if (!this.fields.agree) this.fields.agree = "";
-            console.log(this.errorPhone)
+
             if (!this.$v.fields.$error && this.fields.agree && !this.errorPhone) {
+                dataLayer.push({'event':'ga-event', 'Category':'buycar', 'Action':'sendok'});
+
                 if (this.get_cookie('_ym_uid')) this.fields['_ym_uid'] = this.get_cookie('_ym_uid');
                 if (this.get_cookie('_ga')) this.fields['_ga'] = this.getGa();
 
