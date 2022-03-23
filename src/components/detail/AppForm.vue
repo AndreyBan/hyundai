@@ -324,7 +324,10 @@ export default {
   position: relative;
   font-size: 14px;
 }
-
+.policy-agreement a{
+  color: #103A71;
+  text-decoration: underline;
+}
 .detail-form__price-old {
   font-size: 14px;
   text-decoration: line-through;
