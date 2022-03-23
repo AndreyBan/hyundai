@@ -66,7 +66,7 @@
                  v-model="fields.agree">
           <label for="policy-agreement" :class="{'no-check': !fields.agree}">
             Я согласен на обработку данных
-            <br><a href="#">Смотреть правила</a>
+            <br><a href="/rules-privacy/">Смотреть правила</a>
           </label>
         </div>
         <button type="submit" class="btn btn--blue-dark">{{ hidePrice ? 'запросить цену' : 'забронировать авто'}}</button>
