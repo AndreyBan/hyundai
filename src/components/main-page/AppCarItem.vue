@@ -1,5 +1,6 @@
 <template>
-    <div class="car-item" itemscope itemtype="https://schema.org/Product" v-if="element['body_type'].toLowerCase() === type || !type" @click="$router.push({ name: 'ModelPage', params: { model: element['name_en']}})">
+    <div class="car-item" itemscope itemtype="https://schema.org/Product" v-if="element['body_type'].toLowerCase() === type || !type" >
+      <a :href="'/auto-v-nalichii/' + element['name_en'] + '/'" class="link-clicker"></a>
       <meta itemprop="brand" content="Hyundai">
       <meta itemprop="model" :content="element['name_en']">
       <meta itemprop="url" :content="urlHost + encodeURI(element['name_en']) + '/'">
@@ -13,7 +14,7 @@
       <div class="car-item__img">
         <img :src="element['img']" :alt="element['name_en']" itemprop="image" >
       </div>
-      <div class="btn-link" > {{ element["instock_count"] }} авто в наличии</div>
+      <a :href="'/auto-v-nalichii/' + element['name_en'] + '/'" class="btn-link" > {{ element["instock_count"] }} авто в наличии</a>
       <div class="wrap-credit" v-if="element['credit']">
         <span class="credit__text">В кредит от</span>
         <span class="credit__price">{{ formatPrice(element["credit"]) }} ₽/мес.</span>
@@ -52,7 +53,15 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.link-clicker{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
 .car-item {
+  position: relative;
   padding: 28px 32px;
   border: 1px solid #E4DCD3;
   margin-bottom: 32px;
@@ -81,6 +90,7 @@ export default {
 }
 
 .btn-link {
+  position: relative;
   text-decoration: none;
   display: block;
   text-align: center;
@@ -88,7 +98,8 @@ export default {
   background-color: #003469;
   padding: 12px 0;
   transition-duration: .15s;
-
+  z-index: 1;
+  
   &:hover {
     background-color: #0C4F94;
   }

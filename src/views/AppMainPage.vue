@@ -25,13 +25,6 @@ export default {
       filterType: ""
     }
   },
-  beforeRouteLeave(to, from, next) {
-    if (to.name === 'ModelPage') {
-      this.$emit('addCache');
-
-    }
-    next();
-  },
   components: {
     AppFormRequest,
     AppTypeCar,

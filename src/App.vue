@@ -1,11 +1,19 @@
 <template>
   <div id="app" v-cloak>
-    <keep-alive :include="$route.meta.keepComponents">
-      <router-view />
-    </keep-alive>
+    <AppMainPage />
   </div>
 </template>
+<script>
+import AppMainPage from "./views/AppMainPage";
 
+export default {
+  name: 'App',
+  components: {
+    AppMainPage
+  }
+}
+
+</script>
 <style>
 @import url('~vue-select/dist/vue-select.css');
 
@@ -28,7 +36,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
   margin-top: 60px;
 }
-
+.error-message {
+  font-size: 18px;
+  font-weight: 500;
+  text-align: center;
+  grid-column: 1/5;
+  padding: 50px 0;
+}
 .container {
   max-width: 1560px;
   margin: 0 auto;

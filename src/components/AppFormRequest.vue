@@ -91,7 +91,7 @@
 
 <script>
 import Vue from "vue";
-import AppModalWindow from "./detail/AppModalWindow";
+import AppModalWindow from "./AppModalWindow";
 import AppPreloadResponse from "./AppPreloadResponse";
 import AppResponse from "./AppResponse";
 import {validationMixin} from 'vuelidate'

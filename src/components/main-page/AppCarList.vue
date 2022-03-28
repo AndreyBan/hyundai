@@ -1,37 +1,19 @@
 <template>
-  <section class="car-list">
-    <template v-if="!dataLoad && !error">
-      <AppPreloaderCars v-for="i in 8" :key="i"/>
-    </template>
-    <template v-else-if="dataLoad && models.length">
-      <AppCarItem v-for="(el, i) in models" :key="i" :element="el" :type="type" :hide-price="hidePrice"></AppCarItem>
-    </template>
-    <div class="not-find-cars" v-else-if="dataLoad && !models.length">По заданным параметрам автомобилей в наличии нет</div>
-    <Error v-if="error"/>
+  <section class="car-list" v-if="dataLoad">
+    <AppCarItem v-for="(el, i) in models" :key="i" :element="el" :type="type" :hide-price="hidePrice"></AppCarItem>
   </section>
+  <AppError v-else/>
 </template>
 
 <script>
 import AppCarItem from "./AppCarItem";
-import AppPreloaderCars from "./AppPreloaderCars";
-import Error from "../AppError";
+import AppError from "../AppError";
 
 export default {
   name: "AppCarList",
   components: {
     AppCarItem,
-    AppPreloaderCars,
-    Error
-  },
-  metaInfo() {
-    return {
-      title: this.metaData.title,
-      meta: [
-        {vmid: 'description', property: 'description', content: this.metaData.description},
-        {vmid: 'og:title', property: 'og:title', content: this.metaData.title},
-        {vmid: 'og:description', property: 'og:description', content: this.metaData.description},
-      ],
-    }
+    AppError
   },
   props: {
     type: {
@@ -62,33 +44,13 @@ export default {
     }
   },
   mounted() {
-    let errorTimeout = setTimeout(() => this.error = true, 5000);
+    let json = window.jsonData ? JSON.parse(window.jsonData) : false;
 
-    fetch(this.$requestUrl + '?data=model-list', {method: "POST"})
-        .then(res => res.json())
-        .then(res => {
-          if (res["status"] == "success") {
-            if (res["city"]["in"]) {
-              let cityIn = res["city"]["in"];
-
-              this.metaData.title = `Hyundai в наличии в ${cityIn}`;
-              this.metaData.description = `Hyundai в наличии в ${cityIn} - характеристики, цена, скидки.`;
-            }
-
-            this.hidePrice = res["hide_price"];
-            this.dataModels = res["data"][0]["models"];
-            this.dataLoad = true;
-            clearTimeout(errorTimeout);
-
-
-          } else {
-            this.error = true;
-          }
-        })
-        .catch(e => {
-          console.log("Error message: " + e.message)
-          this.error = true;
-        })
+    if (json && json.length) {
+      this.hidePrice = json["hide_price"];
+      this.dataModels = json["data"][0]["models"];
+      this.dataLoad = true;
+    }
   }
 }
 
