@@ -44,9 +44,9 @@ export default {
     }
   },
   mounted() {
-    let json = window.jsonData ? JSON.parse(window.jsonData) : false;
+    let json = jsonData ? jsonData : false;
 
-    if (json && json.length) {
+    if (json) {
       this.hidePrice = json["hide_price"];
       this.dataModels = json["data"][0]["models"];
       this.dataLoad = true;
