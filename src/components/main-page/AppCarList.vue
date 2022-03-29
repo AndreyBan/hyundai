@@ -25,10 +25,6 @@ export default {
   data() {
     return {
       dataModels: null,
-      metaData: {
-        title: 'Hyundai в наличии',
-        description: 'Hyundai в наличии - характеристики, цена, скидки.',
-      },
       error: false,
       dataLoad: false,
       hidePrice: false
