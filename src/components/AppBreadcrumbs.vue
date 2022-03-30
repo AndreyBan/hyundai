@@ -11,13 +11,24 @@
       </a>
       <meta itemprop="position" content="1">
     </li>
+    <li itemprop="itemListElement"
+        itemscope="itemscope"
+        itemtype="https://schema.org/ListItem"
+        class="breadcrumbs-item">
+      <a  href="/auto-v-nalichii/"
+          class="router-link-active"
+          itemprop="item">
+        <span itemprop="name">Атомобили Hyundai в наличии</span>
+      </a>
+      <meta itemprop="position" content="2">
+    </li>
     <li class="breadcrumbs-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"
         v-for="(item, i) in breadcrumbs" :key="i">
     <router-link :to="item.path" itemprop="item" v-if="(i + 1) !== breadcrumbs.length">
       <span itemprop="name">{{ item.name }}</span>
     </router-link>
     <span itemprop="name" v-else>{{ item.name }}</span>
-    <meta itemprop="position" :content="i + 2">
+    <meta itemprop="position" :content="i + 3">
     </li>
   </ul>
 </template>
@@ -34,12 +45,7 @@ export default {
     return {
       chainItem: this.propChainItem,
       deviceDesktop: false,
-      breadcrumbs: [
-        {
-          name: "Атомобили Hyundai в наличии",
-          path: "/"
-        }
-      ]
+      breadcrumbs: []
     }
   },
   computed: {

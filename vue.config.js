@@ -1,4 +1,4 @@
 module.exports = {
   lintOnSave: false,
-  publicPath: '/auto-v-nalichii/',
+  publicPath: '/auto-v-nalichii-new/',
 }

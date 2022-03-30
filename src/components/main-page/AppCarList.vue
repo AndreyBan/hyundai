@@ -23,16 +23,6 @@ export default {
     AppPreloaderCars,
     Error
   },
-  metaInfo() {
-    return {
-      title: this.metaData.title,
-      meta: [
-        {vmid: 'description', property: 'description', content: this.metaData.description},
-        {vmid: 'og:title', property: 'og:title', content: this.metaData.title},
-        {vmid: 'og:description', property: 'og:description', content: this.metaData.description},
-      ],
-    }
-  },
   props: {
     type: {
       type: String,
@@ -43,13 +33,16 @@ export default {
   data() {
     return {
       dataModels: null,
-      metaData: {
-        title: 'Hyundai в наличии',
-        description: 'Hyundai в наличии - характеристики, цена, скидки.',
-      },
       error: false,
       dataLoad: false,
       hidePrice: false
+    }
+  },
+  methods: {
+    setData(data){
+      this.hidePrice = data["hide_price"];
+      this.dataModels = data["data"][0]["models"];
+      this.dataLoad = true;
     }
   },
   computed: {
@@ -62,33 +55,30 @@ export default {
     }
   },
   mounted() {
-    let errorTimeout = setTimeout(() => this.error = true, 5000);
+    let json = jsonData ? jsonData : false;
 
-    fetch(this.$requestUrl + '?data=model-list', {method: "POST"})
-        .then(res => res.json())
-        .then(res => {
-          if (res["status"] == "success") {
-            if (res["city"]["in"]) {
-              let cityIn = res["city"]["in"];
+    if (json) {
+      this.setData(json);
 
-              this.metaData.title = `Hyundai в наличии в ${cityIn}`;
-              this.metaData.description = `Hyundai в наличии в ${cityIn} - характеристики, цена, скидки.`;
+    } else {
+      let errorTimeout = setTimeout(() => this.error = true, 5000);
+
+      fetch(this.$requestUrl + '?data=model-list', {method: "POST"})
+          .then(res => res.json())
+          .then(res => {
+            if (res["status"] == "success") {
+              this.setData(res);
+              clearTimeout(errorTimeout);
+
+            } else {
+              this.error = true;
             }
-
-            this.hidePrice = res["hide_price"];
-            this.dataModels = res["data"][0]["models"];
-            this.dataLoad = true;
-            clearTimeout(errorTimeout);
-
-
-          } else {
+          })
+          .catch(e => {
+            console.log("Error message: " + e.message)
             this.error = true;
-          }
-        })
-        .catch(e => {
-          console.log("Error message: " + e.message)
-          this.error = true;
-        })
+          })
+    }
   }
 }
 

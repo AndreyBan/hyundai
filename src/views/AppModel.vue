@@ -101,6 +101,23 @@ export default {
             || !this.filterProp(el["color"], colors));
 
       });
+    },
+    setData(data){
+      if (data["city"]["in"]) {
+        let cityIn = data["city"]["in"];
+
+        this.metaData.title = `Hyundai ${this.$route.params.model} в наличии в ${cityIn}`;
+        this.metaData.description = `Hyundai ${this.$route.params.model} в наличии в ${cityIn} - характеристики, цена, скидки.`;
+      }
+
+      if (data["model_image"]) {
+        this.modelImage = data["model_image"];
+      }
+
+      this.hidePrice = data["hide_price"];
+
+      this.cars = data["data"];
+      this.dealers = data["city"]["dealers"];
     }
   },
 
@@ -108,45 +125,39 @@ export default {
     if(matchMedia('(max-width:767px)').matches){
       window.scrollTo(0, 0)
     }
+    let json = jsonData ? jsonData : false;
 
-    let errorTimeout = setTimeout(() => this.error = true, 5000);
+    if (json) {
+      this.setData(json);
 
-    fetch(this.$requestUrl + '?data=model-cars&model=' + this.$route.params.model, {method: 'POST'})
-        .then(res => res.json())
-        .then(res => {
-          if (res["status"] == "success") {
+    } else {
+      let errorTimeout = setTimeout(() => this.error = true, 5000);
 
-            if (res["city"]["in"]) {
-              let cityIn = res["city"]["in"];
+      fetch(this.$requestUrl + '?data=model-cars&model=' + this.$route.params.model, {method: 'POST'})
+          .then(res => res.json())
+          .then(res => {
+            if (res["status"] == "success") {
 
-              this.metaData.title = `Hyundai ${this.$route.params.model} в наличии в ${cityIn}`;
-              this.metaData.description = `Hyundai ${this.$route.params.model} в наличии в ${cityIn} - характеристики, цена, скидки.`;
+
+              this.setData(res);
+
+              this.filterCarList = this.filterCars();
+              this.countCars = this.filterCarList.length;
+              this.loadPage = true;
+              clearTimeout(errorTimeout);
+
+            } else if (res["status"] == 'not-found') {
+              this.$router.replace({name: 'NotFound'});
+
+            } else {
+              this.error = true;
             }
-
-            if (res["model_image"]){
-              this.modelImage = res["model_image"];
-            }
-
-            this.hidePrice = res["hide_price"];
-
-            this.cars = res["data"];
-            this.dealers = res["city"]["dealers"];
-            this.filterCarList = this.filterCars();
-            this.countCars = this.filterCarList.length;
-            this.loadPage = true;
-            clearTimeout(errorTimeout);
-
-          } else if (res["status"] == 'not-found') {
-            this.$router.replace({name: 'NotFound'});
-
-          } else {
+          })
+          .catch(e => {
+            console.log("Error message: " + e.message)
             this.error = true;
-          }
-        })
-        .catch(e => {
-          console.log("Error message: " + e.message)
-          this.error = true;
-        })
+          })
+    }
   }
 }
 </script>
