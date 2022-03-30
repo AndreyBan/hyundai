@@ -45,10 +45,6 @@ export default {
       loadPage: false,
       hidePrice: false,
       modelImage: '/images/instock/filter-car-img.png',
-      metaData: {
-        title: 'Hyundai в наличии',
-        description: 'Hyundai в наличии - характеристики, цена, скидки.',
-      },
     }
   },
   beforeRouteLeave(to, from, next) {
@@ -56,17 +52,6 @@ export default {
       this.$emit('clearCache');
     }
     next();
-  },
-
-  metaInfo() {
-    return {
-      title: this.metaData.title,
-      meta: [
-        {vmid: 'description', property: 'description', content: this.metaData.description},
-        {vmid: 'og:title', property: 'og:title', content: this.metaData.title},
-        {vmid: 'og:description', property: 'og:description', content: this.metaData.description},
-      ],
-    }
   },
   methods: {
     filterCars(filter = undefined) {
@@ -105,48 +90,25 @@ export default {
   },
 
   mounted() {
-    if(matchMedia('(max-width:767px)').matches){
+    if (matchMedia('(max-width:767px)').matches) {
       window.scrollTo(0, 0)
     }
 
-    let errorTimeout = setTimeout(() => this.error = true, 5000);
+    let json = jsonData ? jsonData : false;
 
-    fetch(this.$requestUrl + '?data=model-cars&model=' + this.$route.params.model, {method: 'POST'})
-        .then(res => res.json())
-        .then(res => {
-          if (res["status"] == "success") {
+    if (json) {
+      if (json["model_image"]) {
+        this.modelImage = json["model_image"];
+      }
 
-            if (res["city"]["in"]) {
-              let cityIn = res["city"]["in"];
+      this.hidePrice = json["hide_price"];
 
-              this.metaData.title = `Hyundai ${this.$route.params.model} в наличии в ${cityIn}`;
-              this.metaData.description = `Hyundai ${this.$route.params.model} в наличии в ${cityIn} - характеристики, цена, скидки.`;
-            }
-
-            if (res["model_image"]){
-              this.modelImage = res["model_image"];
-            }
-
-            this.hidePrice = res["hide_price"];
-
-            this.cars = res["data"];
-            this.dealers = res["city"]["dealers"];
-            this.filterCarList = this.filterCars();
-            this.countCars = this.filterCarList.length;
-            this.loadPage = true;
-            clearTimeout(errorTimeout);
-
-          } else if (res["status"] == 'not-found') {
-            this.$router.replace({name: 'NotFound'});
-
-          } else {
-            this.error = true;
-          }
-        })
-        .catch(e => {
-          console.log("Error message: " + e.message)
-          this.error = true;
-        })
+      this.cars = json["data"];
+      this.dealers = json["city"]["dealers"];
+      this.filterCarList = this.filterCars();
+      this.countCars = this.filterCarList.length;
+      this.loadPage = true;
+    }
   }
 }
 </script>
